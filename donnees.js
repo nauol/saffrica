@@ -5,7 +5,7 @@
  */
 window.APP_DATA = {
   meta: {
-    version: "3.0.1",
+    version: "3.0.2",
     lastChecked: "2026-11-15",
     nextUpdate: "2026-12-01"
   },
@@ -8378,6 +8378,15 @@ window.APP_DATA = {
 
   /* News and update log, newest first. Shown on the "What’s new" page. */
   updates: [
+    {
+      date: "2026-11-26",
+      title: { en: "Fix: pick the spot on the map", fr: "Correction : choisir l’endroit sur la carte" },
+      text: {
+        en: "The “Pick on the map” button works again when you note a sighting from an older photo, and “See the map” now shows your new sighting right away.",
+        fr: "Le bouton « Choisir sur la carte » fonctionne de nouveau quand vous notez une observation à partir d’une photo ancienne, et « Voir la carte » affiche tout de suite votre nouvelle observation."
+      },
+      src: []
+    },
     {
       date: "2026-11-26",
       title: { en: "Simpler sightings", fr: "Noter une observation, plus simplement" },

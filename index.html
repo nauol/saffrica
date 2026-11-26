@@ -1790,6 +1790,27 @@ body.is-fiche .footer { padding-bottom: 100px; }
         });
       } });
   }
+  function obsPick(aid, shot, st, done) {
+    var pt = null;
+    recShow({ title: T().obsPickTitle, text: T().obsPickText, html: '<div class="obsmap" id="pickMap" style="height:42vh;min-height:240px"></div><p class="meta" id="pickMsg">' + esc(T().obsLoading) + "</p>", buttons: [
+      { label: T().obsPickOk, primary: true, fn: function () { if (pt) done(pt.lat, pt.lng); } },
+      { label: T().camClose, fn: function () { obsForm(aid, shot, st); } }],
+      after: function (el) {
+        var msg = el.querySelector("#pickMsg");
+        loadLeaflet().then(function () {
+          var L = window.L, c = D.parks.length === 1 && D.parks[0].map ? D.parks[0].map : { lat: 2, lng: 20, zoom: 3 };
+          var map = L.map(el.querySelector("#pickMap")).setView([c.lat, c.lng], c.zoom), mk = null;
+          L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "© OpenStreetMap contributors" }).addTo(map);
+          map.on("click", function (e) {
+            pt = { lat: e.latlng.lat, lng: e.latlng.lng };
+            if (mk) mk.setLatLng(e.latlng); else mk = L.circleMarker(e.latlng, { radius: 9, color: "#fff", weight: 2, fillColor: "#c2410c", fillOpacity: 0.95 }).addTo(map);
+            msg.textContent = pt.lat.toFixed(5) + ", " + pt.lng.toFixed(5);
+          });
+          setTimeout(function () { map.invalidateSize(); }, 200);
+          msg.textContent = "";
+        }).catch(function () { msg.textContent = T().obsNeedNet; });
+      } });
+  }
   function obsConfirm(aid, shot, lat, lng, ts) {
     var pk = parkOf(lat, lng), lbl = pk ? T().obsInPark + tr(findPark(pk).name) : T().obsNoPark;
     var txt = lat.toFixed(5) + ", " + lng.toFixed(5) + " · " + obsDate(ts) + " — " + lbl + " " + T().obsConfirmText;
@@ -1805,7 +1826,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       var queued = obsInQueue(rec.id), hash = "#/obs/" + (pk || "none");
       recShow({ img: shot, title: queued ? T().obsQueued : T().obsSent, text: queued ? T().obsQueuedText : T().obsSentText, buttons: [
         { label: T().seeCard, primary: true, fn: function () { recHide(); location.hash = "#/a/" + aid; } },
-        { label: T().obsSeeMap, fn: function () { recHide(); location.hash = hash; } },
+        { label: T().obsSeeMap, fn: function () { recHide(); if (location.hash === hash) render(); else location.hash = hash; } },
         { label: T().camClose, fn: recHide }] });
     });
   }

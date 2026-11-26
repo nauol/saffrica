@@ -291,6 +291,11 @@ async function navigateur() {
     await page.click("text=Non, photo plus ancienne");
     await etape("où et quand", ["Continuer"], ["Voir la fiche", "Choisir sur la carte"]);
     if (!(await page.$("#obsMapBtn"))) pb("parcours photo, où et quand : bouton « Choisir sur la carte » absent sous les coordonnées");
+    else {
+      await page.click("#obsMapBtn"); await page.waitForTimeout(400);
+      if (!(await page.$("#pickMap"))) pb("parcours photo : « Choisir sur la carte » n'ouvre pas la carte");
+      else { await page.click(".recbtns .rbtn:not(.primary)"); await page.waitForTimeout(300); if (!(await page.$("#obsCoord"))) pb("parcours photo : fermer la carte ne revient pas à « Où et quand »"); }
+    }
     await page.fill("#obsCoord", "-24.99, 31.59"); await page.click(".recbtns .rbtn.primary");
     await etape("enregistrer ?", ["Enregistrer"], ["Voir la fiche"]);
     await page.click(".recbtns .rbtn.primary"); await page.waitForSelector(".recin h2:has-text('enregistrée'), .recin h2:has-text('gardée')", { timeout: 15000 });
