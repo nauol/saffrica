@@ -69,6 +69,7 @@ body.is-fiche main { padding-top: 0; }
 h1 { font-size: 2rem; line-height: 1.1; font-weight: 800; letter-spacing: -0.03em; margin: 6px 0 8px; }
 h2 { font-size: 1.15rem; line-height: 1.25; font-weight: 750; letter-spacing: -0.02em; margin: 0 0 8px; }
 h3 { letter-spacing: -0.01em; }
+.htitle { font-size: 1.7rem; margin-bottom: 12px; }
 .eyebrow { margin: 8px 0 0; font-size: .8rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--brand-ink); }
 .lead { color: var(--muted); margin: 0 0 14px; }
 .meta { color: var(--muted); font-size: .88rem; margin: 4px 0; }
@@ -370,7 +371,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     en: {
       title: "Saffrica",
       pickCountry: "Choose a country",
-      homeEyebrow: "Safari guide", homeTitle: "Where are you going?", countriesH: "Countries", availN: "{n} available", parksN: "{n} parks", explore: "Explore", otherCountries: "Other countries · coming soon", idTitle: "Identify", idSub: "by photo", obsSub: "map", seenNow: "Seen",
+      homeEyebrow: "Safari guide", homeTitle: "Collect the wildlife", countriesH: "Countries", availN: "{n} available", parksN: "{n} parks", explore: "Explore", otherCountries: "Other countries · coming soon", idTitle: "Identify", idSub: "by photo", obsSub: "map", seenNow: "Seen",
       pickCountryLead: "Step 1 of 4. Start by picking the country you are in.",
       search: "Search…",
       soon: "Coming soon",
@@ -506,7 +507,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     fr: {
       title: "Saffrica",
       pickCountry: "Choisissez un pays",
-      homeEyebrow: "Guide de safari", homeTitle: "Où partez-vous ?", countriesH: "Pays", availN: "{n} disponibles", parksN: "{n} parcs", explore: "Explorer", otherCountries: "Autres pays · bientôt", idTitle: "Identifier", idSub: "par photo", obsSub: "carte", seenNow: "Vu",
+      homeEyebrow: "Guide de safari", homeTitle: "Collectionnez la faune", countriesH: "Pays", availN: "{n} disponibles", parksN: "{n} parcs", explore: "Explorer", otherCountries: "Autres pays · bientôt", idTitle: "Identifier", idSub: "par photo", obsSub: "carte", seenNow: "Vu",
       pickCountryLead: "Étape 1 sur 4. Commencez par choisir le pays où vous êtes.",
       search: "Rechercher…",
       soon: "Bientôt",
@@ -1356,7 +1357,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     var list = D.countries.slice().sort(function (a, b) { return countryName(a).localeCompare(countryName(b), lang); });
     var avail = list.filter(function (c) { return c.available; }), soon = list.filter(function (c) { return !c.available; });
     var mc = mineCount();
-    var html = '<p class="eyebrow">' + esc(T().homeEyebrow) + "</p><h1>" + esc(T().homeTitle) + "</h1>" +
+    var html = '<p class="eyebrow">' + esc(T().homeEyebrow) + "</p><h1 class=\"htitle\">" + esc(T().homeTitle) + "</h1>" +
       '<input class="search" id="q" type="search" placeholder="' + esc(T().searchAll) + '" autocomplete="off">' +
       '<div class="qa-row"><button type="button" class="qa main" id="photoBtn">' + ICON.cam + "<span>" + esc(T().idTitle) + "<small>" + esc(T().idSub) + "</small></span></button>" +
       '<a class="qa obs" href="#/obs">' + ICON.pin + "<span>" + esc(T().obsTitle) + "<small>" + esc(T().obsSub) + "</small></span></a>" +
