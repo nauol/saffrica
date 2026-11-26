@@ -5,7 +5,7 @@
  */
 window.APP_DATA = {
   meta: {
-    version: "3.0.0",
+    version: "3.0.1",
     lastChecked: "2026-11-15",
     nextUpdate: "2026-12-01"
   },
@@ -8378,6 +8378,15 @@ window.APP_DATA = {
 
   /* News and update log, newest first. Shown on the "What’s new" page. */
   updates: [
+    {
+      date: "2026-11-26",
+      title: { en: "Simpler sightings", fr: "Noter une observation, plus simplement" },
+      text: {
+        en: "After a photo, the app now first offers to note your sighting. While you note it, the animal page is no longer offered at every step: it comes at the end. For an older photo, enter the coordinates or pick the spot on the map, right in the same place.",
+        fr: "Après une photo, l’appli propose d’abord de noter votre observation. Pendant que vous la notez, la fiche n’est plus proposée à chaque étape : elle arrive à la fin. Pour une photo plus ancienne, entrez les coordonnées ou choisissez l’endroit sur la carte, au même endroit."
+      },
+      src: []
+    },
     {
       date: "2026-11-26",
       title: { en: "A brand-new look", fr: "Un tout nouveau design" },

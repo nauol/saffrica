@@ -262,6 +262,42 @@ async function navigateur() {
     }
     console.log(`${n} pages parcourues`);
   }
+  /* ---------- Parcours photo → observation (IA simulée : « Lion ») ---------- */
+  titre("Parcours photo → observation");
+  try {
+    const img = path.join(os.tmpdir(), "saffrica-test-lion.jpg");
+    fs.writeFileSync(img, Buffer.from(I["animal-lion.jpg"].split(",")[1], "base64"));
+    await page.unroute("**/*saffrica-relais*/**");
+    await page.route("**/*saffrica-relais*/**", (r) => r.fulfill({ json: { result: { animal: true, sure: true, sci: "Panthera leo", name_fr: "Lion", name_en: "Lion" } } }));
+    await ctx.unroute("**/*saffrica-relais*/**");
+    await page.evaluate(() => { localStorage.setItem("awf-lang", "fr"); });
+    const boutons = async () => page.$$eval(".recbtns .rbtn", (bs) => bs.map((b) => b.textContent.trim()));
+    const etape = async (nom, attendus, interdits) => {
+      await page.waitForTimeout(400);
+      const bs = await boutons();
+      for (const a of attendus) if (!bs.includes(a)) pb(`parcours photo, ${nom} : bouton « ${a} » absent (boutons : ${bs.join(" | ")})`);
+      for (const x of interdits) if (bs.includes(x)) pb(`parcours photo, ${nom} : bouton « ${x} » ne devrait pas être là`);
+    };
+    // depuis l'accueil : on propose d'abord de noter, la fiche en second
+    await page.goto(base + "#/"); await page.reload(); await page.waitForSelector("#galInput", { state: "attached" });
+    await page.setInputFiles("#galInput", img); await page.waitForSelector(".recin h2:has-text('Lion')", { timeout: 15000 });
+    await etape("accueil, résultat", ["Noter l’observation", "Juste voir la fiche"], ["Voir la fiche"]);
+    // depuis Observations : jamais la fiche avant la fin
+    await page.evaluate(() => { location.hash = "#/obs"; }); await page.waitForTimeout(300);
+    await page.setInputFiles("#galInput", img); await page.waitForSelector(".recin h2:has-text('Lion')", { timeout: 15000 });
+    await etape("observations, résultat", ["Noter l’observation"], ["Voir la fiche", "Juste voir la fiche"]);
+    await page.click(".recbtns .rbtn.primary");
+    await etape("sur place ?", ["Oui, je suis sur place", "Non, photo plus ancienne"], ["Voir la fiche"]);
+    await page.click("text=Non, photo plus ancienne");
+    await etape("où et quand", ["Continuer"], ["Voir la fiche", "Choisir sur la carte"]);
+    if (!(await page.$("#obsMapBtn"))) pb("parcours photo, où et quand : bouton « Choisir sur la carte » absent sous les coordonnées");
+    await page.fill("#obsCoord", "-24.99, 31.59"); await page.click(".recbtns .rbtn.primary");
+    await etape("enregistrer ?", ["Enregistrer"], ["Voir la fiche"]);
+    await page.click(".recbtns .rbtn.primary"); await page.waitForSelector(".recin h2:has-text('enregistrée'), .recin h2:has-text('gardée')", { timeout: 15000 });
+    await etape("fin", ["Voir la fiche", "Voir la carte"], []);
+    console.log("parcours vérifié (accueil + observations)");
+  } catch (e) { pb("parcours photo → observation interrompu : " + e.message); }
+
   for (const e of [...new Set(erreurs)]) pb("erreur JavaScript, " + e);
 
   /* ---------- 4. Captures ---------- */

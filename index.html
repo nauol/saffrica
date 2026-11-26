@@ -316,6 +316,15 @@ a.tile.seen::after { content: "✓"; position: absolute; top: 8px; left: 8px; wi
 .recbtns { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
 .rbtn { border: 0; border-radius: 12px; padding: 12px 18px; font-weight: 650; font-size: 1rem; background: var(--fill); color: var(--ink); cursor: pointer; }
 .rbtn.primary { background: var(--brand); color: #fff; }
+.rbtn.ghost { background: transparent; color: var(--muted); font-weight: 600; }
+.recbtns .rbtn.primary { flex: 1 1 100%; }
+.obsform { text-align: left; }
+.obsform label { display: block; margin: 6px 2px 2px; }
+.obsform .search { margin-bottom: 4px; }
+.orsep { display: flex; align-items: center; gap: 12px; margin: 6px 0; color: var(--muted); font-size: .85rem; text-transform: uppercase; letter-spacing: .06em; }
+.orsep::before, .orsep::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.mapbtn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin: 0 0 10px; }
+.mapbtn svg { width: 20px; height: 20px; color: var(--purple); }
 .cgutext { max-height: 34vh; overflow: auto; margin: 8px 0; padding-right: 4px; font-size: .9rem; text-align: left; }
 .cgutext p { margin: 0 0 8px; }
 .pickrow { display: block; width: 100%; text-align: left; padding: 12px 14px; margin: 0 0 6px; border: 0; border-radius: 12px; background: var(--fill); color: var(--ink); font-weight: 600; cursor: pointer; }
@@ -371,7 +380,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     en: {
       title: "Saffrica",
       pickCountry: "Choose a country",
-      homeEyebrow: "Safari guide", homeTitle: "Collect the wildlife", countriesH: "Countries", availN: "{n} available", parksN: "{n} parks", explore: "Explore", otherCountries: "Other countries · coming soon", idTitle: "Identify", idSub: "by photo", obsSub: "map", seenNow: "Seen",
+      homeEyebrow: "Safari guide", homeTitle: "Collect the wildlife", countriesH: "Countries", availN: "{n} available", parksN: "{n} parks", explore: "Explore", otherCountries: "Other countries · coming soon", idTitle: "Identify", idSub: "by photo", obsFirst: "Note your sighting first: it will be added to the sightings map.", justFiche: "Just see the page", cancelLbl: "Cancel", orSep: "or", obsPickPrompt: "Pick on the map", obsSub: "map", seenNow: "Seen",
       pickCountryLead: "Step 1 of 4. Start by picking the country you are in.",
       search: "Search…",
       soon: "Coming soon",
@@ -507,7 +516,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     fr: {
       title: "Saffrica",
       pickCountry: "Choisissez un pays",
-      homeEyebrow: "Guide de safari", homeTitle: "Collectionnez la faune", countriesH: "Pays", availN: "{n} disponibles", parksN: "{n} parcs", explore: "Explorer", otherCountries: "Autres pays · bientôt", idTitle: "Identifier", idSub: "par photo", obsSub: "carte", seenNow: "Vu",
+      homeEyebrow: "Guide de safari", homeTitle: "Collectionnez la faune", countriesH: "Pays", availN: "{n} disponibles", parksN: "{n} parcs", explore: "Explorer", otherCountries: "Autres pays · bientôt", idTitle: "Identifier", idSub: "par photo", obsFirst: "Notez d’abord votre observation : elle sera ajoutée à la carte des observations.", justFiche: "Juste voir la fiche", cancelLbl: "Annuler", orSep: "ou", obsPickPrompt: "Choisir sur la carte", obsSub: "carte", seenNow: "Vu",
       pickCountryLead: "Étape 1 sur 4. Commencez par choisir le pays où vous êtes.",
       search: "Rechercher…",
       soon: "Bientôt",
@@ -955,7 +964,14 @@ body.is-fiche .footer { padding-bottom: 100px; }
     function fiche(id, primary, prefix) {
       return { label: (prefix || "") + tr(D.animals[id].name), primary: primary, fn: function () { recHide(); o.onFiche(id); } };
     }
-    if (r.kind === "listed") {
+    if (r.kind === "listed" && o.obs) {
+      /* photo prise pour noter une observation (depuis Observations) ou pour identifier (depuis l'accueil) :
+         on pousse d'abord à noter l'observation ; la fiche n'est proposée qu'à la fin (ou, depuis l'accueil, en petit) */
+      bs.push({ label: T().obsAdd, primary: true, fn: function () { o.obs(r.id); } });
+      if (o.ctx !== "obs") bs.push({ label: T().justFiche, fn: function () { recHide(); o.onFiche(r.id); } });
+      r.alt.forEach(function (i) { if (i !== r.id && D.animals[i]) bs.push({ label: T().aiAlso + " " + tr(D.animals[i].name), fn: function () { o.obs(i); } }); });
+      recShow({ img: img, title: T().detected + " : " + tr(D.animals[r.id].name), text: T().aiBy + (o.ctx !== "obs" ? " " + T().obsFirst : ""), buttons: bs.concat(o.extra || [], [close]) });
+    } else if (r.kind === "listed") {
       bs.push({ label: T().seeCard, primary: true, fn: function () { recHide(); o.onFiche(r.id); } });
       if (o.obs) bs.push({ label: T().obsAdd, fn: function () { o.obs(r.id); } });
       r.alt.forEach(function (i) { if (i !== r.id) bs.push(fiche(i, false, T().aiAlso + " ")); });
@@ -967,7 +983,10 @@ body.is-fiche .footer { padding-bottom: 100px; }
     } else if (r.kind === "none") {
       recShow({ img: img, title: T().aiNoneTitle, text: T().aiNoneText, buttons: (o.save ? [o.save] : []).concat(o.extra || [], [close]) });
     } else {
-      r.alt.forEach(function (i, n) { bs.push(fiche(i, n === 0, "")); });
+      r.alt.forEach(function (i, n) {
+        if (o.obs && D.animals[i]) bs.push({ label: tr(D.animals[i].name), primary: n === 0, fn: function () { o.obs(i); } });
+        else bs.push(fiche(i, n === 0, ""));
+      });
       if (o.save) bs.push(o.save);
       recShow({ img: img, title: T().aiUnsureTitle, text: T().aiUnsureText, buttons: bs.concat(o.extra || [], [close]) });
     }
@@ -990,7 +1009,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     var box = el.querySelector(".recbtns");
     (o.buttons || []).forEach(function (x) {
       var bt = document.createElement("button");
-      bt.type = "button"; bt.className = "rbtn" + (x.primary ? " primary" : ""); bt.textContent = x.label; bt.onclick = x.fn;
+      bt.type = "button"; bt.className = "rbtn" + (x.primary ? " primary" : "") + (x.cls ? " " + x.cls : ""); bt.textContent = x.label; bt.onclick = x.fn;
       box.appendChild(bt);
     });
     if (o.after) o.after(el);
@@ -1040,6 +1059,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
   function recHandle(file) {
     if (!file) return;
     var shot = null, close = { label: T().camClose, fn: recHide };
+    var ctx = /^#\/obs/.test(location.hash || "") ? "obs" : "home";   /* d'où vient la photo : page Observations ou accueil */
     recShow({ title: T().camWork, bar: null, buttons: [] });
     recPrepare(file).then(function (url) {
       shot = url;
@@ -1047,7 +1067,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       recShow({ img: shot, title: T().aiWork, buttons: [] });
       return aiAsk(file).then(function (res) {
         REC.lastAi = res;
-        aiShow(res, shot, { onFiche: function (id) { location.hash = "#/a/" + id; }, save: saveBtn(file, shot), obs: function (id) { obsStart(id, shot); } });
+        aiShow(res, shot, { ctx: ctx, onFiche: function (id) { location.hash = "#/a/" + id; }, save: saveBtn(file, shot), obs: function (id) { obsStart(id, shot); } });
       }, function () { failScreen(file, shot, false); });
     }).catch(function () {
       var bs = [], sb = saveBtn(file, shot); if (sb) bs.push(sb); bs.push(close);
@@ -1716,8 +1736,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     recShow({ img: shot, title: T().obsQTitle, text: tr(D.animals[aid].name) + " — " + T().obsQText, buttons: [
       { label: T().obsYesNow, primary: true, fn: function () { obsLocate(aid, shot); } },
       { label: T().obsOlder, fn: function () { obsForm(aid, shot, { coord: "", date: obsToday() }); } },
-      obsFiche(aid),
-      { label: T().obsNoThanks, fn: recHide }] });
+      { label: T().cancelLbl, cls: "ghost", fn: recHide }] });
   }
   function obsToday() { var d = new Date(); return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
   function obsLocate(aid, shot) {
@@ -1728,8 +1747,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       recShow({ img: shot, title: T().obsLocErr, buttons: [
         { label: T().obsManual, primary: true, fn: function () { obsForm(aid, shot, { coord: "", date: obsToday() }); } },
         { label: T().retry, fn: function () { obsLocate(aid, shot); } },
-        obsFiche(aid),
-        { label: T().camClose, fn: recHide }] });
+        { label: T().cancelLbl, cls: "ghost", fn: recHide }] });
     }
     if (!navigator.geolocation) { fail(); return; }
     navigator.geolocation.getCurrentPosition(function (pos) {
@@ -1745,8 +1763,10 @@ body.is-fiche .footer { padding-bottom: 100px; }
     return { lat: lat, lng: lng };
   }
   function obsForm(aid, shot, st, err) {
-    var html = '<div style="text-align:left"><label class="meta" for="obsCoord">' + esc(T().obsCoordLbl) + '</label>' +
+    var html = '<div class="obsform"><label class="meta" for="obsCoord">' + esc(T().obsCoordLbl) + '</label>' +
       '<input class="search" id="obsCoord" type="text" inputmode="text" autocomplete="off" placeholder="-24.10, 31.50" value="' + esc(st.coord) + '">' +
+      '<p class="orsep"><span>' + esc(T().orSep) + "</span></p>" +
+      '<button type="button" class="rbtn mapbtn" id="obsMapBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>' + esc(T().obsPickPrompt) + "</button>" +
       '<label class="meta" for="obsDate">' + esc(T().obsDateLbl) + '</label>' +
       '<input class="search" id="obsDate" type="date" max="' + obsToday() + '" value="' + esc(st.date) + '">' +
       (err ? '<p class="meta" style="color:#b42318">' + esc(err) + "</p>" : "") + "</div>";
@@ -1760,36 +1780,14 @@ body.is-fiche .footer { padding-bottom: 100px; }
           if (!(ts > 1577836800000) || ts > Date.now() + 3600000) { obsForm(aid, shot, st, T().obsDateBad); return; }
           obsConfirm(aid, shot, c.lat, c.lng, ts);
         } },
-      { label: T().obsPickMap, fn: function () {
-          obsPick(aid, shot, st, function (lat, lng) { st.coord = lat.toFixed(5) + ", " + lng.toFixed(5); obsForm(aid, shot, st); });
-        } },
-      obsFiche(aid),
-      { label: T().camClose, fn: recHide }],
+      { label: T().cancelLbl, cls: "ghost", fn: recHide }],
       after: function (el) {
         var ci = el.querySelector("#obsCoord"), di = el.querySelector("#obsDate");
         ci.addEventListener("input", function () { st.coord = ci.value; });
         di.addEventListener("input", function () { st.date = di.value; });
-      } });
-  }
-  function obsPick(aid, shot, st, done) {
-    var pt = null;
-    recShow({ title: T().obsPickTitle, text: T().obsPickText, html: '<div class="obsmap" id="pickMap" style="height:42vh;min-height:240px"></div><p class="meta" id="pickMsg">' + esc(T().obsLoading) + "</p>", buttons: [
-      { label: T().obsPickOk, primary: true, fn: function () { if (pt) done(pt.lat, pt.lng); } },
-      { label: T().camClose, fn: function () { obsForm(aid, shot, st); } }],
-      after: function (el) {
-        var msg = el.querySelector("#pickMsg");
-        loadLeaflet().then(function () {
-          var L = window.L, c = D.parks.length === 1 && D.parks[0].map ? D.parks[0].map : { lat: 2, lng: 20, zoom: 3 };
-          var map = L.map(el.querySelector("#pickMap")).setView([c.lat, c.lng], c.zoom), mk = null;
-          L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "© OpenStreetMap contributors" }).addTo(map);
-          map.on("click", function (e) {
-            pt = { lat: e.latlng.lat, lng: e.latlng.lng };
-            if (mk) mk.setLatLng(e.latlng); else mk = L.circleMarker(e.latlng, { radius: 9, color: "#fff", weight: 2, fillColor: "#c2410c", fillOpacity: 0.95 }).addTo(map);
-            msg.textContent = pt.lat.toFixed(5) + ", " + pt.lng.toFixed(5);
-          });
-          setTimeout(function () { map.invalidateSize(); }, 200);
-          msg.textContent = "";
-        }).catch(function () { msg.textContent = T().obsNeedNet; });
+        el.querySelector("#obsMapBtn").addEventListener("click", function () {
+          obsPick(aid, shot, st, function (lat, lng) { st.coord = lat.toFixed(5) + ", " + lng.toFixed(5); obsForm(aid, shot, st); });
+        });
       } });
   }
   function obsConfirm(aid, shot, lat, lng, ts) {
@@ -1797,8 +1795,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     var txt = lat.toFixed(5) + ", " + lng.toFixed(5) + " · " + obsDate(ts) + " — " + lbl + " " + T().obsConfirmText;
     recShow({ img: shot, title: T().obsConfirmTitle + " " + tr(D.animals[aid].name), text: txt, buttons: [
       { label: T().obsSave, primary: true, fn: function () { obsSubmit(aid, shot, lat, lng, ts, pk); } },
-      obsFiche(aid),
-      { label: T().obsNoThanks, fn: recHide }] });
+      { label: T().cancelLbl, cls: "ghost", fn: recHide }] });
   }
   function obsSubmit(aid, shot, lat, lng, ts, pk) {
     var rec = { id: obsNewId(), animal: aid, lat: Math.round(lat * 1e5) / 1e5, lng: Math.round(lng * 1e5) / 1e5, ts: Math.round(ts), park: pk };
