@@ -17,7 +17,7 @@ Saffrica est une application web mobile (PWA), **bilingue français/anglais**, p
 - **Zéro coût mensuel** : GitHub Pages, Cloudflare gratuit, Gemini gratuit. Pas de carte bancaire. Ne rien proposer de payant.
 
 ## 2. Les fichiers
-L'appli tient en 7 fichiers à la racine (ci-dessous). Il n'y a **pas de règle figée** sur le nombre de fichiers : on peut ajouter ce qui est utile (scripts de test, outils…). Tout ce qui est dans le dépôt est public sur le site : rien de secret. Si un nouveau fichier doit marcher hors ligne, l'ajouter à `FICHIERS` dans `sw.js`.
+L'appli tient en 8 fichiers à la racine (ci-dessous). Il n'y a **pas de règle figée** sur le nombre de fichiers : on peut ajouter ce qui est utile (scripts de test, outils…). Tout ce qui est dans le dépôt est public sur le site : rien de secret. Si un nouveau fichier doit marcher hors ligne, l'ajouter à `FICHIERS` dans `sw.js`.
 
 | Fichier | Rôle | Taille |
 |---|---|---|
@@ -27,7 +27,10 @@ L'appli tient en 7 fichiers à la racine (ci-dessous). Il n'y a **pas de règle 
 | `sw.js` | service worker (cache `saffrica-vNN`) | |
 | `manifest.webmanifest` | manifeste PWA | |
 | `icone.png`, `icone-192.png` | icônes | |
+| `inter.woff2` | police Inter (latin, graisses 400–800, licence OFL), servie localement pour marcher hors ligne | 48 Ko |
 | `CLAUDE.md` | ce fichier (pas mis en cache par `sw.js`, pas utilisé par l'appli) | |
+| `outils/test.js` | test complet (voir §8) | |
+| `.claude/skills/` | skills de design pour Claude Code : `web-design-guidelines` (Vercel, règles de qualité UI) et 12 styles `style-*` (awesome-design-md). taste-skill volontairement non installé (fait pour des sites vitrines, 40 Mo, script automatique) | |
 
 Les relais Cloudflare (`worker.js`, `worker-obs.js`) ne sont PAS dans le dépôt : l'utilisateur les colle lui-même dans Cloudflare. Si on les modifie, donner le code complet à coller.
 
@@ -35,7 +38,7 @@ Les relais Cloudflare (`worker.js`, `worker-obs.js`) ne sont PAS dans le dépôt
 1. `donnees.js` → `meta.version` (ex. `"2.10.1"` → `"2.10.2"`), et ajouter une entrée **en tête** de `updates: [` (date, title {en,fr}, text {en,fr}, src []).
 2. `sw.js` → incrémenter `const CACHE = "saffrica-vNN"` (sinon les utilisateurs gardent l'ancienne version).
 3. Vérifier la syntaxe du `<script>` de `index.html` et que `donnees.js` / `images.js` se chargent dans Node.
-4. Tester (voir §8).
+4. Tester (voir §9).
 
 ## 4. Publier (Git)
 - Travailler sur une **branche de travail**, jamais directement sur `main`.
@@ -44,19 +47,26 @@ Les relais Cloudflare (`worker.js`, `worker-obs.js`) ne sont PAS dans le dépôt
 - Avant de publier, vérifier `git ls-files` : aucun fichier de travail oublié (données temporaires, captures…).
 - Après publication : GitHub Pages met ~1 à 10 min ; ouvrir l'appli deux fois pour que le cache se mette à jour.
 
-## 5. Architecture de `index.html`
+## 5. Design (version 3.0, direction « App premium » choisie le 26 nov. 2026)
+- Style clair et net façon app iPhone, police Inter, couleur principale vert `#2F6B3B`, fond `#F2F2F0`, cartes blanches arrondies (18 px), ombres légères. **Mode sombre automatique** (variables CSS redéfinies dans `@media (prefers-color-scheme: dark)`). Toutes les couleurs passent par les variables de `:root`.
+- Accueil : « Guide de safari / Où partez-vous ? », recherche, 3 tuiles (Identifier par photo en vert, Observations avec épingle violette, Mes animaux avec étoile orange), puis **une grande carte image par pays** avec la **frontière du pays dessinée en blanc** et **un point par parc** (`countryCard`, `countryMap`), puis « Autres pays · bientôt » replié.
+- Page pays : même carte en en-tête, puis liste groupée des parcs. Page parc : surtitre pays, titre, carte d'infos, grille d'animaux (vignettes image + nom + statut ; vu = contour vert + coche).
+- Fiche animal : illustration plein écran en haut, barre du haut transparente (elle reprend un fond quand on fait défiler : classe `scrolled`), puis une « feuille » arrondie (`.sheet`) : surtitre parc, nom, chiffres du parc et du monde, où le voir, à propos, etc. Bouton « vu » en bas sur toute la largeur. `body.is-fiche` est posé quand la vue renvoie `fiche: true`.
+- Nouveau pays : ajouter dans `countries[]` `cover` (id de l'animal de la photo) et `outline` {viewBox, d, proj:[k, minx, miny, s], src} — frontière Nominatim simplifiée (`polygon_threshold=0.03`, îles lointaines retirées), projetée comme dans `outils`/l'historique (x = lng·k, y = −lat, mis à l'échelle sur 100).
+- Avant de changer le design : maquettes et captures à 390 px (clair + sombre) montrées à l'utilisateur.
+
+## 6. Architecture de `index.html`
 - **Routage par hash** (fonction `render()`) : `#/` (accueil, pays), `#/c/<pays>`, `#/p/<parc>`, `#/p/<parc>/a/<animal>`, `#/a/<animal>` (si l'animal n'est que dans un parc, on affiche directement la fiche du parc), `#/mine` (Mes animaux), `#/obs` (observations : pays), `#/obs/c/<pays>` (parcs du pays), `#/obs/<parc|none>` (carte), `#/news`, `#/verify` (photos gardées à vérifier).
 - Fonctions clés : `viewCountries`, `viewCountry`, `viewPark`, `viewAnimal`, `viewMine`, `viewObs`, `viewObsCountry`, `viewNews`, `viewVerify`, `menuChain`/menu ☰, `photo()` + `window.saffFit` + `FOCUS` (cadrage des illustrations), `orderAnimals` (les Cinq Grands d'abord : lion, léopard, éléphant, rhinocéros blanc, rhinocéros noir, buffle ; puis ordre alphabétique), `rankOf`/`RANKS` (titres), `lastSeenLoad` (dernière observation), `parkOf` (observation → parc : rectangle `zone` puis vrai contour `shape` avec `inRing` ; si plusieurs parcs contiennent le point, le plus petit gagne).
 - Textes de l'interface : objet `UI` (fr/en), lu par `T()` ; `tr()` choisit la langue d'un objet `{en, fr}`.
 - Menu ☰ : bloc fixe Accueil / Observations / Mes animaux (toujours dans cet ordre), puis « Vous êtes ici » (pays > parc > animal).
-- Accueil : boutons « Observations » (violet) à gauche et « Mes animaux · n/63 » (orange) à droite.
 - Mes animaux : 63 animaux (les 3 pages de groupe ne comptent pas), rond pour cocher « vu », filtres Tous / Vus / Pas encore vus. « Vu » stocké dans `localStorage` (`saffrica-seen`). Titres : Bébé safari (0), Petit pisteur (5), Éclaireur de la savane (15), Chasseur de traces (25), Ranger (35), Maître pisteur (45), Légende du safari (55), Gardien de l'Afrique (tous).
 - Illustrations : sur la fiche, image entière pour les images presque carrées ; dans les listes, cadre plus haut centré sur l'animal (`FOCUS` = centre vertical en % par image).
 - Autres clés `localStorage` : `awf-lang` (langue), `saffrica-cgu` (`"3"` = conditions acceptées), `saffrica-obsq` (observations en attente).
 
-## 6. Données (`window.APP_DATA`)
+## 7. Données (`window.APP_DATA`)
 - `meta` {version, lastChecked, nextUpdate}
-- `countries[]` : `{ id, en, fr, available }` — disponibles : `za`, `tz`, `ke`.
+- `countries[]` : `{ id, en, fr, available, cover?, outline? }` — disponibles : `za`, `tz`, `ke` (avec `cover` et `outline`, voir §5).
 - `status`, `gauge` : statuts UICN (LC, NT, VU, EN, CR, + VAR pour les pages de groupe, NE).
 - `sources` : `s1` … `s719` (des numéros manquent : les sources jamais citées ont été retirées en 2.10.2), chacune `{title, publisher, date:{en,fr}, url}`. Toujours ajouter les nouvelles sources à la suite (numéro max + 1).
 - `parks[]` : `{id, country, name{en,fr}, region, facts[{label,value}], about, bestTime, sources[], map{lat,lng,zoom}, zone{south,north,west,east}, shape?, shapeSrc?, animals[ids]}`.
@@ -72,14 +82,14 @@ Les relais Cloudflare (`worker.js`, `worker-obs.js`) ne sont PAS dans le dépôt
 - **Kenya (8)** : maasai-mara, amboseli, tsavo-east, tsavo-west, samburu, lake-nakuru, nairobi, meru.
 - Règle « uniquement les animaux déjà dans l'appli ». Exclus volontairement en Afrique de l'Est : babouin chacma, porc-épic du Cap, cobe des roseaux du Sud, autruche de Somalie, oryx beisa (espèces différentes de celles des fiches). La page de groupe **« Babouins »** est dans 15 parcs du Kenya et de Tanzanie (pas Katavi : aucune source).
 
-## 7. Services en ligne
+## 8. Services en ligne
 - **Reconnaissance photo** : Worker Cloudflare `saffrica-relais` → https://saffrica-relais.michel-elouan.workers.dev/ (`?test=1` pour tester). N'accepte que l'origine `https://nauol.github.io`, donc ne marche pas en local. Modèles Gemini gratuits en cascade, clé dans le secret Cloudflare `GEMINI_KEY`.
 - **Observations** : Worker `saffrica-obs` → https://saffrica-obs.michel-elouan.workers.dev, base Cloudflare D1, table `observations(id PK, animal, lat, lng, ts, park, created)`. `POST /` {id, animal, lat, lng, ts, park|null}, `GET /?park=<id|none>&animal=&limit=`, `GET /latest`. File d'attente hors ligne côté appli (`localStorage` `saffrica-obsq`).
 - **Carte** : Leaflet 1.9.4 + tuiles OpenStreetMap, chargés à la demande depuis jsdelivr (usage léger seulement ; prévoir un fournisseur si usage commercial ou fort trafic).
 - Pays déduit des coordonnées hors parc : Nominatim (OpenStreetMap), avec cache.
 - Photos gardées pour plus tard : IndexedDB `saffrica`, magasin `pending`.
 
-## 8. Tests (Node + Playwright)
+## 9. Tests (Node + Playwright)
 **Lancer `node outils/test.js`** depuis la racine (≈ 1 min 30 ; `--rapide` saute les fiches parc par parc ; `--captures DIR` pour choisir le dossier des captures). Il fait tout ce qui suit et finit par « ✓ Aucun problème » ou la liste des problèmes (code de sortie 1). Il vérifie aussi que, si l'appli a changé par rapport à `origin/main`, la version et le cache ont bien été incrémentés. Compléter le script quand on ajoute une fonctionnalité.
 
 Ce que fait le script :
@@ -87,7 +97,7 @@ Ce que fait le script :
 - Parcourir toutes les pages (pays, parcs, fiches de chaque parc, en fr et en) et vérifier : aucun « undefined », « NaN » ou « [object », aucune erreur JavaScript, toutes les sources citées existent dans `sources`.
 - Regarder les écrans à 390 px de large (captures) pour la mise en page, et les montrer à l'utilisateur quand l'affichage change.
 
-## 9. Ajouter un pays (méthode qui a marché)
+## 10. Ajouter un pays (méthode qui a marché)
 1. Choisir les parcs principaux du pays (avec l'utilisateur).
 2. Une recherche par parc (agents en parallèle), avec une consigne commune :
    - sources officielles d'abord (organismes gestionnaires, recensements nationaux, plans de gestion, études), avec la date et le périmètre de chaque chiffre ;
@@ -95,21 +105,21 @@ Ce que fait le script :
    - utiliser seulement les ids de la liste des animaux, **pages de groupe comprises** (`pythons`, `baboons`, `gyps`) quand l'espèce exacte n'est pas celle de la fiche mais que le groupe est présent ;
    - sortie JSON : `{sources[], park{…, zone, zoneNote}, animals{id:{pop, asOf, conf, src[index], trend?, note, spot, spotSrc}}, doubts[]}`.
 3. Intégrer par script : renuméroter les sources (max + 1), ajouter les parcs, les `parkAnimals`, mettre `available: true` au pays, version + nouveauté, cache +1.
-4. Tester (§8), puis publier seulement si l'utilisateur le demande (§4).
+4. Tester (§9), ajouter `cover` + `outline` au pays (§5), puis publier seulement si l'utilisateur le demande (§4).
 5. Résumer honnêtement : chiffres anciens, chiffres d'écosystème, présences fragiles, exclusions.
 
 L'utilisateur ajoute les pays lui-même, à son rythme (pas de tâche automatique).
 
-## 10. Liste des pays (décidée le 26 nov. 2026)
+## 11. Liste des pays (décidée le 26 nov. 2026)
 - **10 pays principaux** : Afrique du Sud ✅, Kenya ✅, Tanzanie ✅, Botswana, Namibie, Zambie, Zimbabwe, Ouganda, Rwanda, et **Mozambique ou Malawi** (10e place à choisir).
 - **Deuxième cercle** (plus tard, après vérification des conseils aux voyageurs) : Malawi, Eswatini, Éthiopie, Angola, Gabon, Congo (Odzala), Tchad (Zakouma), RDC (Virunga), Bénin (Pendjari), Sénégal (Niokolo-Koba), Ghana (Mole), Côte d'Ivoire (Comoé).
 - **À enlever** : Maghreb, Sahel et Sahara, petits pays et îles sans vrai safari. Madagascar : cas à part.
 - À décider : cacher les pays enlevés de l'accueil (conseillé).
 
-## 11. Vérification mensuelle automatique
+## 12. Vérification mensuelle automatique
 Une tâche planifiée « Vérification mensuelle saffrica » tourne le 1er de chaque mois (8 h 59, heure de Zurich). Elle lit le site publié, vérifie **un seul pays par mois** (roulement : pays ayant des parcs, triés par id ; index = (année × 12 + mois) mod nombre de pays → déc. 2026 Kenya, janv. 2027 Tanzanie, févr. 2027 Afrique du Sud…), produit un rapport et un e-mail. Elle ne modifie rien. Quand l'utilisateur demande d'appliquer un rapport : intégrer les corrections sourcées, mettre à jour `meta.lastChecked` / `nextUpdate`, version, nouveauté, cache.
 
-## 12. À faire plus tard
+## 13. À faire plus tard
 1. ~~Limites des parcs~~ : fait en 2.10.2 (contours OSM pour 22 parcs). Restent : Mapungubwe (trouver un contour complet), Tsavo Ouest (contour OSM ~7 000 km² pour 9 065 officiels). Pour un nouveau parc : Nominatim `search?format=jsonv2&polygon_geojson=1&polygon_threshold=0.002`, vérifier que la surface correspond à la surface officielle, puis ajouter `shape` + `zone` englobante. Idée : dessiner le contour sur la carte des observations.
 2. Prochaine mise à jour des données le **1er décembre 2026** (revérifier statuts UICN et chiffres ; vautours oricou et Gyps en particulier).
 3. Sources non relues : environ 15 au Serengeti et 14 à Ruaha. Recensement national tanzanien 2024/2025 : chiffres par parc pas encore publiés.
@@ -117,5 +127,5 @@ Une tâche planifiée « Vérification mensuelle saffrica » tourne le 1er de ch
 5. Page « Mes observations » avec suppression par code secret : proposée, pas décidée.
 6. Après les 10 pays : nouvelles fiches pour les espèces proches mais différentes (porc-épic à crête, cobe de Bohor…), avec les illustrations à fournir par l'utilisateur ; revoir les babouins de Katavi.
 7. Système de récompenses : les titres sont faits, la suite est prévue tout à la fin.
-8. **Refonte du design**, tout à la fin.
+8. ~~Refonte du design~~ : faite en 3.0.0 (§5).
 9. Commercialisation plus tard : les illustrations appartiennent à l'utilisateur ; conditions d'utilisation des données UICN à vérifier ; fond de carte OpenStreetMap à remplacer si usage commercial.

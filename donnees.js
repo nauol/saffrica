@@ -5,7 +5,7 @@
  */
 window.APP_DATA = {
   meta: {
-    version: "2.10.2",
+    version: "3.0.0",
     lastChecked: "2026-11-15",
     nextUpdate: "2026-12-01"
   },
@@ -36,7 +36,7 @@ window.APP_DATA = {
     { id: "gh", en: "Ghana", fr: "Ghana" },
     { id: "gn", en: "Guinea", fr: "Guinée" },
     { id: "gw", en: "Guinea-Bissau", fr: "Guinée-Bissau" },
-    { id: "ke", en: "Kenya", fr: "Kenya", available: true },
+    { id: "ke", en: "Kenya", fr: "Kenya", available: true, cover: "giraffe", outline: { viewBox: "0 0 84.1 100.0", d: "M0.0 47.5L0.8 50.0L0.2 53.4L0.2 59.1L1.9 59.4L39.6 80.7L40.0 83.4L38.6 84.7L38.9 85.6L40.2 85.7L40.7 87.2L55.8 97.8L57.5 99.8L58.5 100.0L59.9 97.8L60.3 97.8L67.6 84.0L68.4 81.0L78.2 72.3L82.1 67.5L80.4 66.0L80.4 65.4L74.5 57.3L74.4 18.8L77.8 15.5L84.1 6.7L83.3 7.1L82.1 6.6L76.3 7.1L72.0 3.5L62.7 7.8L61.7 10.0L59.2 12.9L58.7 12.2L55.6 12.0L54.4 11.4L52.5 11.6L50.5 11.0L50.2 10.5L49.1 10.7L48.7 10.2L47.7 10.7L44.4 10.7L33.0 2.6L30.9 1.8L22.4 1.8L21.3 0.0L5.0 0.1L0.8 4.1L1.6 5.0L1.6 6.4L2.4 6.9L1.9 8.0L3.2 7.8L3.3 8.3L2.6 8.5L2.7 9.0L3.5 8.8L4.2 9.6L4.8 9.3L5.8 10.0L5.7 11.6L5.0 11.9L5.7 15.1L6.7 15.6L7.2 17.8L8.7 18.6L9.4 20.6L10.1 21.5L10.3 21.3L11.0 22.6L10.6 23.3L11.5 27.9L11.4 31.1L9.3 33.7L9.4 35.6L8.0 35.9L7.0 36.5L7.0 37.0L6.4 37.0L5.7 39.5L4.3 40.6L3.9 41.8L2.4 42.4L2.0 44.9L0.0 47.5Z", proj: [0.999997, 33.9096, -4.62, 10.5131], src: ["s719"] } },
     { id: "ls", en: "Lesotho", fr: "Lesotho" },
     { id: "lr", en: "Liberia", fr: "Libéria" },
     { id: "ly", en: "Libya", fr: "Libye" },
@@ -56,10 +56,10 @@ window.APP_DATA = {
     { id: "sc", en: "Seychelles", fr: "Seychelles" },
     { id: "sl", en: "Sierra Leone", fr: "Sierra Leone" },
     { id: "so", en: "Somalia", fr: "Somalie" },
-    { id: "za", en: "South Africa", fr: "Afrique du Sud", available: true },
+    { id: "za", en: "South Africa", fr: "Afrique du Sud", available: true, cover: "whiterhino", outline: { viewBox: "0 0 100.0 87.7", d: "M0.0 45.3L0.4 46.5L1.6 48.0L2.5 50.2L4.4 56.3L7.2 61.9L9.9 65.8L10.5 68.6L7.9 71.4L7.6 72.8L7.8 74.2L8.5 75.5L10.9 83.1L12.1 84.3L14.4 84.6L19.1 87.2L22.1 87.7L27.3 85.2L33.1 84.5L35.3 83.2L39.7 82.6L50.8 83.4L55.8 82.3L64.3 78.9L69.9 75.2L71.5 73.6L73.9 71.8L79.1 66.1L82.9 62.9L86.0 58.4L87.9 54.6L89.1 53.2L89.3 52.1L90.4 50.3L92.8 47.6L94.4 46.9L96.8 44.5L98.1 41.2L98.4 38.7L100.0 32.6L98.8 32.1L94.7 32.0L94.5 32.2L93.5 31.8L93.3 35.3L90.4 35.2L88.4 34.5L87.4 33.4L87.3 32.5L86.8 31.6L86.3 32.0L86.3 29.5L87.2 28.1L88.2 25.8L89.3 24.6L89.9 24.4L92.6 26.3L93.3 26.0L93.0 25.2L93.5 23.9L93.3 22.7L93.6 20.4L93.3 14.8L92.9 14.0L92.7 12.4L92.0 12.0L91.6 10.2L90.8 9.2L90.8 7.3L89.1 1.6L86.5 1.1L83.2 1.6L82.9 1.2L82.3 1.3L81.1 0.4L79.4 0.0L78.7 0.4L75.7 0.6L75.0 2.3L72.6 3.1L71.6 3.0L69.8 4.8L69.8 5.3L69.2 5.7L69.1 6.4L68.2 6.9L68.0 7.5L67.2 7.4L66.8 8.6L66.2 8.6L66.1 8.8L66.0 8.6L65.8 8.8L65.6 8.7L65.4 9.1L64.8 9.3L64.8 9.6L64.4 9.5L64.5 9.8L64.0 10.1L64.0 10.5L63.7 10.3L63.4 10.7L62.8 14.5L61.1 15.5L60.1 17.1L56.7 17.9L56.9 18.9L55.9 21.5L55.6 22.7L54.7 24.2L53.7 24.8L51.9 24.4L51.1 25.0L49.8 25.1L48.4 24.5L47.8 24.7L46.7 23.7L46.1 23.9L45.3 23.9L44.1 22.6L42.7 21.9L42.5 21.4L42.2 21.7L41.0 21.4L40.2 21.8L39.8 21.5L39.2 22.8L38.8 22.9L38.6 23.5L38.9 23.7L38.6 23.8L38.7 24.2L38.2 24.9L38.5 25.1L38.0 25.6L38.3 25.8L38.1 26.4L37.8 26.4L37.8 26.8L37.2 27.3L37.1 27.8L36.6 27.7L36.0 28.5L35.2 28.7L34.1 30.6L32.5 30.9L32.5 31.8L32.0 32.2L30.2 31.9L28.6 32.2L27.2 31.7L26.0 32.5L26.0 32.0L25.6 31.7L25.5 29.8L27.0 27.2L26.8 27.0L26.7 25.4L26.6 25.0L26.3 25.1L26.4 24.8L25.8 23.8L26.0 23.5L25.6 23.1L25.9 22.6L25.6 22.7L25.2 22.2L24.2 19.8L21.9 17.9L21.9 42.8L21.1 42.9L20.8 43.3L19.3 43.5L18.7 44.7L17.5 44.9L17.3 45.4L17.7 46.0L16.8 46.4L16.0 46.2L15.5 45.7L14.3 45.5L11.1 46.1L10.2 45.8L9.4 45.1L8.4 44.9L7.8 45.2L7.4 44.6L6.5 44.8L6.5 43.8L6.2 43.8L6.0 43.1L6.4 42.6L6.3 41.9L6.0 41.4L5.3 41.6L5.1 40.6L4.4 40.1L3.4 40.4L3.3 41.1L3.0 41.0L3.1 41.3L2.8 41.4L2.9 41.7L2.5 41.7L2.8 42.4L2.6 43.0L0.8 43.8L0.0 45.3ZM63.7 51.1L65.8 50.0L66.3 48.7L66.8 48.4L66.7 48.2L67.6 47.2L67.4 47.0L67.9 46.8L68.1 46.0L68.9 46.1L69.2 45.7L69.7 45.9L70.7 44.6L71.7 44.7L72.0 44.1L73.5 43.8L73.8 44.5L74.4 44.7L74.4 45.1L75.2 45.2L75.4 46.1L75.6 45.9L77.1 47.3L77.4 47.2L78.3 49.0L77.9 49.7L77.3 50.0L77.5 50.6L77.2 51.1L76.5 51.3L76.1 52.4L76.5 52.9L74.3 54.2L71.9 54.5L71.6 55.1L70.8 55.5L71.2 56.0L70.5 56.6L70.6 57.0L70.2 58.1L68.1 57.6L66.4 55.6L65.9 55.8L65.8 54.8L66.0 54.5L65.6 54.5L63.7 51.1Z", proj: [0.878161, 14.3435, 22.125, 6.7908], src: ["s719"] } },
     { id: "ss", en: "South Sudan", fr: "Soudan du Sud" },
     { id: "sd", en: "Sudan", fr: "Soudan" },
-    { id: "tz", en: "Tanzania", fr: "Tanzanie", available: true },
+    { id: "tz", en: "Tanzania", fr: "Tanzanie", available: true, cover: "wildebeest", outline: { viewBox: "0 0 100.0 95.7", d: "M0.0 33.0L0.3 35.6L2.7 41.8L1.5 44.5L2.0 47.2L3.6 50.1L6.7 52.2L8.7 54.6L10.1 58.8L12.1 62.0L13.0 64.7L14.6 67.1L15.7 67.9L18.1 67.5L19.8 68.6L19.9 69.8L20.8 70.4L21.9 70.1L23.2 70.6L23.0 71.3L23.5 71.9L24.2 71.6L25.0 71.7L25.7 72.4L27.4 72.2L28.4 73.4L30.3 73.7L31.8 74.7L32.4 74.4L33.7 75.5L35.3 75.5L36.3 76.6L39.2 76.4L40.7 77.6L40.8 76.1L41.6 75.6L44.1 77.9L46.0 80.6L45.8 81.1L46.4 82.8L46.3 84.7L47.3 86.8L47.2 88.4L46.7 89.3L46.9 90.0L47.9 90.8L48.2 91.8L49.4 92.5L49.7 94.0L55.8 93.9L57.5 92.6L58.4 92.7L59.4 93.7L59.9 93.5L60.2 94.0L60.5 93.8L60.8 95.2L63.2 95.0L63.4 95.7L63.9 95.1L64.4 95.5L65.7 94.7L66.1 93.8L66.5 94.2L68.0 94.1L71.2 95.1L71.6 94.6L74.4 93.8L75.0 91.7L75.9 91.2L78.4 91.3L80.7 92.7L84.3 90.5L86.5 90.2L87.5 90.5L90.0 88.8L94.2 87.2L96.2 85.3L97.3 85.1L100.0 82.9L99.1 81.4L94.1 77.4L92.7 71.5L92.4 67.6L95.2 59.4L95.3 52.2L92.4 47.4L94.8 36.7L94.9 34.7L94.4 33.6L93.4 32.9L90.7 32.8L89.6 34.7L88.8 34.6L87.3 32.8L74.6 23.8L74.3 22.7L73.1 22.5L72.9 21.8L74.0 20.7L73.7 18.4L41.9 0.3L12.7 0.0L11.7 0.7L10.1 0.7L10.1 1.5L11.0 3.1L12.5 4.1L13.4 5.9L13.1 8.5L13.9 9.7L13.2 12.2L10.7 12.7L9.6 14.9L10.6 15.1L9.8 15.6L9.5 16.7L10.4 17.5L11.0 16.9L11.8 17.8L13.4 17.7L13.0 18.4L13.4 20.1L11.8 20.7L11.5 21.1L11.8 21.7L9.9 22.9L9.3 24.2L9.6 24.9L8.8 24.9L7.9 27.1L6.6 28.3L6.3 29.2L4.8 30.2L4.3 30.0L3.8 30.9L1.0 30.8L0.0 33.0Z", proj: [0.993822, 29.1458, 0.9855, 8.8799], src: ["s719"] } },
     { id: "tg", en: "Togo", fr: "Togo" },
     { id: "tn", en: "Tunisia", fr: "Tunisie" },
     { id: "ug", en: "Uganda", fr: "Ouganda" },
@@ -1884,7 +1884,7 @@ window.APP_DATA = {
     s716: {"title": "Yellow baboons – photo, Tsavo West, 5 Aug 2017 (Mohammed Salman)", "publisher": "JungleDragon", "date": {"en": "read Nov 2026", "fr": "consultée en nov. 2026"}, "url": "https://www.jungledragon.com/image/94108/yellow_baboons.html"},
     s717: {"title": "Observe a baboon troop descend from treetops to rove, play, and forage in the Tanzanian landscape (video)", "publisher": "Encyclopaedia Britannica", "date": {"en": "read Nov 2026", "fr": "consultée en nov. 2026"}, "url": "https://www.britannica.com/video/22518/life-anubis-olive-baboons-troop-members-Tanzania"},
     s718: {"title": "What are the different types of baboons? And other baboon FAQs", "publisher": "Tsavo Trust", "date": {"en": "read Nov 2026", "fr": "consultée en nov. 2026"}, "url": "https://tsavotrust.org/what-are-the-different-types-of-baboons-and-other-baboon-faqs/"},
-    s719: {"title": "Park boundaries (OpenStreetMap, simplified to about 100 m)", "publisher": "OpenStreetMap contributors (ODbL licence)", "date": {"en": "read Nov 2026", "fr": "consultée en nov. 2026"}, "url": "https://www.openstreetmap.org/copyright"}
+    s719: {"title": "Park and country boundaries (OpenStreetMap, simplified)", "publisher": "OpenStreetMap contributors (ODbL licence)", "date": {"en": "read Nov 2026", "fr": "consultée en nov. 2026"}, "url": "https://www.openstreetmap.org/copyright"}
   },
 
   parks: [
@@ -8378,6 +8378,15 @@ window.APP_DATA = {
 
   /* News and update log, newest first. Shown on the "What’s new" page. */
   updates: [
+    {
+      date: "2026-11-26",
+      title: { en: "A brand-new look", fr: "Un tout nouveau design" },
+      text: {
+        en: "Saffrica has a new, cleaner design: large pictures, each country shown with its borders and its parks, animal pages that open on the illustration, and an automatic dark mode. Everything works as before, offline too.",
+        fr: "Saffrica change de look : grandes images, chaque pays avec ses frontières et ses parcs, fiches qui s’ouvrent sur l’illustration, et mode sombre automatique. Tout fonctionne comme avant, hors ligne aussi."
+      },
+      src: []
+    },
     {
       date: "2026-11-26",
       title: { en: "Real park boundaries for sightings", fr: "Vraies limites des parcs pour les observations" },
