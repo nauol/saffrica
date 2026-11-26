@@ -269,6 +269,17 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
     const k = D.parks.find((p) => p.id === "kruger"), c = await centreCarte("#/obs/kruger");
     exige(Math.abs(c.lat - k.map.lat) < 0.3 && Math.abs(c.lng - k.map.lng) < 0.3 && c.zoom === k.map.zoom, "carte non centrée sur le Kruger : " + JSON.stringify(c));
   });
+  await verif("cartes : limites des parcs dessinées, et toucher la carte marche toujours", async () => {
+    const n = D.parks.filter((p) => p.shape || p.zone).length;
+    await go("#/obs/kruger");
+    await page.waitForFunction(() => window.SAFFRICA_REC && window.SAFFRICA_REC.obsMap && document.querySelector("#obsMap .leaflet-overlay-pane path"), null, { timeout: 15000 });
+    exige(await page.$$eval("#obsMap .leaflet-overlay-pane path:not(.leaflet-interactive)", (l) => l.length) === n, "limites des parcs absentes de la carte d'un parc");
+    await centreCarte("#/obs/kruger");
+    exige(await page.$$eval("#pickMap .leaflet-overlay-pane path:not(.leaflet-interactive)", (l) => l.length) === n, "limites des parcs absentes de « Choisir sur la carte »");
+    const box = await page.$eval("#pickMap", (e) => { const r = e.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    await page.mouse.click(box.x, box.y); await W(300);
+    exige(/-?\d+\.\d{5}, -?\d+\.\d{5}/.test(await txt("#pickMsg")), "toucher la carte (dans un parc) ne place plus le point");
+  });
   await verif("photo : « Choisir sur la carte » centré sur le pays choisi", async () => {
     const c = await centreCarte("#/obs/c/ke");
     exige(c.lat > -5 && c.lat < 5 && c.lng > 33 && c.lng < 42 && c.zoom >= 4, "carte non centrée sur le Kenya : " + JSON.stringify(c));

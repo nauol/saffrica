@@ -1809,8 +1809,18 @@ body.is-fiche .footer { padding-bottom: 100px; }
     }
     m = /^#\/obs\/([^/]+)$/.exec(location.hash || "");
     var p = m && m[1] !== "none" && m[1] !== "c" ? findPark(m[1]) : null;
-    if (p && p.map) return { view: p.map };
+    if (p && p.map) return { view: p.map, park: p.id };
     return null;
+  }
+  /* limites des parcs sur une carte Leaflet : trait gris foncé discret (pointillés si on n'a qu'un rectangle approximatif) ;
+     non cliquables, pour que toucher la carte marche toujours ; le parc affiché est un peu plus marqué */
+  function drawParks(map, cur) {
+    var L = window.L; if (!L || !map) return;
+    D.parks.forEach(function (p) {
+      var on = p.id === cur, st = { color: "#1b1d18", weight: on ? 2.6 : 1.6, opacity: on ? 0.7 : 0.45, fill: true, fillColor: "#1b1d18", fillOpacity: on ? 0.03 : 0.02, interactive: false };
+      if (p.shape) L.polygon(p.shape, st).addTo(map);
+      else if (p.zone) { st.dashArray = "6 6"; L.rectangle([[p.zone.south, p.zone.west], [p.zone.north, p.zone.east]], st).addTo(map); }
+    });
   }
   function obsPick(aid, shot, st, done) {
     var pt = null;
@@ -1823,6 +1833,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
           var map = L.map(el.querySelector("#pickMap")), mk = null;
           if (ar && ar.bounds) map.fitBounds(ar.bounds, { padding: [8, 8] }); else map.setView([c.lat, c.lng], c.zoom);
           REC.pickMap = map;
+          drawParks(map, ar && ar.park);
           L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "© OpenStreetMap contributors" }).addTo(map);
           map.on("click", function (e) {
             pt = { lat: e.latlng.lat, lng: e.latlng.lng };
@@ -1908,6 +1919,8 @@ body.is-fiche .footer { padding-bottom: 100px; }
           var L = window.L, c = park && park.map ? park.map : { lat: 2, lng: 20, zoom: 3 };
           mapRef = L.map(el).setView([c.lat, c.lng], c.zoom);
           L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "© OpenStreetMap contributors" }).addTo(mapRef);
+          drawParks(mapRef, park && park.id);
+          REC.obsMap = mapRef;
           setTimeout(function () { if (mapRef) mapRef.invalidateSize(); }, 200);
           draw();
         }).catch(function (e) {

@@ -5,7 +5,7 @@
  */
 window.APP_DATA = {
   meta: {
-    version: "3.2.0",
+    version: "3.3.0",
     lastChecked: "2026-11-15",
     nextUpdate: "2026-12-01"
   },
@@ -8378,6 +8378,15 @@ window.APP_DATA = {
 
   /* News and update log, newest first. Shown on the "What’s new" page. */
   updates: [
+    {
+      date: "2026-11-26",
+      title: { en: "Park boundaries on the maps", fr: "Limites des parcs sur les cartes" },
+      text: {
+        en: "Park boundaries are now drawn in dark grey on the sightings maps and on the map used to pick where you saw an animal (dotted line when only an approximate rectangle is known, as for Mapungubwe).",
+        fr: "Les limites des parcs sont maintenant dessinées en gris foncé sur les cartes des observations et sur la carte pour choisir où vous avez vu l’animal (en pointillés quand on ne connaît qu’un rectangle approximatif, comme pour Mapungubwe)."
+      },
+      src: ["s719"]
+    },
     {
       date: "2026-11-26",
       title: { en: "Sightings: first say where you are", fr: "Observations : dites d’abord où vous êtes" },
