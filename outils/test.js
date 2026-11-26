@@ -143,6 +143,11 @@ for (const p of parcs) {
   } catch (e) { pb("impossible de tester parkOf : " + e.message); }
 }
 for (const c of D.countries || []) if (c.available && !parcs.some((p) => p.country === c.id)) pb(`pays ${c.id} disponible mais sans parc`);
+// Chaque animal d'un parc a au moins une source (sa présence doit être prouvée) ; « Non trouvé » va avec conf « none »
+for (const [pid, pa] of Object.entries(D.parkAnimals || {})) for (const [aid, x] of Object.entries(pa)) {
+  if (!(x.src || []).length) pb(`${pid}/${aid} : aucune source pour la présence de l'animal`);
+  if (x.conf !== "none" && /^Not found in the sources used/.test(x.pop && x.pop.en)) pb(`${pid}/${aid} : « Non trouvé » mais conf « ${x.conf} »`);
+}
 // Chaque niveau de confiance utilisé a son libellé dans les deux langues (sinon le badge s'affiche vide)
 {
   const html = fs.readFileSync(path.join(RACINE, "index.html"), "utf8");
