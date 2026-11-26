@@ -283,7 +283,7 @@ async function navigateur() {
     await page.setInputFiles("#galInput", img); await page.waitForSelector(".recin h2:has-text('Lion')", { timeout: 15000 });
     await etape("accueil, résultat", ["Noter l’observation", "Juste voir la fiche"], ["Voir la fiche"]);
     // depuis Observations : jamais la fiche avant la fin
-    await page.evaluate(() => { location.hash = "#/obs"; }); await page.waitForTimeout(300);
+    await page.evaluate(() => { location.hash = "#/obs/kruger"; }); await page.waitForTimeout(300);
     await page.setInputFiles("#galInput", img); await page.waitForSelector(".recin h2:has-text('Lion')", { timeout: 15000 });
     await etape("observations, résultat", ["Noter l’observation"], ["Voir la fiche", "Juste voir la fiche"]);
     await page.click(".recbtns .rbtn.primary");

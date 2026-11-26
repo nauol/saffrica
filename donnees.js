@@ -5,7 +5,7 @@
  */
 window.APP_DATA = {
   meta: {
-    version: "3.1.0",
+    version: "3.2.0",
     lastChecked: "2026-11-15",
     nextUpdate: "2026-12-01"
   },
@@ -8378,6 +8378,15 @@ window.APP_DATA = {
 
   /* News and update log, newest first. Shown on the "What’s new" page. */
   updates: [
+    {
+      date: "2026-11-26",
+      title: { en: "Sightings: first say where you are", fr: "Observations : dites d’abord où vous êtes" },
+      text: {
+        en: "The Sightings page now asks first for your country, park or “Outside parks”. The photo button comes next, and the map to pick the spot opens directly on that park or country. Fixed: the park map no longer covers the photo window.",
+        fr: "La page Observations demande d’abord votre pays, votre parc ou « Hors parc ». Le bouton photo vient ensuite, et la carte pour choisir l’endroit s’ouvre directement sur ce parc ou ce pays. Corrigé : la carte du parc ne passe plus devant la fenêtre de la photo."
+      },
+      src: []
+    },
     {
       date: "2026-11-26",
       title: { en: "Back arrow and coming-soon countries", fr: "Flèche retour et pays à venir" },

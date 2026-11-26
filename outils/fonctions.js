@@ -199,9 +199,12 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
   /* ---------- observations ---------- */
   await verif("observations : pays, parcs, carte et filtre", async () => {
     await go("#/obs");
-    exige(await nb('a.row[href^="#/obs/c/"]') === D.countries.filter((c) => D.parks.some((p) => p.country === c.id)).length, "liste des pays incomplète");
+    exige(await nb('a.ccard[href^="#/obs/c/"]') === D.countries.filter((c) => D.parks.some((p) => p.country === c.id)).length, "cartes des pays incomplètes");
+    exige(await nb('a.row[href="#/obs/none"]') === 1, "« Hors parc » absent");
+    exige(await nb("#photoBtn") === 0, "la page Observations ne doit plus avoir de bouton photo (choisir d'abord où l'on est)");
     await go("#/obs/c/za");
     exige(await nb('a.row[href^="#/obs/"]') === parcsDe("za").length, "liste des parcs incomplète");
+    exige(await nb("#photoBtn") === 1, "bouton photo absent sur la page du pays");
     await go("#/obs/kruger");
     await page.waitForFunction(() => document.querySelector("#obsMap.leaflet-container") || /réseau|connexion/i.test((document.getElementById("obsMsg") || {}).textContent || ""), null, { timeout: 15000 });
     if (await nb("#obsMap.leaflet-container")) {
@@ -215,7 +218,7 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
   await verif("photo : animal reconnu → noter sur place (position GPS) → enregistré dans le bon parc", async () => {
     relais = { result: { animal: true, sure: true, sci: "Panthera leo", name_fr: "Lion", name_en: "Lion" } };
     posts.length = 0;
-    await photoDepuis("#/obs");
+    await photoDepuis("#/obs/kruger");
     await clicBouton("Noter l’observation"); await clicBouton("Oui, je suis sur place"); await W(800);
     exige(/Kruger/.test(await txt("#rec .recin")), "le parc Kruger n'est pas reconnu depuis la position");
     await clicBouton("Enregistrer"); await page.waitForSelector("#rec h2:has-text('enregistrée')", { timeout: 10000 });
@@ -224,7 +227,7 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
     exige(/#\/a\/lion/.test(await page.evaluate(() => location.hash)), "« Voir la fiche » n'ouvre pas la fiche");
   });
   await verif("photo : photo ancienne → choisir sur la carte → revenir", async () => {
-    await photoDepuis("#/obs");
+    await photoDepuis("#/obs/kruger");
     await clicBouton("Noter l’observation"); await clicBouton("Non, photo plus ancienne");
     await page.click("#obsMapBtn"); await W(400);
     exige(await nb("#pickMap") === 1, "« Choisir sur la carte » n'ouvre pas la carte");
@@ -253,15 +256,47 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
     await page.click("#rec .recback"); await W();
     exige(/Noter où/.test(await txt("#rec h2")), "« Enregistrer » (sur place) ← ne revient pas à « Noter où ? »");
   });
+  const centreCarte = async (depuis) => {
+    relais = { result: { animal: true, sure: true, sci: "Panthera leo", name_fr: "Lion", name_en: "Lion" } };
+    await photoDepuis(depuis);
+    await clicBouton("Noter l’observation"); await clicBouton("Non, photo plus ancienne");
+    await page.click("#obsMapBtn");
+    await page.waitForFunction(() => window.SAFFRICA_REC && window.SAFFRICA_REC.pickMap && document.querySelector("#pickMap.leaflet-container"), null, { timeout: 15000 });
+    await W(400);
+    return page.evaluate(() => { const m = window.SAFFRICA_REC.pickMap, c = m.getCenter(); return { lat: c.lat, lng: c.lng, zoom: m.getZoom() }; });
+  };
+  await verif("photo : « Choisir sur la carte » centré sur le parc choisi", async () => {
+    const k = D.parks.find((p) => p.id === "kruger"), c = await centreCarte("#/obs/kruger");
+    exige(Math.abs(c.lat - k.map.lat) < 0.3 && Math.abs(c.lng - k.map.lng) < 0.3 && c.zoom === k.map.zoom, "carte non centrée sur le Kruger : " + JSON.stringify(c));
+  });
+  await verif("photo : « Choisir sur la carte » centré sur le pays choisi", async () => {
+    const c = await centreCarte("#/obs/c/ke");
+    exige(c.lat > -5 && c.lat < 5 && c.lng > 33 && c.lng < 42 && c.zoom >= 4, "carte non centrée sur le Kenya : " + JSON.stringify(c));
+  });
+  await verif("photo : « Choisir sur la carte » sur toute l'Afrique depuis « Hors parc » ou l'accueil", async () => {
+    for (const h of ["#/obs/none", "#/"]) { const c = await centreCarte(h); exige(c.zoom <= 4, `${h} : carte trop zoomée ` + JSON.stringify(c)); }
+  });
+  await verif("carte d'un parc : la fenêtre photo passe bien devant la carte", async () => {
+    await go("#/obs/kruger");
+    await page.waitForFunction(() => document.querySelector("#obsMap .leaflet-tile-pane"), null, { timeout: 15000 });
+    /* tuiles simulées qui couvrent toute la carte (les vraies tuiles ne se chargent pas pendant le test) */
+    await page.evaluate(() => { const t = document.createElement("div"); t.style.cssText = "position:absolute;left:-3000px;top:-3000px;width:7000px;height:7000px;background:#9c9"; document.querySelector("#obsMap .leaflet-tile-pane").appendChild(t); });
+    await photo();
+    const dessus = await page.evaluate(() => {
+      const r = document.querySelector("#rec .recin").getBoundingClientRect(), pts = [[0.5, 0.5], [0.5, 0.9], [0.2, 0.8], [0.8, 0.95]];
+      return pts.every(([x, y]) => { const e = document.elementFromPoint(r.left + r.width * x, r.top + r.height * y); return e && e.closest("#rec"); });
+    });
+    exige(dessus, "la carte du parc passe devant la fenêtre");
+  });
   await verif("photo : coordonnées fausses → message d'erreur", async () => {
-    await photoDepuis("#/obs");
+    await photoDepuis("#/obs/kruger");
     await clicBouton("Noter l’observation"); await clicBouton("Non, photo plus ancienne");
     await page.fill("#obsCoord", "n'importe quoi"); await clicBouton("Continuer");
     exige(await nb("#obsCoord") === 1 && /non valides|Invalid/i.test(await txt("#rec .recin")), "pas de message pour des coordonnées fausses");
   });
   await verif("photo : sans réseau à l'envoi → observation gardée puis envoyée", async () => {
     posts.length = 0;
-    await photoDepuis("#/obs");
+    await photoDepuis("#/obs/kruger");
     await clicBouton("Noter l’observation"); await clicBouton("Non, photo plus ancienne");
     await page.fill("#obsCoord", "-2.33, 34.83"); await clicBouton("Continuer");
     await ctx.setOffline(true);

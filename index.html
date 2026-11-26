@@ -293,7 +293,7 @@ a.tile.seen::after { content: "✓"; position: absolute; top: 8px; left: 8px; wi
 .obsbtn { display: flex; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 13px 10px; margin: 0 0 16px; border-radius: 14px; background: var(--card); box-shadow: var(--shadow); font-weight: 650; color: var(--ink); text-decoration: none; }
 .obsbtn::before { content: ""; width: 20px; height: 20px; background: var(--purple); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z'/%3E%3Ccircle cx='12' cy='10' r='2.5'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z'/%3E%3Ccircle cx='12' cy='10' r='2.5'/%3E%3C/svg%3E") center / contain no-repeat; }
 .obslink { display: block; margin: 10px 0; font-weight: 700; }
-.obsmap { height: 60vh; min-height: 320px; border-radius: var(--radius); margin: 10px 0; background: var(--fill); overflow: hidden; }
+.obsmap { position: relative; z-index: 0; isolation: isolate; height: 60vh; min-height: 320px; border-radius: var(--radius); margin: 10px 0; background: var(--fill); overflow: hidden; }
 .obsbar { display: flex; gap: 8px; align-items: center; margin: 8px 0; }
 .obsbar select { flex: 1; min-height: 44px; font: inherit; border-radius: 12px; padding: 0 12px; border: 0; background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
 .obspop strong { display: block; font-size: 1rem; }
@@ -315,7 +315,7 @@ a.tile.seen::after { content: "✓"; position: absolute; top: 8px; left: 8px; wi
 .recin.hasback.noimg > h2 { padding: 0 44px; }
 .recin p { margin: 0 0 10px; color: var(--muted); }
 .recin video { width: 100%; max-height: 60vh; border-radius: 14px; margin-bottom: 10px; background: #000; }
-.recin img { width: 100%; max-height: 40vh; object-fit: contain; border-radius: 14px; margin-bottom: 10px; background: #000; }
+.recin img { width: 100%; max-height: 40vh; object-fit: contain; border-radius: 14px; margin-bottom: 10px; background: var(--fill); }
 .recin .bar { height: 10px; border-radius: 6px; background: var(--fill); overflow: hidden; margin: 8px 0 12px; }
 .recin .bar span { display: block; height: 100%; width: 0; background: var(--brand); transition: width .2s; }
 .recbtns { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
@@ -385,7 +385,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     en: {
       title: "Saffrica",
       pickCountry: "Choose a country",
-      homeEyebrow: "Safari guide", homeTitle: "Collect the wildlife", countriesH: "Countries", availN: "{n} available", parksN: "{n} parks", explore: "Explore", otherCountries: "Other countries · coming soon", idTitle: "Identify", idSub: "by photo", obsFirst: "Note your sighting first: it will be added to the sightings map.", justFiche: "Just see the page", cancelLbl: "Cancel", orSep: "or", obsPickPrompt: "Pick on the map", obsSub: "map", seenNow: "Seen",
+      homeEyebrow: "Safari guide", homeTitle: "Collect the wildlife", countriesH: "Countries", availN: "{n} available", parksN: "{n} parks", explore: "Explore", otherCountries: "Other countries · coming soon", idTitle: "Identify", idSub: "by photo", obsWhereLead: "Where are you? First pick your country, or “Outside parks”: the map will then open at the right place to note your sighting. You will also see where other users saw animals.", obsParkPick: "Pick your park:", obsElsewhere: "Elsewhere in this country? Take the photo directly:", obsFirst: "Note your sighting first: it will be added to the sightings map.", justFiche: "Just see the page", cancelLbl: "Cancel", orSep: "or", obsPickPrompt: "Pick on the map", obsSub: "map", seenNow: "Seen",
       pickCountryLead: "Step 1 of 4. Start by picking the country you are in.",
       search: "Search…",
       soon: "Coming soon",
@@ -521,7 +521,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     fr: {
       title: "Saffrica",
       pickCountry: "Choisissez un pays",
-      homeEyebrow: "Guide de safari", homeTitle: "Collectionnez la faune", countriesH: "Pays", availN: "{n} disponibles", parksN: "{n} parcs", explore: "Explorer", otherCountries: "Autres pays · bientôt", idTitle: "Identifier", idSub: "par photo", obsFirst: "Notez d’abord votre observation : elle sera ajoutée à la carte des observations.", justFiche: "Juste voir la fiche", cancelLbl: "Annuler", orSep: "ou", obsPickPrompt: "Choisir sur la carte", obsSub: "carte", seenNow: "Vu",
+      homeEyebrow: "Guide de safari", homeTitle: "Collectionnez la faune", countriesH: "Pays", availN: "{n} disponibles", parksN: "{n} parcs", explore: "Explorer", otherCountries: "Autres pays · bientôt", idTitle: "Identifier", idSub: "par photo", obsWhereLead: "Où êtes-vous ? Choisissez d’abord votre pays, ou « Hors parc » : la carte s’ouvrira ensuite au bon endroit pour noter votre observation. Vous y verrez aussi où les autres utilisateurs ont vu des animaux.", obsParkPick: "Choisissez votre parc :", obsElsewhere: "Ailleurs dans ce pays ? Prenez directement la photo :", obsFirst: "Notez d’abord votre observation : elle sera ajoutée à la carte des observations.", justFiche: "Juste voir la fiche", cancelLbl: "Annuler", orSep: "ou", obsPickPrompt: "Choisir sur la carte", obsSub: "carte", seenNow: "Vu",
       pickCountryLead: "Étape 1 sur 4. Commencez par choisir le pays où vous êtes.",
       search: "Rechercher…",
       soon: "Bientôt",
@@ -1066,6 +1066,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     if (!file) return;
     var shot = null, close = { label: T().camClose, fn: recHide };
     var ctx = /^#\/obs/.test(location.hash || "") ? "obs" : "home";   /* d'où vient la photo : page Observations ou accueil */
+    REC.area = obsArea();   /* parc ou pays choisi avant la photo : la carte « Choisir sur la carte » y sera centrée */
     recShow({ title: T().camWork, bar: null, buttons: [] });
     recPrepare(file).then(function (url) {
       shot = url;
@@ -1799,6 +1800,18 @@ body.is-fiche .footer { padding-bottom: 100px; }
         });
       } });
   }
+  /* zone choisie sur les pages Observations : #/obs/<parc> → ce parc ; #/obs/c/<pays> → ce pays ; sinon toute l'Afrique */
+  function obsArea() {
+    var m = /^#\/obs\/c\/([^/]+)/.exec(location.hash || ""), c, o, pr, w, h;
+    if (m && (c = findCountry(m[1])) && (o = c.outline)) {
+      pr = o.proj; w = +o.viewBox.split(" ")[2]; h = +o.viewBox.split(" ")[3];
+      return { bounds: [[-(h / pr[3] + pr[2]), pr[1] / pr[0]], [-pr[2], (w / pr[3] + pr[1]) / pr[0]]] };
+    }
+    m = /^#\/obs\/([^/]+)$/.exec(location.hash || "");
+    var p = m && m[1] !== "none" && m[1] !== "c" ? findPark(m[1]) : null;
+    if (p && p.map) return { view: p.map };
+    return null;
+  }
   function obsPick(aid, shot, st, done) {
     var pt = null;
     recShow({ back: function () { obsForm(aid, shot, st); }, title: T().obsPickTitle, text: T().obsPickText, html: '<div class="obsmap" id="pickMap" style="height:42vh;min-height:240px"></div><p class="meta" id="pickMsg">' + esc(T().obsLoading) + "</p>", buttons: [
@@ -1806,8 +1819,10 @@ body.is-fiche .footer { padding-bottom: 100px; }
       after: function (el) {
         var msg = el.querySelector("#pickMsg");
         loadLeaflet().then(function () {
-          var L = window.L, c = D.parks.length === 1 && D.parks[0].map ? D.parks[0].map : { lat: 2, lng: 20, zoom: 3 };
-          var map = L.map(el.querySelector("#pickMap")).setView([c.lat, c.lng], c.zoom), mk = null;
+          var L = window.L, ar = REC.area, c = ar && ar.view ? ar.view : { lat: 2, lng: 20, zoom: 3 };
+          var map = L.map(el.querySelector("#pickMap")), mk = null;
+          if (ar && ar.bounds) map.fitBounds(ar.bounds, { padding: [8, 8] }); else map.setView([c.lat, c.lng], c.zoom);
+          REC.pickMap = map;
           L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "© OpenStreetMap contributors" }).addTo(map);
           map.on("click", function (e) {
             pt = { lat: e.latlng.lat, lng: e.latlng.lng };
@@ -1845,16 +1860,17 @@ body.is-fiche .footer { padding-bottom: 100px; }
     var li = D.parks.filter(function (p) { return p.country === cid; }).map(function (p) {
       return '<li><a class="row" href="#/obs/' + p.id + '"><span>' + esc(tr(p.name)) + '</span><span class="chev">›</span></a></li>';
     }).join("");
-    return { after: bindPhotoBtn, html: "<h1>" + esc(countryName(c)) + "</h1>" + photoBtnHtml() + '<p class="meta camhint">' + esc(T().camHint) + "</p>" + '<ul class="list">' + li + "</ul>" };
+    return { after: bindPhotoBtn, html: '<p class="eyebrow">' + esc(T().obsTitle) + "</p><h1>" + esc(countryName(c)) + '</h1><p class="lead">' + esc(T().obsParkPick) + '</p><ul class="list">' + li + "</ul>" +
+      '<p class="lead" style="margin-top:22px">' + esc(T().obsElsewhere) + "</p>" + photoBtnHtml() + '<p class="meta camhint">' + esc(T().camHint) + "</p>" };
   }
   function viewObs(pid) {
     if (!pid) {
       var cs = D.countries.filter(function (c) { return D.parks.some(function (p) { return p.country === c.id; }); });
-      var li = cs.map(function (c) {
-        return '<li><a class="row" href="#/obs/c/' + c.id + '"><span>' + esc(countryName(c)) + '</span><span class="chev">›</span></a></li>';
-      }).join("") + '<li><a class="row" href="#/obs/none"><span>' + esc(T().obsNone) + '</span><span class="chev">›</span></a></li>';
       var nq = obsQ().length;
-      return { after: bindPhotoBtn, html: "<h1>" + esc(T().obsTitle) + '</h1>' + '<p class="lead">' + esc(T().obsAddLead) + "</p>" + photoBtnHtml() + '<p class="meta camhint">' + esc(T().camHint) + "</p>" + '<p class="lead">' + esc(T().obsLead) + "</p>" + (nq ? '<p class="meta"><strong>' + nq + "</strong> " + esc(T().obsPending) + "</p>" : "") + '<ul class="list">' + li + "</ul>" };
+      var cards = cs.map(function (c) { return "<li>" + countryCard(c, "#/obs/c/" + c.id) + "</li>"; }).join("");
+      return { html: "<h1>" + esc(T().obsTitle) + '</h1><p class="lead">' + esc(T().obsWhereLead) + "</p>" +
+        (nq ? '<p class="meta"><strong>' + nq + "</strong> " + esc(T().obsPending) + "</p>" : "") +
+        '<ul class="clist">' + cards + '</ul><ul class="list" style="margin-top:12px"><li><a class="row" href="#/obs/none"><span>' + esc(T().obsNone) + '</span><span class="chev">›</span></a></li></ul>' };
     }
     var park = pid === "none" ? null : findPark(pid);
     if (pid !== "none" && !park) return viewObs(null);
