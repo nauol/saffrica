@@ -79,6 +79,9 @@ Les relais Cloudflare (`worker.js`, `worker-obs.js`) ne sont PAS dans le dépôt
 - Photos gardées pour plus tard : IndexedDB `saffrica`, magasin `pending`.
 
 ## 8. Tests (Node + Playwright)
+**Lancer `node outils/test.js`** depuis la racine (≈ 1 min 30 ; `--rapide` saute les fiches parc par parc ; `--captures DIR` pour choisir le dossier des captures). Il fait tout ce qui suit et finit par « ✓ Aucun problème » ou la liste des problèmes (code de sortie 1). Il vérifie aussi que, si l'appli a changé par rapport à `origin/main`, la version et le cache ont bien été incrémentés. Compléter le script quand on ajoute une fonctionnalité.
+
+Ce que fait le script :
 - Servir le dossier en local, intercepter les relais avec des réponses simulées (`**saffrica-obs**`, `**saffrica-relais**`), forcer `localStorage.saffrica-cgu = "3"` pour sauter l'écran des conditions.
 - Parcourir toutes les pages (pays, parcs, fiches de chaque parc, en fr et en) et vérifier : aucun « undefined », « NaN » ou « [object », aucune erreur JavaScript, toutes les sources citées existent dans `sources`.
 - Regarder les écrans à 390 px de large (captures) pour la mise en page, et les montrer à l'utilisateur quand l'affichage change.
