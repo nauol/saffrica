@@ -107,6 +107,38 @@ for (const p of parcs) {
   }
 }
 for (const pid of ids(D.parkAnimals)) if (!vus.has(pid)) pb(`parkAnimals.${pid} : parc inexistant`);
+
+// Contours des parcs (shape = liste d'anneaux de points [lat, lng])
+for (const p of parcs) {
+  if (!p.shape) { av(`parc ${p.id} sans contour réel (rectangle seulement)`); continue; }
+  if (!Array.isArray(p.shape) || !p.shape.length) { pb(`parc ${p.id} : shape vide`); continue; }
+  const z = p.zone || {};
+  p.shape.forEach((r, i) => {
+    if (!Array.isArray(r) || r.length < 3) pb(`parc ${p.id} : anneau ${i} du contour avec moins de 3 points`);
+    else if (r.some((pt) => !(pt[0] >= z.south && pt[0] <= z.north && pt[1] >= z.west && pt[1] <= z.east))) pb(`parc ${p.id} : le contour dépasse la zone (rectangle)`);
+  });
+}
+// Rattachement d'une observation à un parc : on exécute le vrai code de index.html sur des points connus
+{
+  const src = fs.readFileSync(path.join(RACINE, "index.html"), "utf8");
+  const fn = (nom) => { const i = src.indexOf("  function " + nom + "("); return i < 0 ? "" : src.slice(i, src.indexOf("\n  }\n", i) + 4); };
+  try {
+    const parkOf = new Function("D", fn("inRing") + fn("ringArea") + fn("parkOf") + "\nreturn parkOf;")(D);
+    const POINTS = [
+      ["Skukuza", -24.996, 31.592, "kruger"],
+      ["centre de Pilanesberg", -25.25, 27.1, "pilanesberg"],
+      ["cratère du Ngorongoro", -3.18, 35.58, "ngorongoro"],
+      ["Seronera (Serengeti)", -2.43, 34.82, "serengeti"],
+      ["Keekorok (Maasai Mara)", -1.586, 35.236, "maasai-mara"],
+      ["centre-ville de Nairobi", -1.286, 36.817, null],
+      ["ville d'Arusha", -3.367, 36.683, null],
+    ];
+    for (const [nom, lat, lng, attendu] of POINTS) {
+      const r = parkOf(lat, lng);
+      if (r !== attendu) pb(`observation à ${nom} rattachée à « ${r} » au lieu de « ${attendu} »`);
+    }
+  } catch (e) { pb("impossible de tester parkOf : " + e.message); }
+}
 for (const c of D.countries || []) if (c.available && !parcs.some((p) => p.country === c.id)) pb(`pays ${c.id} disponible mais sans parc`);
 for (const aid of ids(D.ranges)) if (!animaux[aid]) pb(`ranges.${aid} : animal inconnu`);
 

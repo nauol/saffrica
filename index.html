@@ -1582,17 +1582,40 @@ details summary { cursor: pointer; font-weight: 600; padding: 4px 0; }
     try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) {}
     var h = ""; for (var i = 0; i < 24; i++) h += Math.floor(Math.random() * 16).toString(16); return "o" + h;
   }
+  /* Point dans un contour (anneau de points [lat, lng]) : méthode du rayon. */
+  function inRing(lat, lng, r) {
+    var c = false;
+    for (var i = 0, j = r.length - 1; i < r.length; j = i++) {
+      var yi = r[i][0], xi = r[i][1], yj = r[j][0], xj = r[j][1];
+      if ((yi > lat) !== (yj > lat) && lng < (xj - xi) * (lat - yi) / (yj - yi) + xi) c = !c;
+    }
+    return c;
+  }
+  function ringArea(r) {
+    var a = 0;
+    for (var i = 0, j = r.length - 1; i < r.length; j = i++) a += (r[j][1] + r[i][1]) * (r[j][0] - r[i][0]);
+    return Math.abs(a / 2);
+  }
+  /* Observation -> parc : le rectangle « zone » sert de premier tri, puis le vrai contour « shape »
+     (OpenStreetMap) quand il existe. Si plusieurs parcs contiennent le point, le plus petit gagne. */
   function parkOf(lat, lng) {
     var best = null, bestArea = 1e9;
     for (var i = 0; i < D.parks.length; i++) {
-      var z = D.parks[i].zone;
-      if (z && lat >= z.south && lat <= z.north && lng >= z.west && lng <= z.east) {
-        var area = (z.north - z.south) * (z.east - z.west);
-        if (area < bestArea) { best = D.parks[i].id; bestArea = area; }   /* zones qui se chevauchent : la plus petite gagne */
+      var p = D.parks[i], z = p.zone, area;
+      if (!z || lat < z.south || lat > z.north || lng < z.west || lng > z.east) continue;
+      if (p.shape) {
+        var hit = null;
+        for (var k = 0; k < p.shape.length; k++) if (inRing(lat, lng, p.shape[k])) { hit = p.shape[k]; break; }
+        if (!hit) continue;
+        area = 0; for (k = 0; k < p.shape.length; k++) area += ringArea(p.shape[k]);
+      } else {
+        area = (z.north - z.south) * (z.east - z.west);
       }
+      if (area < bestArea) { best = p.id; bestArea = area; }
     }
     return best;
   }
+
   /* envoie ce qui attend ; une observation n'est retirée de la file qu'une fois acceptée par le serveur */
   function obsFlush() {
     if (obsFlushing || !navigator.onLine || !window.fetch) return Promise.resolve();
