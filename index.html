@@ -306,8 +306,13 @@ a.tile.seen::after { content: "✓"; position: absolute; top: 8px; left: 8px; wi
 
 /* --- fenêtres (photo, conditions, choix) --- */
 .recbox { position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,.55); display: flex; align-items: center; justify-content: center; padding: 16px; }
-.recin { background: var(--card); color: var(--ink); border-radius: 24px; padding: 20px; width: min(420px, 100%); max-height: 90vh; overflow: auto; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+.recin { position: relative; background: var(--card); color: var(--ink); border-radius: 24px; padding: 20px; width: min(420px, 100%); max-height: 90vh; overflow: auto; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.35); }
 .recin h2 { margin: 4px 0 6px; font-size: 1.25rem; }
+.recback { position: absolute; top: 12px; left: 12px; z-index: 2; width: 44px; height: 44px; border-radius: 999px; border: 0; display: grid; place-items: center; cursor: pointer;
+  background: color-mix(in srgb, var(--card) 88%, transparent); color: var(--ink); box-shadow: 0 1px 6px rgba(0,0,0,.25); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.recback svg { width: 22px; height: 22px; }
+.recin.hasback > img { margin-top: 0; }
+.recin.hasback.noimg > h2 { padding: 0 44px; }
 .recin p { margin: 0 0 10px; color: var(--muted); }
 .recin video { width: 100%; max-height: 60vh; border-radius: 14px; margin-bottom: 10px; background: #000; }
 .recin img { width: 100%; max-height: 40vh; object-fit: contain; border-radius: 14px; margin-bottom: 10px; background: #000; }
@@ -1002,7 +1007,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
   function recShow(o) {
     var el = recEl();
     el.hidden = false;
-    el.innerHTML = '<div class="recin">' + (o.img ? '<img src="' + esc(o.img) + '" alt="">' : "") +
+    el.innerHTML = '<div class="recin' + (o.back ? " hasback" : "") + (o.img ? "" : " noimg") + '">' + (o.back ? '<button type="button" class="recback" aria-label="' + esc(T().back) + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></button>' : "") + (o.img ? '<img src="' + esc(o.img) + '" alt="">' : "") +
       (o.title ? "<h2>" + esc(o.title) + "</h2>" : "") + (o.text ? "<p>" + esc(o.text) + "</p>" : "") + (o.html || "") +
       (o.bar != null ? '<div class="bar"><span style="width:' + o.bar + '%"></span></div><p class="meta" id="recmb"></p>' : "") +
       '<div class="recbtns"></div></div>';
@@ -1012,6 +1017,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       bt.type = "button"; bt.className = "rbtn" + (x.primary ? " primary" : "") + (x.cls ? " " + x.cls : ""); bt.textContent = x.label; bt.onclick = x.fn;
       box.appendChild(bt);
     });
+    if (o.back) el.querySelector(".recback").onclick = o.back;
     if (o.after) o.after(el);
   }
   function recHide() { var el = document.getElementById("rec"); if (el) el.hidden = true; }
@@ -1067,7 +1073,9 @@ body.is-fiche .footer { padding-bottom: 100px; }
       recShow({ img: shot, title: T().aiWork, buttons: [] });
       return aiAsk(file).then(function (res) {
         REC.lastAi = res;
-        aiShow(res, shot, { ctx: ctx, onFiche: function (id) { location.hash = "#/a/" + id; }, save: saveBtn(file, shot), obs: function (id) { obsStart(id, shot); } });
+        var opts = { ctx: ctx, onFiche: function (id) { location.hash = "#/a/" + id; }, save: saveBtn(file, shot), obs: function (id) { obsStart(id, shot); } };
+        REC.showResult = function () { aiShow(res, shot, opts); };   /* pour la flèche retour des écrans suivants */
+        aiShow(res, shot, opts);
       }, function () { failScreen(file, shot, false); });
     }).catch(function () {
       var bs = [], sb = saveBtn(file, shot); if (sb) bs.push(sb); bs.push(close);
@@ -1375,7 +1383,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
   };
   function viewCountries() {
     var list = D.countries.slice().sort(function (a, b) { return countryName(a).localeCompare(countryName(b), lang); });
-    var avail = list.filter(function (c) { return c.available; }), soon = list.filter(function (c) { return !c.available; });
+    var avail = list.filter(function (c) { return c.available; }), soon = list.filter(function (c) { return !c.available && c.soon; });
     var mc = mineCount();
     var html = '<p class="eyebrow">' + esc(T().homeEyebrow) + "</p><h1 class=\"htitle\">" + esc(T().homeTitle) + "</h1>" +
       '<input class="search" id="q" type="search" placeholder="' + esc(T().searchAll) + '" autocomplete="off">' +
@@ -1733,18 +1741,19 @@ body.is-fiche .footer { padding-bottom: 100px; }
   function obsInQueue(id) { return obsQ().some(function (x) { return x.data.id === id; }); }
   function obsFiche(aid) { return { label: T().seeCard, fn: function () { recHide(); location.hash = "#/a/" + aid; } }; }
   function obsStart(aid, shot) {
-    recShow({ img: shot, title: T().obsQTitle, text: tr(D.animals[aid].name) + " — " + T().obsQText, buttons: [
+    recShow({ img: shot, back: REC.showResult || null, title: T().obsQTitle, text: tr(D.animals[aid].name) + " — " + T().obsQText, buttons: [
       { label: T().obsYesNow, primary: true, fn: function () { obsLocate(aid, shot); } },
       { label: T().obsOlder, fn: function () { obsForm(aid, shot, { coord: "", date: obsToday() }); } },
       { label: T().cancelLbl, cls: "ghost", fn: recHide }] });
   }
   function obsToday() { var d = new Date(); return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
   function obsLocate(aid, shot) {
-    recShow({ img: shot, title: T().obsLocating, buttons: [{ label: T().camClose, fn: recHide }] });
     var done = false;
+    function back() { done = true; obsStart(aid, shot); }
+    recShow({ img: shot, back: back, title: T().obsLocating, buttons: [{ label: T().camClose, fn: function () { done = true; recHide(); } }] });
     function fail() {
       if (done) return; done = true;
-      recShow({ img: shot, title: T().obsLocErr, buttons: [
+      recShow({ img: shot, back: back, title: T().obsLocErr, buttons: [
         { label: T().obsManual, primary: true, fn: function () { obsForm(aid, shot, { coord: "", date: obsToday() }); } },
         { label: T().retry, fn: function () { obsLocate(aid, shot); } },
         { label: T().cancelLbl, cls: "ghost", fn: recHide }] });
@@ -1752,7 +1761,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     if (!navigator.geolocation) { fail(); return; }
     navigator.geolocation.getCurrentPosition(function (pos) {
       if (done) return; done = true;
-      obsConfirm(aid, shot, pos.coords.latitude, pos.coords.longitude, Date.now());
+      obsConfirm(aid, shot, pos.coords.latitude, pos.coords.longitude, Date.now(), function () { obsStart(aid, shot); });
     }, fail, { enableHighAccuracy: true, timeout: 20000, maximumAge: 30000 });
   }
   function obsParseCoord(str) {
@@ -1770,7 +1779,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       '<label class="meta" for="obsDate">' + esc(T().obsDateLbl) + '</label>' +
       '<input class="search" id="obsDate" type="date" max="' + obsToday() + '" value="' + esc(st.date) + '">' +
       (err ? '<p class="meta" style="color:#b42318">' + esc(err) + "</p>" : "") + "</div>";
-    recShow({ img: shot, title: T().obsFormTitle, html: html, buttons: [
+    recShow({ img: shot, back: function () { obsStart(aid, shot); }, title: T().obsFormTitle, html: html, buttons: [
       { label: T().obsContinue, primary: true, fn: function () {
           var c = obsParseCoord(st.coord);
           if (!c) { obsForm(aid, shot, st, T().obsCoordBad); return; }
@@ -1778,7 +1787,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
           if (!dm) { obsForm(aid, shot, st, T().obsDateBad); return; }
           var ts = st.date === obsToday() ? Date.now() : new Date(+dm[1], +dm[2] - 1, +dm[3], 12, 0, 0).getTime();
           if (!(ts > 1577836800000) || ts > Date.now() + 3600000) { obsForm(aid, shot, st, T().obsDateBad); return; }
-          obsConfirm(aid, shot, c.lat, c.lng, ts);
+          obsConfirm(aid, shot, c.lat, c.lng, ts, function () { obsForm(aid, shot, st); });
         } },
       { label: T().cancelLbl, cls: "ghost", fn: recHide }],
       after: function (el) {
@@ -1792,9 +1801,8 @@ body.is-fiche .footer { padding-bottom: 100px; }
   }
   function obsPick(aid, shot, st, done) {
     var pt = null;
-    recShow({ title: T().obsPickTitle, text: T().obsPickText, html: '<div class="obsmap" id="pickMap" style="height:42vh;min-height:240px"></div><p class="meta" id="pickMsg">' + esc(T().obsLoading) + "</p>", buttons: [
-      { label: T().obsPickOk, primary: true, fn: function () { if (pt) done(pt.lat, pt.lng); } },
-      { label: T().camClose, fn: function () { obsForm(aid, shot, st); } }],
+    recShow({ back: function () { obsForm(aid, shot, st); }, title: T().obsPickTitle, text: T().obsPickText, html: '<div class="obsmap" id="pickMap" style="height:42vh;min-height:240px"></div><p class="meta" id="pickMsg">' + esc(T().obsLoading) + "</p>", buttons: [
+      { label: T().obsPickOk, primary: true, fn: function () { if (pt) done(pt.lat, pt.lng); } }],
       after: function (el) {
         var msg = el.querySelector("#pickMsg");
         loadLeaflet().then(function () {
@@ -1811,10 +1819,10 @@ body.is-fiche .footer { padding-bottom: 100px; }
         }).catch(function () { msg.textContent = T().obsNeedNet; });
       } });
   }
-  function obsConfirm(aid, shot, lat, lng, ts) {
+  function obsConfirm(aid, shot, lat, lng, ts, back) {
     var pk = parkOf(lat, lng), lbl = pk ? T().obsInPark + tr(findPark(pk).name) : T().obsNoPark;
     var txt = lat.toFixed(5) + ", " + lng.toFixed(5) + " · " + obsDate(ts) + " — " + lbl + " " + T().obsConfirmText;
-    recShow({ img: shot, title: T().obsConfirmTitle + " " + tr(D.animals[aid].name), text: txt, buttons: [
+    recShow({ img: shot, back: back || null, title: T().obsConfirmTitle + " " + tr(D.animals[aid].name), text: txt, buttons: [
       { label: T().obsSave, primary: true, fn: function () { obsSubmit(aid, shot, lat, lng, ts, pk); } },
       { label: T().cancelLbl, cls: "ghost", fn: recHide }] });
   }

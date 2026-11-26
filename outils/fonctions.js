@@ -73,10 +73,20 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
     await page.fill("#q", "kenya"); await W();
     exige(await nb("#items > li") === 1, "le Kenya devrait être le seul pays affiché");
   });
+  await verif("accueil : « bientôt » = principaux + 2e cercle + Madagascar seulement", async () => {
+    await go("#/");
+    const attendus = D.countries.filter((c) => !c.available && c.soon).length;
+    exige(await page.$$eval("#soonList > li", (l) => l.length) === attendus, "nombre de pays « bientôt » faux");
+    for (const [nom, la] of [["botswana", true], ["madagascar", true], ["malawi", true], ["maroc", false], ["mali", false]]) {
+      await page.fill("#q", nom); await W(150);
+      exige((await nb("#soonList > li")) === (la ? 1 : 0), `${nom} ${la ? "absent de" : "présent dans"} « bientôt »`);
+    }
+    await page.fill("#q", ""); await W();
+  });
   await verif("accueil : recherche d'un pays « bientôt » (ouvre la liste repliée)", async () => {
-    await page.fill("#q", "maroc"); await W();
+    await page.fill("#q", "botswana"); await W();
     exige(await page.$eval("#soonBox", (d) => d.open && !d.hidden), "la liste « Autres pays » ne s'ouvre pas");
-    exige(await nb("#soonList > li") === 1, "Maroc introuvable dans « Autres pays »");
+    exige(await nb("#soonList > li") === 1, "Botswana introuvable dans « Autres pays »");
     await page.fill("#q", ""); await W();
     exige(await nb("#items > li") === D.countries.filter((c) => c.available).length, "effacer la recherche ne réaffiche pas tous les pays");
   });
@@ -218,8 +228,30 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
     await clicBouton("Noter l’observation"); await clicBouton("Non, photo plus ancienne");
     await page.click("#obsMapBtn"); await W(400);
     exige(await nb("#pickMap") === 1, "« Choisir sur la carte » n'ouvre pas la carte");
-    await page.click(".recbtns .rbtn:not(.primary)"); await W();
-    exige(await nb("#obsCoord") === 1, "fermer la carte ne revient pas à « Où et quand »");
+    await page.click(".recback"); await W();
+    exige(await nb("#obsCoord") === 1, "la flèche retour de la carte ne revient pas à « Où et quand »");
+  });
+  await verif("photo : flèches retour à chaque étape (sans perdre la photo ni l'animal)", async () => {
+    relais = { result: { animal: true, sure: true, sci: "Panthera leo", name_fr: "Lion", name_en: "Lion" } };
+    await photoDepuis("#/");
+    exige(await nb("#rec .recback") === 0, "le résultat de l'IA ne devrait pas avoir de flèche retour");
+    await clicBouton("Noter l’observation");
+    await page.click("#rec .recback"); await W();
+    exige(/Lion/.test(await txt("#rec h2")) && (await boutons()).includes("Noter l’observation"), "« Noter où ? » ← ne revient pas au résultat");
+    await clicBouton("Noter l’observation"); await clicBouton("Non, photo plus ancienne");
+    await page.click("#rec .recback"); await W();
+    exige(/Noter où/.test(await txt("#rec h2")), "« Où et quand » ← ne revient pas à « Noter où ? »");
+    await clicBouton("Non, photo plus ancienne");
+    await page.fill("#obsCoord", "-24.99, 31.59"); await clicBouton("Continuer");
+    exige(/Enregistrer/.test(await txt("#rec h2")), "pas d'écran « Enregistrer »");
+    await page.click("#rec .recback"); await W();
+    exige(await nb("#obsCoord") === 1 && (await page.inputValue("#obsCoord")) === "-24.99, 31.59", "« Enregistrer » ← ne revient pas à « Où et quand » avec les coordonnées");
+    await clicBouton("Annuler");
+    await photoDepuis("#/");
+    await clicBouton("Noter l’observation"); await clicBouton("Oui, je suis sur place"); await W(800);
+    exige(/Enregistrer/.test(await txt("#rec h2")), "pas d'écran « Enregistrer » après la position");
+    await page.click("#rec .recback"); await W();
+    exige(/Noter où/.test(await txt("#rec h2")), "« Enregistrer » (sur place) ← ne revient pas à « Noter où ? »");
   });
   await verif("photo : coordonnées fausses → message d'erreur", async () => {
     await photoDepuis("#/obs");

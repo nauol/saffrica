@@ -294,7 +294,7 @@ async function navigateur() {
     else {
       await page.click("#obsMapBtn"); await page.waitForTimeout(400);
       if (!(await page.$("#pickMap"))) pb("parcours photo : « Choisir sur la carte » n'ouvre pas la carte");
-      else { await page.click(".recbtns .rbtn:not(.primary)"); await page.waitForTimeout(300); if (!(await page.$("#obsCoord"))) pb("parcours photo : fermer la carte ne revient pas à « Où et quand »"); }
+      else { await page.click(".recback"); await page.waitForTimeout(300); if (!(await page.$("#obsCoord"))) pb("parcours photo : la flèche retour de la carte ne revient pas à « Où et quand »"); }
     }
     await page.fill("#obsCoord", "-24.99, 31.59"); await page.click(".recbtns .rbtn.primary");
     await etape("enregistrer ?", ["Enregistrer"], ["Voir la fiche"]);

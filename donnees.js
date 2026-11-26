@@ -5,54 +5,54 @@
  */
 window.APP_DATA = {
   meta: {
-    version: "3.0.2",
+    version: "3.1.0",
     lastChecked: "2026-11-15",
     nextUpdate: "2026-12-01"
   },
 
   countries: [
     { id: "dz", en: "Algeria", fr: "Algérie" },
-    { id: "ao", en: "Angola", fr: "Angola" },
-    { id: "bj", en: "Benin", fr: "Bénin" },
-    { id: "bw", en: "Botswana", fr: "Botswana" },
+    { id: "ao", en: "Angola", fr: "Angola", soon: true },
+    { id: "bj", en: "Benin", fr: "Bénin", soon: true },
+    { id: "bw", en: "Botswana", fr: "Botswana", soon: true },
     { id: "bf", en: "Burkina Faso", fr: "Burkina Faso" },
     { id: "bi", en: "Burundi", fr: "Burundi" },
     { id: "cv", en: "Cabo Verde", fr: "Cap-Vert" },
     { id: "cm", en: "Cameroon", fr: "Cameroun" },
     { id: "cf", en: "Central African Republic", fr: "République centrafricaine" },
-    { id: "td", en: "Chad", fr: "Tchad" },
+    { id: "td", en: "Chad", fr: "Tchad", soon: true },
     { id: "km", en: "Comoros", fr: "Comores" },
-    { id: "cg", en: "Congo (Republic of the)", fr: "Congo (Brazzaville)" },
-    { id: "cd", en: "DR Congo", fr: "RD Congo" },
-    { id: "ci", en: "Côte d’Ivoire", fr: "Côte d’Ivoire" },
+    { id: "cg", en: "Congo (Republic of the)", fr: "Congo (Brazzaville)", soon: true },
+    { id: "cd", en: "DR Congo", fr: "RD Congo", soon: true },
+    { id: "ci", en: "Côte d’Ivoire", fr: "Côte d’Ivoire", soon: true },
     { id: "dj", en: "Djibouti", fr: "Djibouti" },
     { id: "eg", en: "Egypt", fr: "Égypte" },
     { id: "gq", en: "Equatorial Guinea", fr: "Guinée équatoriale" },
     { id: "er", en: "Eritrea", fr: "Érythrée" },
-    { id: "sz", en: "Eswatini", fr: "Eswatini" },
-    { id: "et", en: "Ethiopia", fr: "Éthiopie" },
-    { id: "ga", en: "Gabon", fr: "Gabon" },
+    { id: "sz", en: "Eswatini", fr: "Eswatini", soon: true },
+    { id: "et", en: "Ethiopia", fr: "Éthiopie", soon: true },
+    { id: "ga", en: "Gabon", fr: "Gabon", soon: true },
     { id: "gm", en: "Gambia", fr: "Gambie" },
-    { id: "gh", en: "Ghana", fr: "Ghana" },
+    { id: "gh", en: "Ghana", fr: "Ghana", soon: true },
     { id: "gn", en: "Guinea", fr: "Guinée" },
     { id: "gw", en: "Guinea-Bissau", fr: "Guinée-Bissau" },
     { id: "ke", en: "Kenya", fr: "Kenya", available: true, cover: "giraffe", outline: { viewBox: "0 0 84.1 100.0", d: "M0.0 47.5L0.8 50.0L0.2 53.4L0.2 59.1L1.9 59.4L39.6 80.7L40.0 83.4L38.6 84.7L38.9 85.6L40.2 85.7L40.7 87.2L55.8 97.8L57.5 99.8L58.5 100.0L59.9 97.8L60.3 97.8L67.6 84.0L68.4 81.0L78.2 72.3L82.1 67.5L80.4 66.0L80.4 65.4L74.5 57.3L74.4 18.8L77.8 15.5L84.1 6.7L83.3 7.1L82.1 6.6L76.3 7.1L72.0 3.5L62.7 7.8L61.7 10.0L59.2 12.9L58.7 12.2L55.6 12.0L54.4 11.4L52.5 11.6L50.5 11.0L50.2 10.5L49.1 10.7L48.7 10.2L47.7 10.7L44.4 10.7L33.0 2.6L30.9 1.8L22.4 1.8L21.3 0.0L5.0 0.1L0.8 4.1L1.6 5.0L1.6 6.4L2.4 6.9L1.9 8.0L3.2 7.8L3.3 8.3L2.6 8.5L2.7 9.0L3.5 8.8L4.2 9.6L4.8 9.3L5.8 10.0L5.7 11.6L5.0 11.9L5.7 15.1L6.7 15.6L7.2 17.8L8.7 18.6L9.4 20.6L10.1 21.5L10.3 21.3L11.0 22.6L10.6 23.3L11.5 27.9L11.4 31.1L9.3 33.7L9.4 35.6L8.0 35.9L7.0 36.5L7.0 37.0L6.4 37.0L5.7 39.5L4.3 40.6L3.9 41.8L2.4 42.4L2.0 44.9L0.0 47.5Z", proj: [0.999997, 33.9096, -4.62, 10.5131], src: ["s719"] } },
     { id: "ls", en: "Lesotho", fr: "Lesotho" },
     { id: "lr", en: "Liberia", fr: "Libéria" },
     { id: "ly", en: "Libya", fr: "Libye" },
-    { id: "mg", en: "Madagascar", fr: "Madagascar" },
-    { id: "mw", en: "Malawi", fr: "Malawi" },
+    { id: "mg", en: "Madagascar", fr: "Madagascar", soon: true },
+    { id: "mw", en: "Malawi", fr: "Malawi", soon: true },
     { id: "ml", en: "Mali", fr: "Mali" },
     { id: "mr", en: "Mauritania", fr: "Mauritanie" },
     { id: "mu", en: "Mauritius", fr: "Maurice" },
     { id: "ma", en: "Morocco", fr: "Maroc" },
-    { id: "mz", en: "Mozambique", fr: "Mozambique" },
-    { id: "na", en: "Namibia", fr: "Namibie" },
+    { id: "mz", en: "Mozambique", fr: "Mozambique", soon: true },
+    { id: "na", en: "Namibia", fr: "Namibie", soon: true },
     { id: "ne", en: "Niger", fr: "Niger" },
     { id: "ng", en: "Nigeria", fr: "Nigéria" },
-    { id: "rw", en: "Rwanda", fr: "Rwanda" },
+    { id: "rw", en: "Rwanda", fr: "Rwanda", soon: true },
     { id: "st", en: "São Tomé and Príncipe", fr: "Sao Tomé-et-Principe" },
-    { id: "sn", en: "Senegal", fr: "Sénégal" },
+    { id: "sn", en: "Senegal", fr: "Sénégal", soon: true },
     { id: "sc", en: "Seychelles", fr: "Seychelles" },
     { id: "sl", en: "Sierra Leone", fr: "Sierra Leone" },
     { id: "so", en: "Somalia", fr: "Somalie" },
@@ -62,9 +62,9 @@ window.APP_DATA = {
     { id: "tz", en: "Tanzania", fr: "Tanzanie", available: true, cover: "wildebeest", outline: { viewBox: "0 0 100.0 95.7", d: "M0.0 33.0L0.3 35.6L2.7 41.8L1.5 44.5L2.0 47.2L3.6 50.1L6.7 52.2L8.7 54.6L10.1 58.8L12.1 62.0L13.0 64.7L14.6 67.1L15.7 67.9L18.1 67.5L19.8 68.6L19.9 69.8L20.8 70.4L21.9 70.1L23.2 70.6L23.0 71.3L23.5 71.9L24.2 71.6L25.0 71.7L25.7 72.4L27.4 72.2L28.4 73.4L30.3 73.7L31.8 74.7L32.4 74.4L33.7 75.5L35.3 75.5L36.3 76.6L39.2 76.4L40.7 77.6L40.8 76.1L41.6 75.6L44.1 77.9L46.0 80.6L45.8 81.1L46.4 82.8L46.3 84.7L47.3 86.8L47.2 88.4L46.7 89.3L46.9 90.0L47.9 90.8L48.2 91.8L49.4 92.5L49.7 94.0L55.8 93.9L57.5 92.6L58.4 92.7L59.4 93.7L59.9 93.5L60.2 94.0L60.5 93.8L60.8 95.2L63.2 95.0L63.4 95.7L63.9 95.1L64.4 95.5L65.7 94.7L66.1 93.8L66.5 94.2L68.0 94.1L71.2 95.1L71.6 94.6L74.4 93.8L75.0 91.7L75.9 91.2L78.4 91.3L80.7 92.7L84.3 90.5L86.5 90.2L87.5 90.5L90.0 88.8L94.2 87.2L96.2 85.3L97.3 85.1L100.0 82.9L99.1 81.4L94.1 77.4L92.7 71.5L92.4 67.6L95.2 59.4L95.3 52.2L92.4 47.4L94.8 36.7L94.9 34.7L94.4 33.6L93.4 32.9L90.7 32.8L89.6 34.7L88.8 34.6L87.3 32.8L74.6 23.8L74.3 22.7L73.1 22.5L72.9 21.8L74.0 20.7L73.7 18.4L41.9 0.3L12.7 0.0L11.7 0.7L10.1 0.7L10.1 1.5L11.0 3.1L12.5 4.1L13.4 5.9L13.1 8.5L13.9 9.7L13.2 12.2L10.7 12.7L9.6 14.9L10.6 15.1L9.8 15.6L9.5 16.7L10.4 17.5L11.0 16.9L11.8 17.8L13.4 17.7L13.0 18.4L13.4 20.1L11.8 20.7L11.5 21.1L11.8 21.7L9.9 22.9L9.3 24.2L9.6 24.9L8.8 24.9L7.9 27.1L6.6 28.3L6.3 29.2L4.8 30.2L4.3 30.0L3.8 30.9L1.0 30.8L0.0 33.0Z", proj: [0.993822, 29.1458, 0.9855, 8.8799], src: ["s719"] } },
     { id: "tg", en: "Togo", fr: "Togo" },
     { id: "tn", en: "Tunisia", fr: "Tunisie" },
-    { id: "ug", en: "Uganda", fr: "Ouganda" },
-    { id: "zm", en: "Zambia", fr: "Zambie" },
-    { id: "zw", en: "Zimbabwe", fr: "Zimbabwe" }
+    { id: "ug", en: "Uganda", fr: "Ouganda", soon: true },
+    { id: "zm", en: "Zambia", fr: "Zambie", soon: true },
+    { id: "zw", en: "Zimbabwe", fr: "Zimbabwe", soon: true }
   ],
 
   status: {
@@ -8378,6 +8378,15 @@ window.APP_DATA = {
 
   /* News and update log, newest first. Shown on the "What’s new" page. */
   updates: [
+    {
+      date: "2026-11-26",
+      title: { en: "Back arrow and coming-soon countries", fr: "Flèche retour et pays à venir" },
+      text: {
+        en: "When you note a sighting after a photo, a back arrow (top left) takes you to the previous step without losing the photo or the animal. The “Other countries · coming soon” list now shows only the countries planned for Saffrica (20, including Madagascar).",
+        fr: "Quand vous notez une observation après une photo, une flèche retour (en haut à gauche) ramène à l’étape précédente sans perdre la photo ni l’animal. La liste « Autres pays · bientôt » ne montre plus que les pays prévus dans Saffrica (20, dont Madagascar)."
+      },
+      src: []
+    },
     {
       date: "2026-11-26",
       title: { en: "Fix: pick the spot on the map", fr: "Correction : choisir l’endroit sur la carte" },
