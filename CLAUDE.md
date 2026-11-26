@@ -12,7 +12,7 @@ Saffrica est une application web mobile (PWA), **bilingue français/anglais**, p
 
 - Site : https://nauol.github.io/saffrica (GitHub Pages, publié depuis la branche `main`)
 - Dépôt : github.com/nauol/saffrica
-- Chaque chiffre affiché a une **source et une date**. Quand une info manque : « Non trouvé dans les sources utilisées ».
+- Chaque chiffre affiché a une **source et une date**. Quand une info manque : « Non trouvé dans les sources utilisées ». Badges de confiance (`UI.conf`) : Chiffre officiel / Estimation / Scientifique / Source non officielle / Aucun chiffre récent (le test vérifie qu'aucun ne manque).
 - Fiches et recherche marchent **hors ligne**.
 - **Zéro coût mensuel** : GitHub Pages, Cloudflare gratuit, Gemini gratuit. Pas de carte bancaire. Ne rien proposer de payant.
 
@@ -72,7 +72,7 @@ Les relais Cloudflare (`worker.js`, `worker-obs.js`) ne sont PAS dans le dépôt
 
 ## 7. Données (`window.APP_DATA`)
 - `meta` {version, lastChecked, nextUpdate}
-- `countries[]` : `{ id, en, fr, available, soon?, cover?, outline? }` — disponibles : `za`, `tz`, `ke` (avec `cover` et `outline`, voir §5).
+- `countries[]` : `{ id, en, fr, available, soon?, cover?, outline? }` — disponibles : `za`, `tz`, `ke`, `na` (avec `cover` et `outline`, voir §5 ; couverture Namibie = `gemsbok`).
 - `status`, `gauge` : statuts UICN (LC, NT, VU, EN, CR, + VAR pour les pages de groupe, NE).
 - `sources` : `s1` … `s719` (des numéros manquent : les sources jamais citées ont été retirées en 2.10.2), chacune `{title, publisher, date:{en,fr}, url}`. Toujours ajouter les nouvelles sources à la suite (numéro max + 1).
 - `parks[]` : `{id, country, name{en,fr}, region, facts[{label,value}], about, bestTime, sources[], map{lat,lng,zoom}, zone{south,north,west,east}, shape?, shapeSrc?, animals[ids]}`.
@@ -82,10 +82,11 @@ Les relais Cloudflare (`worker.js`, `worker-obs.js`) ne sont PAS dans le dépôt
 - `ranges[id]` : pays où vit l'animal.
 - `updates[]` : journal des nouveautés (le plus récent en premier).
 
-### Parcs actuels (23)
+### Parcs actuels (30)
 - **Afrique du Sud (7)** : kruger, addo, pilanesberg, hluhluwe-imfolozi, kgalagadi, marakele, mapungubwe.
 - **Tanzanie (8)** : serengeti, ngorongoro, tarangire, lake-manyara, ruaha, nyerere, mikumi, katavi (chiffres revérifiés une 2e fois).
 - **Kenya (8)** : maasai-mara, amboseli, tsavo-east, tsavo-west, samburu, lake-nakuru, nairobi, meru.
+- **Namibie (7, version 3.5.0)** : etosha, namib-naukluft, waterberg, khaudum, bwabwata, mudumu, nkasa-rupara. Les rhinocéros n'ont **pas de chiffre par parc** (la Namibie ne les publie pas, contre le braconnage) : seulement les totaux nationaux, et des « où le voir » génériques. Babouin chacma (`baboon`) présent ici (forme à pieds gris, *griseipes*). Exclus (pas de fiche) : zèbre de montagne de Hartmann, tsessebe, sitatunga, puku, bubale, otarie ; varan des savanes retiré à Waterberg (c'est le varan à gorge blanche). Babouin, hippopotame, crocodile, lechwe : comptages en bateau 2021–2024 du nord-est (NACSO/MEFT).
 - Règle « uniquement les animaux déjà dans l'appli ». Exclus volontairement en Afrique de l'Est : babouin chacma, porc-épic du Cap, cobe des roseaux du Sud, autruche de Somalie, oryx beisa (espèces différentes de celles des fiches). La page de groupe **« Babouins »** est dans 15 parcs du Kenya et de Tanzanie (pas Katavi : aucune source).
 
 ## 8. Services en ligne
@@ -119,16 +120,16 @@ Ce que fait le script :
 L'utilisateur ajoute les pays lui-même, à son rythme (pas de tâche automatique).
 
 ## 11. Liste des pays (décidée le 26 nov. 2026)
-- **10 pays principaux** : Afrique du Sud ✅, Kenya ✅, Tanzanie ✅, Botswana, Namibie, Zambie, Zimbabwe, Ouganda, Rwanda, et **Mozambique ou Malawi** (10e place à choisir).
+- **10 pays principaux** : Afrique du Sud ✅, Kenya ✅, Tanzanie ✅, Namibie ✅, Botswana, Zambie, Zimbabwe, Ouganda, Rwanda, et **Mozambique ou Malawi** (10e place à choisir).
 - **Deuxième cercle** (plus tard, après vérification des conseils aux voyageurs) : Malawi, Eswatini, Éthiopie, Angola, Gabon, Congo (Odzala), Tchad (Zakouma), RDC (Virunga), Bénin (Pendjari), Sénégal (Niokolo-Koba), Ghana (Mole), Côte d'Ivoire (Comoé).
 - **À enlever** : Maghreb, Sahel et Sahara, petits pays et îles sans vrai safari. Madagascar : cas à part.
-- **Fait en 3.1.0** : « Autres pays · bientôt » n'affiche que les pays `soon: true` dans `countries[]` = les 6 principaux restants + Mozambique + le deuxième cercle (dont Malawi) + **Madagascar** (20 pays). Les autres restent dans les données (pour « Où vit-il » sur les fiches) mais n'apparaissent plus sur l'accueil. 10e pays principal (Mozambique ou Malawi) : encore à choisir.
+- **Fait en 3.1.0** : « Autres pays · bientôt » n'affiche que les pays `soon: true` dans `countries[]` = les 6 principaux restants + Mozambique + le deuxième cercle (dont Malawi) + **Madagascar** (20 pays ; 19 depuis la 3.5.0, la Namibie étant disponible). Les autres restent dans les données (pour « Où vit-il » sur les fiches) mais n'apparaissent plus sur l'accueil. 10e pays principal (Mozambique ou Malawi) : encore à choisir.
 
 ## 12. Vérification mensuelle automatique
-Une tâche planifiée « Vérification mensuelle saffrica » tourne le 1er de chaque mois (8 h 59, heure de Zurich). Elle lit le site publié, vérifie **un seul pays par mois** (roulement : pays ayant des parcs, triés par id ; index = (année × 12 + mois) mod nombre de pays → déc. 2026 Kenya, janv. 2027 Tanzanie, févr. 2027 Afrique du Sud…), produit un rapport et un e-mail. Elle ne modifie rien. Quand l'utilisateur demande d'appliquer un rapport : intégrer les corrections sourcées, mettre à jour `meta.lastChecked` / `nextUpdate`, version, nouveauté, cache.
+Une tâche planifiée « Vérification mensuelle saffrica » tourne le 1er de chaque mois (8 h 59, heure de Zurich). Elle lit le site publié, vérifie **un seul pays par mois** (roulement : pays ayant des parcs, triés par id ; index = (année × 12 + mois) mod nombre de pays → avec 4 pays (ke, na, tz, za) : déc. 2026 Kenya, janv. 2027 Namibie, févr. 2027 Tanzanie, mars 2027 Afrique du Sud…), produit un rapport et un e-mail. Elle ne modifie rien. Quand l'utilisateur demande d'appliquer un rapport : intégrer les corrections sourcées, mettre à jour `meta.lastChecked` / `nextUpdate`, version, nouveauté, cache.
 
 ## 13. À faire plus tard
-1. ~~Limites des parcs~~ : fait en 2.10.2 (contours OSM pour 22 parcs). Restent : Mapungubwe (trouver un contour complet), Tsavo Ouest (contour OSM ~7 000 km² pour 9 065 officiels). Pour un nouveau parc : Nominatim `search?format=jsonv2&polygon_geojson=1&polygon_threshold=0.002`, vérifier que la surface correspond à la surface officielle, puis ajouter `shape` + `zone` englobante. Contours dessinés sur les cartes depuis la 3.3.0.
+1. ~~Limites des parcs~~ : fait en 2.10.2 (contours OSM pour 22 parcs). Restent : Mapungubwe (trouver un contour complet), Waterberg (contour OSM ~616 km² pour 405 officiels : rectangle seulement), Tsavo Ouest (contour OSM ~7 000 km² pour 9 065 officiels). Pour un nouveau parc : Nominatim `search?format=jsonv2&polygon_geojson=1&polygon_threshold=0.002`, vérifier que la surface correspond à la surface officielle, puis ajouter `shape` + `zone` englobante. Contours dessinés sur les cartes depuis la 3.3.0.
 2. Prochaine mise à jour des données le **1er décembre 2026** (revérifier statuts UICN et chiffres ; vautours oricou et Gyps en particulier).
 3. Sources non relues : environ 15 au Serengeti et 14 à Ruaha. Recensement national tanzanien 2024/2025 : chiffres par parc pas encore publiés.
 **⚠ Avant la sortie publique — à RAPPELER à l'utilisateur :** supprimer les **observations de test** dans la base Cloudflare D1 (au moins 2 lions à Wellington, Nouvelle-Zélande, lat ≈ −41.29, lng ≈ 174.78 ; vérifier aussi les autres tests). L'appli ne sait pas supprimer : c'est à faire dans Cloudflare → D1 → `observations` (`DELETE FROM observations WHERE …`).

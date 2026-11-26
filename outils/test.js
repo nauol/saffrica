@@ -131,6 +131,9 @@ for (const p of parcs) {
       ["Seronera (Serengeti)", -2.43, 34.82, "serengeti"],
       ["Keekorok (Maasai Mara)", -1.586, 35.236, "maasai-mara"],
       ["centre-ville de Nairobi", -1.286, 36.817, null],
+      ["Okaukuejo (Etosha)", -19.18, 15.92, "etosha"],
+      ["Sossusvlei (Namib-Naukluft)", -24.73, 15.29, "namib-naukluft"],
+      ["ville de Windhoek", -22.56, 17.08, null],
       ["ville d'Arusha", -3.367, 36.683, null],
     ];
     for (const [nom, lat, lng, attendu] of POINTS) {
@@ -140,6 +143,15 @@ for (const p of parcs) {
   } catch (e) { pb("impossible de tester parkOf : " + e.message); }
 }
 for (const c of D.countries || []) if (c.available && !parcs.some((p) => p.country === c.id)) pb(`pays ${c.id} disponible mais sans parc`);
+// Chaque niveau de confiance utilisé a son libellé dans les deux langues (sinon le badge s'affiche vide)
+{
+  const html = fs.readFileSync(path.join(RACINE, "index.html"), "utf8");
+  const blocs = [...html.matchAll(/\n      conf: \{([^}]*)\}/g)].map((m) => m[1]);
+  if (blocs.length !== 2) pb(`libellés conf : ${blocs.length} bloc(s) trouvés au lieu de 2`);
+  const utilises = new Set(); for (const pa of Object.values(D.parkAnimals || {})) for (const x of Object.values(pa)) utilises.add(x.conf);
+  for (const c of utilises) blocs.forEach((b, i) => { if (!new RegExp("\\b" + c + ":").test(b)) pb(`libellé conf « ${c} » manquant (${i ? "fr" : "en"})`); });
+  if (/SANParks\)",/.test(html) && D.countries.filter((c) => c.available).length > 1) pb("libellé « Chiffre officiel (SANParks) » affiché pour tous les pays");
+}
 for (const aid of ids(D.ranges)) if (!animaux[aid]) pb(`ranges.${aid} : animal inconnu`);
 
 // Textes bilingues vides n'importe où
