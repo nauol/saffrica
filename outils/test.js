@@ -305,6 +305,11 @@ async function navigateur() {
 
   for (const e of [...new Set(erreurs)]) pb("erreur JavaScript, " + e);
 
+  /* ---------- Fonctionnalités, une par une (outils/fonctions.js) ---------- */
+  titre("Fonctionnalités");
+  try { await require("./fonctions.js")({ browser, base, D, I, pb, log: console.log }); }
+  catch (e) { pb("test des fonctionnalités interrompu : " + e.message); }
+
   /* ---------- 4. Captures ---------- */
   titre("Captures (390 px)");
   fs.mkdirSync(CAPTURES, { recursive: true });

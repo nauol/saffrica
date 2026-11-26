@@ -29,7 +29,8 @@ L'appli tient en 8 fichiers à la racine (ci-dessous). Il n'y a **pas de règle 
 | `icone.png`, `icone-192.png` | icônes | |
 | `inter.woff2` | police Inter (latin, graisses 400–800, licence OFL), servie localement pour marcher hors ligne | 48 Ko |
 | `CLAUDE.md` | ce fichier (pas mis en cache par `sw.js`, pas utilisé par l'appli) | |
-| `outils/test.js` | test complet (voir §8) | |
+| `outils/test.js` | test complet (voir §9) | |
+| `outils/fonctions.js` | test des fonctionnalités une par une (appelé par `test.js`) | |
 | `.claude/skills/` | skills de design pour Claude Code : `web-design-guidelines` (Vercel, règles de qualité UI) et 12 styles `style-*` (awesome-design-md). taste-skill volontairement non installé (fait pour des sites vitrines, 40 Mo, script automatique) | |
 
 Les relais Cloudflare (`worker.js`, `worker-obs.js`) ne sont PAS dans le dépôt : l'utilisateur les colle lui-même dans Cloudflare. Si on les modifie, donner le code complet à coller.
@@ -92,6 +93,8 @@ Les relais Cloudflare (`worker.js`, `worker-obs.js`) ne sont PAS dans le dépôt
 
 ## 9. Tests (Node + Playwright)
 **Lancer `node outils/test.js`** depuis la racine (≈ 1 min 30 ; `--rapide` saute les fiches parc par parc ; `--captures DIR` pour choisir le dossier des captures). Il fait tout ce qui suit et finit par « ✓ Aucun problème » ou la liste des problèmes (code de sortie 1). Il vérifie aussi que, si l'appli a changé par rapport à `origin/main`, la version et le cache ont bien été incrémentés. Compléter le script quand on ajoute une fonctionnalité.
+
+**Règle (demandée par l'utilisateur après la 3.0.1, où « Choisir sur la carte » avait été cassé par erreur) : avant chaque publication, `node outils/test.js` complet doit finir par « ✓ Aucun problème ».** Il inclut `outils/fonctions.js`, qui rejoue ~30 fonctionnalités dans le navigateur : recherche (animal, parc, pays, pays « bientôt »), cartes pays (frontière + points), page pays, page parc (grille, recherche, sources, légende), fiche (vu, zoom, dernière observation, chiffres, sources, pays), retour, Mes animaux (cocher, titre, filtres), menu, langue, Nouveautés, conditions, Observations (pays, parcs, carte, filtre), tous les résultats photo (reconnu, hésitation, inconnu, aucun animal, panne, hors ligne), observation sur place (GPS → bon parc), photo ancienne (carte, coordonnées fausses), envoi hors ligne puis au retour du réseau, page À vérifier. **Quand on modifie un écran, mettre à jour ou ajouter la vérification correspondante ; quand on remplace un bloc de code, comparer la liste des fonctions avant/après** (`grep -oE 'function [A-Za-z0-9_]+'`).
 
 Ce que fait le script :
 - Servir le dossier en local, intercepter les relais avec des réponses simulées (`**saffrica-obs**`, `**saffrica-relais**`), forcer `localStorage.saffrica-cgu = "3"` pour sauter l'écran des conditions.
