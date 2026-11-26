@@ -17,7 +17,7 @@ Saffrica est une application web mobile (PWA), **bilingue français/anglais**, p
 - **Zéro coût mensuel** : GitHub Pages, Cloudflare gratuit, Gemini gratuit. Pas de carte bancaire. Ne rien proposer de payant.
 
 ## 2. Les fichiers
-Le dépôt contient **les 7 fichiers de l'appli + ce `CLAUDE.md`**, tous à la racine, sans sous-dossier. Ne pas en ajouter d'autres sans l'accord de l'utilisateur (scripts de test, données de travail… → dossier temporaire, hors du dépôt).
+L'appli tient en 7 fichiers à la racine (ci-dessous). Il n'y a **pas de règle figée** sur le nombre de fichiers : on peut ajouter ce qui est utile (scripts de test, outils…). Tout ce qui est dans le dépôt est public sur le site : rien de secret. Si un nouveau fichier doit marcher hors ligne, l'ajouter à `FICHIERS` dans `sw.js`.
 
 | Fichier | Rôle | Taille |
 |---|---|---|
@@ -41,7 +41,7 @@ Les relais Cloudflare (`worker.js`, `worker-obs.js`) ne sont PAS dans le dépôt
 - Travailler sur une **branche de travail**, jamais directement sur `main`.
 - **Publier sur `main` (= mettre le site à jour) seulement quand l'utilisateur le demande** (« publie », « mets en ligne »).
 - Un commit normal par version, message « Saffrica X.Y.Z : résumé ». ~~Plus de commit « Vide le dépôt avant la version X »~~ : Git enregistre déjà les différences, l'historique reste lisible et on peut revenir en arrière facilement.
-- Avant de publier, vérifier `git ls-files` : exactement les 8 fichiers du §2.
+- Avant de publier, vérifier `git ls-files` : aucun fichier de travail oublié (données temporaires, captures…).
 - Après publication : GitHub Pages met ~1 à 10 min ; ouvrir l'appli deux fois pour que le cache se mette à jour.
 
 ## 5. Architecture de `index.html`
