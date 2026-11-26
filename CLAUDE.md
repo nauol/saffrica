@@ -29,6 +29,8 @@ L'appli tient en 7 fichiers à la racine (ci-dessous). Il n'y a **pas de règle 
 | `icone.png`, `icone-192.png` | icônes | |
 | `CLAUDE.md` | ce fichier (pas mis en cache par `sw.js`, pas utilisé par l'appli) | |
 
+Outils de design pour Claude : `.claude/skills/` contient `web-design-guidelines` (Vercel, relecture d'interface) et `apple-design` (règles d'Apple). Ils ne font pas partie de l'appli (pas dans `sw.js`). Pour une refonte, s'en servir avec l'extension `frontend-design`.
+
 Les relais Cloudflare (`worker.js`, `worker-obs.js`) ne sont PAS dans le dépôt : l'utilisateur les colle lui-même dans Cloudflare. Si on les modifie, donner le code complet à coller.
 
 ## 3. Faire une nouvelle version
