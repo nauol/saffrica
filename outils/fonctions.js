@@ -20,8 +20,13 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
   await ctx.route("**/*saffrica-relais*/**", (r) => r.fulfill({ status: relaisStatus, json: relais }));
   await ctx.route("**/*saffrica-obs*/**", (r) => {
     if (r.request().method() === "POST") { posts.push(JSON.parse(r.request().postData() || "{}")); return r.fulfill({ json: { ok: true } }); }
-    const animal = new URL(r.request().url()).searchParams.get("animal") || "lion";
-    return r.fulfill({ json: { observations: [{ id: "t1", animal, lat: -24.99, lng: 31.59, ts: Date.now() - 2 * 864e5, park: "kruger" }] } });
+    const u = new URL(r.request().url()), animal = u.searchParams.get("animal");
+    if (animal) return r.fulfill({ json: { observations: [{ id: "t1", animal, lat: -24.99, lng: 31.59, ts: Date.now() - 2 * 864e5, park: "kruger" }] } });
+    /* carte : une observation au Kruger, une au Maasai Mara, une hors parc */
+    return r.fulfill({ json: { observations: [
+      { id: "t1", animal: "lion", lat: -24.99, lng: 31.59, ts: Date.now() - 2 * 864e5, park: "kruger" },
+      { id: "t2", animal: "elephant", lat: -1.5, lng: 35.1, ts: Date.now() - 3 * 864e5, park: "maasai-mara" },
+      { id: "t3", animal: "zebra", lat: -20.0, lng: 25.0, ts: Date.now() - 4 * 864e5, park: null }] } });
   });
   await ctx.route("**/nominatim.openstreetmap.org/**", (r) => r.fulfill({ json: { address: { country: "Afrique du Sud" } } }));
   await ctx.route("**/tile.openstreetmap.org/**", (r) => r.abort());
@@ -268,6 +273,23 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
   await verif("photo : « Choisir sur la carte » centré sur le parc choisi", async () => {
     const k = D.parks.find((p) => p.id === "kruger"), c = await centreCarte("#/obs/kruger");
     exige(Math.abs(c.lat - k.map.lat) < 0.3 && Math.abs(c.lng - k.map.lng) < 0.3 && c.zoom === k.map.zoom, "carte non centrée sur le Kruger : " + JSON.stringify(c));
+  });
+  await verif("carte des observations : la même partout (tous les parcs + hors parc)", async () => {
+    for (const [h, centre] of [["#/obs/kruger", D.parks.find((p) => p.id === "kruger").map], ["#/obs/maasai-mara", D.parks.find((p) => p.id === "maasai-mara").map], ["#/obs/none", null]]) {
+      await go(h);
+      await page.waitForFunction(() => window.SAFFRICA_REC && window.SAFFRICA_REC.obsMap && document.querySelectorAll("#obsMap .leaflet-interactive").length >= 3, null, { timeout: 15000 });
+      exige(await page.$$eval("#obsMap .leaflet-interactive", (l) => l.length) === 3, `${h} : les 3 observations (2 parcs + hors parc) ne sont pas toutes sur la carte`);
+      exige(await page.$$eval("#obsSel option", (o) => o.length) === 4, `${h} : le filtre ne liste pas les animaux de tous les parcs`);
+      const c = await page.evaluate(() => { const m = window.SAFFRICA_REC.obsMap, x = m.getCenter(); return { lat: x.lat, lng: x.lng, zoom: m.getZoom() }; });
+      if (centre) exige(Math.abs(c.lat - centre.lat) < 0.3 && Math.abs(c.lng - centre.lng) < 0.3 && c.zoom === centre.zoom, `${h} : la carte n'est pas centrée sur le parc ` + JSON.stringify(c));
+      else exige(c.zoom <= 4, `${h} : la carte « hors parc » devrait montrer toute l'Afrique ` + JSON.stringify(c));
+    }
+    await page.selectOption("#obsSel", "elephant"); await W(300);
+    exige(await page.$$eval("#obsMap .leaflet-interactive", (l) => l.length) === 1, "le filtre par animal ne marche pas sur la carte unique");
+  });
+  await verif("« Choisir sur la carte » ne montre pas les autres observations", async () => {
+    await centreCarte("#/obs/kruger");
+    exige(await page.$$eval("#pickMap .leaflet-interactive", (l) => l.length) === 0, "des observations apparaissent sur « Choisir sur la carte »");
   });
   await verif("cartes : limites des parcs dessinées, et toucher la carte marche toujours", async () => {
     const n = D.parks.filter((p) => p.shape || p.zone).length;

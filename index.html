@@ -1902,16 +1902,18 @@ body.is-fiche .footer { padding-bottom: 100px; }
           shown.forEach(function (o) {
             var a = D.animals[o.animal], nm = a ? tr(a.name) : o.animal;
             var box = document.createElement("div"); box.className = "obspop";
-            box.innerHTML = "<strong>" + esc(nm) + "</strong>" + esc(T().obsOn) + " " + esc(obsDate(o.ts)) + "<br>" + esc(o.lat.toFixed(5) + ", " + o.lng.toFixed(5)) + "<br>" +
+            var op = o.park && findPark(o.park);
+            box.innerHTML = "<strong>" + esc(nm) + "</strong>" + esc(op ? tr(op.name) : T().obsNone) + "<br>" + esc(T().obsOn) + " " + esc(obsDate(o.ts)) + "<br>" + esc(o.lat.toFixed(5) + ", " + o.lng.toFixed(5)) + "<br>" +
               '<a class="gm" target="_blank" rel="noopener" href="https://www.google.com/maps?q=' + o.lat + "," + o.lng + '">' + esc(T().obsOpenG) + "</a>";
             window.L.circleMarker([o.lat, o.lng], { radius: 8, color: "#fff", weight: 2, fillColor: "#c2410c", fillOpacity: 0.95 }).bindPopup(box).addTo(layer);
           });
           msg.textContent = shown.length ? "" : T().obsEmpty;
         }
         sel.addEventListener("change", draw);
-        Promise.all([loadLeaflet(), fetch(OBS_URL + "/?park=" + encodeURIComponent(pid) + "&limit=1000").then(function (r) { if (!r.ok) throw new Error("http"); return r.json(); })]).then(function (rs) {
+        Promise.all([loadLeaflet(), fetch(OBS_URL + "/?limit=1000").then(function (r) { if (!r.ok) throw new Error("http"); return r.json(); })]).then(function (rs) {
           if (!alive) return;
-          all = (rs[1].observations || []).map(function (o) { return { id: o.id, animal: o.animal, lat: Number(o.lat), lng: Number(o.lng), ts: Number(o.ts) }; });
+          /* carte unique : on charge TOUTES les observations ; seul le zoom de départ dépend du parc choisi */
+          all = (rs[1].observations || []).map(function (o) { return { id: o.id, animal: o.animal, lat: Number(o.lat), lng: Number(o.lng), ts: Number(o.ts), park: o.park || null }; });
           var names = {}; all.forEach(function (o) { names[o.animal] = 1; });
           Object.keys(names).sort(function (x, y) { return tr((D.animals[x] || { name: { en: x, fr: x } }).name).localeCompare(tr((D.animals[y] || { name: { en: y, fr: y } }).name), lang); }).forEach(function (k) {
             var o = document.createElement("option"); o.value = k; o.textContent = D.animals[k] ? tr(D.animals[k].name) : k; sel.appendChild(o);

@@ -5,7 +5,7 @@
  */
 window.APP_DATA = {
   meta: {
-    version: "3.3.0",
+    version: "3.4.0",
     lastChecked: "2026-11-15",
     nextUpdate: "2026-12-01"
   },
@@ -8378,6 +8378,15 @@ window.APP_DATA = {
 
   /* News and update log, newest first. Shown on the "What’s new" page. */
   updates: [
+    {
+      date: "2026-11-26",
+      title: { en: "One map for all sightings", fr: "Une seule carte pour toutes les observations" },
+      text: {
+        en: "The sightings map is now the same everywhere: it shows the sightings of every park and outside parks. Choosing a park just opens the map on it; zoom out to see the others. The animal filter applies to the whole map.",
+        fr: "La carte des observations est maintenant la même partout : elle montre les observations de tous les parcs et hors parc. Choisir un parc ouvre simplement la carte sur celui-ci ; dézoomez pour voir les autres. Le filtre par animal s’applique à toute la carte."
+      },
+      src: []
+    },
     {
       date: "2026-11-26",
       title: { en: "Park boundaries on the maps", fr: "Limites des parcs sur les cartes" },
