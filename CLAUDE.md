@@ -140,3 +140,10 @@ Une tâche planifiée « Vérification mensuelle saffrica » tourne le 1er de ch
 7. Système de récompenses : les titres sont faits, la suite est prévue tout à la fin.
 8. ~~Refonte du design~~ : faite en 3.0.0 (§5).
 9. Commercialisation plus tard : les illustrations appartiennent à l'utilisateur ; conditions d'utilisation des données UICN à vérifier ; fond de carte OpenStreetMap à remplacer si usage commercial.
+
+## 14. Modèle commercial envisagé (idée de l'utilisateur, 27 nov. 2026 — pas encore construit)
+- **Vendre Saffrica aux agences de voyage qui organisent des safaris** (pas aux lodges) : l'agence paie et offre l'appli à ses clients comme compagnon de voyage (ados, passionnés de nature). L'utilisateur **choisit lui-même** les agences.
+- **Accès par code** fourni par l'agence au voyageur. Effet voulu : seuls les voyageurs de ces agences voient les positions des animaux → règle le problème du **braconnage** (§13.4). Moins d'observations partagées : accepté.
+- **Durée (décision de l'utilisateur)** : le code ne coupe pas tout après le voyage. **Après une période limitée, on perd seulement la carte des observations** ; on **garde les fiches des animaux** et **ses animaux vus / enregistrés** (« Mes animaux »). Durée exacte à fixer (ex. dates du voyage + marge).
+- Pistes techniques proposées (à valider) : vérifier le code **côté serveur** (relais Cloudflare, gratuit) car le dépôt et `donnees.js` sont publics ; fiches gratuites pour tous en vitrine possible ; logo « Offert par <agence> » ; IA photo réservée aux codes (limite le coût Gemini) ; Google Play accepte une appli à code (donner un code de test à Google).
+- À faire avant de coder : demander à 3–5 agences si elles paieraient, combien et comment (par voyageur ou forfait annuel). Passage en activité commerciale = revoir la règle « zéro coût » (§1), Gemini payant, conditions UICN, fond de carte (§13.9).
