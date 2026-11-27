@@ -1437,9 +1437,16 @@ body.is-fiche .footer { padding-bottom: 100px; }
     pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>',
     star: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>'
   };
+  /* ordre des pays disponibles, voulu par l'utilisateur, le même partout (accueil, Observations, Identifier) */
+  var COUNTRY_ORDER = ["ke", "za", "na", "tz"];
+  function byCountryOrder(a, b) {
+    var i = COUNTRY_ORDER.indexOf(a.id), j = COUNTRY_ORDER.indexOf(b.id);
+    if (i < 0) i = 99; if (j < 0) j = 99;
+    return i - j || countryName(a).localeCompare(countryName(b), lang);
+  }
   function viewCountries() {
     var list = D.countries.slice().sort(function (a, b) { return countryName(a).localeCompare(countryName(b), lang); });
-    var avail = list.filter(function (c) { return c.available; }), soon = list.filter(function (c) { return !c.available && c.soon; });
+    var avail = list.filter(function (c) { return c.available; }).sort(byCountryOrder), soon = list.filter(function (c) { return !c.available && c.soon; });
     var mc = mineCount();
     var html = '<p class="eyebrow">' + esc(T().homeEyebrow) + "</p><h1 class=\"htitle\">" + esc(T().homeTitle) + "</h1>" +
       '<input class="search" id="q" type="search" placeholder="' + esc(T().searchAll) + '" autocomplete="off">' +
@@ -2077,10 +2084,9 @@ body.is-fiche .footer { padding-bottom: 100px; }
     REC.forceArea = area;
     var gi = document.getElementById("galInput"); if (gi) gi.click();
   }
-  /* pays qui ont des parcs, dans le même ordre que l'accueil (alphabétique dans la langue choisie) */
+  /* pays qui ont des parcs, dans le même ordre que l'accueil */
   function parkCountries() {
-    return D.countries.filter(function (c) { return D.parks.some(function (p) { return p.country === c.id; }); })
-      .sort(function (a, b) { return countryName(a).localeCompare(countryName(b), lang); });
+    return D.countries.filter(function (c) { return D.parks.some(function (p) { return p.country === c.id; }); }).sort(byCountryOrder);
   }
   function viewId() {
     var cs = parkCountries();

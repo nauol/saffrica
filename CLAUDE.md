@@ -69,7 +69,7 @@ Les relais Cloudflare (`worker.js`, `worker-obs.js`) ne sont PAS dans le dépôt
 - Menu ☰ : bloc fixe Accueil / Observations / Mes animaux (toujours dans cet ordre), puis « Vous êtes ici » (pays > parc > animal).
 - Mes animaux : 63 animaux (les 3 pages de groupe ne comptent pas), rond pour cocher « vu », filtres Tous / Vus / Pas encore vus. « Vu » stocké dans `localStorage` (`saffrica-seen`). Titres : Bébé safari (0), Petit pisteur (5), Éclaireur de la savane (15), Chasseur de traces (25), Ranger (35), Maître pisteur (45), Légende du safari (55), Gardien de l'Afrique (tous).
 - Illustrations : sur la fiche, image entière pour les images presque carrées ; dans les listes, cadre plus haut centré sur l'animal (`FOCUS` = centre vertical en % par image).
-- Langue : bouton en haut à droite = menu déroulant Français / English (`langMenuOpen`, `setLang`). Textes d'explication (IA Google, OpenStreetMap, estimations) **seulement dans les conditions**, pas sur les écrans (voulu par l'utilisateur, vérifié par le test) ; sources repliées derrière une flèche. Pays dans le même ordre partout (`parkCountries`, alphabétique dans la langue).
+- Langue : bouton en haut à droite = menu déroulant Français / English (`langMenuOpen`, `setLang`). Textes d'explication (IA Google, OpenStreetMap, estimations) **seulement dans les conditions**, pas sur les écrans (voulu par l'utilisateur, vérifié par le test) ; sources repliées derrière une flèche. Pays disponibles **toujours dans cet ordre, voulu par l'utilisateur : Kenya, Afrique du Sud, Namibie, Tanzanie** (`COUNTRY_ORDER`, sur l'accueil, Observations et Identifier ; vérifié par le test).
 - Autres clés `localStorage` : `awf-lang` (langue), `saffrica-cgu` (numéro de version des conditions acceptées : 3, ou 4 avec le compte), `saffrica-obsq` (observations en attente).
 
 ## 7. Données (`window.APP_DATA`)
@@ -142,6 +142,8 @@ Une tâche planifiée « Vérification mensuelle saffrica » tourne le 1er de ch
 6. Après les 10 pays : nouvelles fiches pour les espèces proches mais différentes (porc-épic à crête, cobe de Bohor…), avec les illustrations à fournir par l'utilisateur ; revoir les babouins de Katavi.
 7. Système de récompenses : les titres sont faits, la suite est prévue tout à la fin.
 8. ~~Refonte du design~~ : faite en 3.0.0 (§5).
+10. **À se rappeler (demandé par l'utilisateur le 27 nov. 2026)** : (a) **modifier les listes des animaux** (détails à demander à l'utilisateur) ; (b) **clé (code) agence de voyage pour les observations** (voir §14 : la carte des observations réservée aux voyageurs ayant un code d'agence).
+11. **Compte Google (3.7.0) à activer** : l'utilisateur doit créer l'ID client OAuth Google (application Web, origine https://nauol.github.io) et le Worker `saffrica-compte` (§8), puis donner l'ID client → le mettre dans `GOOGLE_CLIENT_ID` de `index.html`, tester, publier. **Ne pas publier la 3.7.0 avant** (la nouveauté annonce le compte).
 9. Commercialisation plus tard : les illustrations appartiennent à l'utilisateur ; conditions d'utilisation des données UICN à vérifier ; fond de carte OpenStreetMap à remplacer si usage commercial.
 
 ## 14. Modèle commercial envisagé (idée de l'utilisateur, 27 nov. 2026 — pas encore construit)

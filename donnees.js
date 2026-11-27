@@ -7493,7 +7493,7 @@ window.APP_DATA = {
     {
       date: "2026-11-27",
       title: { en: "Your Saffrica account", fr: "Votre compte Saffrica" },
-      text: { en: "Sign in with Google to keep the animals you have seen and your sightings, even if you change phones. “My account” (menu ☰) lists your sightings and lets you sign out or delete your account. On the shared map, sightings stay anonymous.", fr: "Connectez-vous avec Google pour garder vos animaux vus et vos observations, même si vous changez de téléphone. « Mon compte » (menu ☰) liste vos observations et permet de vous déconnecter ou de supprimer votre compte. Sur la carte partagée, les observations restent anonymes." },
+      text: { en: "Sign in with Google to keep the animals you have seen and your sightings, even if you change phones. Countries now appear in the same order everywhere: Kenya, South Africa, Namibia, Tanzania. “My account” (menu ☰) lists your sightings and lets you sign out or delete your account. On the shared map, sightings stay anonymous.", fr: "Connectez-vous avec Google pour garder vos animaux vus et vos observations, même si vous changez de téléphone. Les pays sont maintenant dans le même ordre partout : Kenya, Afrique du Sud, Namibie, Tanzanie. « Mon compte » (menu ☰) liste vos observations et permet de vous déconnecter ou de supprimer votre compte. Sur la carte partagée, les observations restent anonymes." },
       src: []
     },
     {

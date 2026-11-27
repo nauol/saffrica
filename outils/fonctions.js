@@ -141,6 +141,7 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
     const ordre = async (h) => { await go(h); return page.$$eval(".ccard", (cs) => cs.map((c) => c.getAttribute("href").split("/").pop())); };
     const a = await ordre("#/"), o = await ordre("#/obs"), i = await ordre("#/id");
     exige(a.join() === o.join() && a.join() === i.join(), `ordre des pays différent : accueil ${a} · observations ${o} · identifier ${i}`);
+    exige(a.join() === "ke,za,na,tz", "ordre voulu : Kenya, Afrique du Sud, Namibie, Tanzanie — obtenu " + a);
     for (const h of ["#/obs", "#/id"]) {
       await go(h);
       exige(await nb("#app > .eyebrow") === 1 && /Où êtes-vous/.test(await txt("#app h1")), `${h} : présentation différente (surtitre + « Où êtes-vous ? »)`);
