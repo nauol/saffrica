@@ -240,7 +240,13 @@ async function navigateur() {
   await ctx.route("**/*saffrica-relais*/**", (r) => r.fulfill({ json: { ok: true, test: true } }));
   await ctx.route("**/nominatim.openstreetmap.org/**", (r) => r.fulfill({ json: { address: { country: "South Africa" } } }));
   await ctx.route("**/tile.openstreetmap.org/**", (r) => r.abort());
-  await ctx.addInitScript(() => { try { localStorage.setItem("saffrica-cgu", "3"); } catch (e) {} });
+  await ctx.route("**/*saffrica-compte*/**", (r) => r.fulfill({ json: { ok: true, token: "a".repeat(64), email: "test@example.com", name: "Test", seen: [], obs: [] } }));
+  // Compte : activé avec un identifiant de test, et un compte déjà connecté (l'écran de connexion est testé dans fonctions.js)
+  await ctx.addInitScript(() => { try {
+    window.SAFFRICA_GOOGLE_CLIENT_ID = "test-client.apps.googleusercontent.com";
+    localStorage.setItem("saffrica-cgu", "4");
+    localStorage.setItem("saffrica-compte", JSON.stringify({ token: "a".repeat(64), email: "test@example.com", name: "Test" }));
+  } catch (e) {} });
 
   const page = await ctx.newPage();
   const erreurs = [];

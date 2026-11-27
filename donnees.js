@@ -5,7 +5,7 @@
  */
 window.APP_DATA = {
   meta: {
-    version: "3.6.1",
+    version: "3.7.0",
     lastChecked: "2026-11-15",
     nextUpdate: "2026-12-01"
   },
@@ -7490,6 +7490,12 @@ window.APP_DATA = {
 
   /* News and update log, newest first. Shown on the "What’s new" page. */
   updates: [
+    {
+      date: "2026-11-27",
+      title: { en: "Your Saffrica account", fr: "Votre compte Saffrica" },
+      text: { en: "Sign in with Google to keep the animals you have seen and your sightings, even if you change phones. “My account” (menu ☰) lists your sightings and lets you sign out or delete your account. On the shared map, sightings stay anonymous.", fr: "Connectez-vous avec Google pour garder vos animaux vus et vos observations, même si vous changez de téléphone. « Mon compte » (menu ☰) liste vos observations et permet de vous déconnecter ou de supprimer votre compte. Sur la carte partagée, les observations restent anonymes." },
+      src: []
+    },
     {
       date: "2026-11-27",
       title: { en: "Same country order everywhere", fr: "Même ordre des pays partout" },

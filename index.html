@@ -308,6 +308,13 @@ a.tile.seen::after { content: "✓"; position: absolute; top: 8px; left: 8px; wi
 .obsbar select { flex: 1; min-height: 44px; font: inherit; border-radius: 12px; padding: 0 12px; border: 0; background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
 .obspop strong { display: block; font-size: 1rem; }
 .obspop a.gm { display: inline-block; margin-top: 8px; padding: 8px 12px; border-radius: 10px; background: var(--brand); color: #fff; text-decoration: none; font-weight: 700; }
+.loginbox { text-align: center; }
+.loginlogo { width: 64px; height: 64px; margin: 4px auto 10px; border-radius: 18px; background: url("icone-192.png") center / cover; box-shadow: var(--shadow); }
+.gbtn { display: flex; justify-content: center; min-height: 44px; margin: 14px 0 6px; }
+.loginnote { margin-top: 14px; font-size: .8rem; }
+.accbtns { display: grid; gap: 10px; margin: 6px 0 24px; }
+.myobs small { display: block; margin-top: 2px; }
+.rbtn.danger { color: var(--st-cr); }
 .idpick { width: 100%; border: 0; background: none; font: inherit; color: inherit; text-align: left; cursor: pointer; }
 .pendlink { display: inline-block; margin: 0 0 10px; padding: 8px 14px; border-radius: 999px; background: #c0392b; color: #fff; font-weight: 700; text-decoration: none; }
 .pitem { display: flex; gap: 12px; align-items: flex-start; padding: 12px; margin: 0 0 12px; border-radius: var(--radius); background: var(--card); box-shadow: var(--shadow); }
@@ -426,6 +433,9 @@ body.is-fiche .footer { padding-bottom: 100px; }
       bestTime: "Best time to visit",
       whatsNew: "What’s new",
       back: "Back", backPhoto: "Back to the photo", langLbl: "Language",
+      accTitle: "Create your account", accLead: "Sign in with Google to keep your animals and your sightings, even if you change phones.", accPrivacy: "Your name and email are never shown to other users.", accLoading: "Connecting…", accOffline: "You need a connection to sign in. Try again when you are online.", accGisErr: "Google sign-in could not be loaded. Check your connection and try again.", accLoginErr: "Sign-in failed. Please try again.",
+      accMenu: "My account", accMyObs: "My sightings", accNoObs: "No sighting yet. Identify an animal by photo, then tap “Note the sighting”.", accWaiting: "{n} not yet saved to your account (will be sent when you are online).", accLogout: "Sign out", accDelete: "Delete my account",
+      accDelTitle: "Delete your account?", accDelText: "Your account, your seen animals and all your sightings (also on the shared map) will be erased for good. This cannot be undone.", accDelOk: "Delete for good", accDeleting: "Deleting…", accDeleted: "Account deleted", accDeletedText: "All your data has been erased.", accDelErr: "The account could not be deleted. Please try again.",
       checked: "Data last checked",
       next: "Next update planned",
       offlineReady: "Ready to use offline",
@@ -563,6 +573,9 @@ body.is-fiche .footer { padding-bottom: 100px; }
       bestTime: "Meilleure période",
       whatsNew: "Nouveautés",
       back: "Retour", backPhoto: "Retour à la photo", langLbl: "Langue",
+      accTitle: "Créez votre compte", accLead: "Connectez-vous avec Google pour garder vos animaux et vos observations, même si vous changez de téléphone.", accPrivacy: "Votre nom et votre adresse ne sont jamais montrés aux autres utilisateurs.", accLoading: "Connexion…", accOffline: "Il faut du réseau pour vous connecter. Réessayez quand vous êtes en ligne.", accGisErr: "La connexion Google n’a pas pu se charger. Vérifiez votre réseau et réessayez.", accLoginErr: "La connexion a échoué. Réessayez.",
+      accMenu: "Mon compte", accMyObs: "Mes observations", accNoObs: "Aucune observation pour l’instant. Identifiez un animal par photo, puis touchez « Noter l’observation ».", accWaiting: "{n} pas encore enregistrée(s) sur votre compte (envoi dès que vous aurez du réseau).", accLogout: "Se déconnecter", accDelete: "Supprimer mon compte",
+      accDelTitle: "Supprimer votre compte ?", accDelText: "Votre compte, vos animaux vus et toutes vos observations (aussi sur la carte partagée) seront effacés pour de bon. Impossible de revenir en arrière.", accDelOk: "Supprimer définitivement", accDeleting: "Suppression…", accDeleted: "Compte supprimé", accDeletedText: "Toutes vos données ont été effacées.", accDelErr: "Le compte n’a pas pu être supprimé. Réessayez.",
       checked: "Dernière vérification des données",
       next: "Prochaine mise à jour prévue",
       offlineReady: "Utilisable hors ligne",
@@ -865,6 +878,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     var m = loadSeen();
     if (m[id]) delete m[id]; else m[id] = 1;
     try { localStorage.setItem("saffrica-seen", JSON.stringify(Object.keys(m))); } catch (e) {}
+    if (ACC_ON && acct()) { seenDirty(true); acctSoon(); }
     return !!m[id];
   }
   function bindZoom(a) {
@@ -1228,6 +1242,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       body: [
         "À propos. Saffrica est un projet personnel et gratuit. Les informations sur les animaux viennent de sources publiques, citées dans chaque fiche avec leur date. Elles peuvent être incomplètes ou changer : elles sont données à titre indicatif.",
         "Chiffres et cartes. Les chiffres sont des estimations, pas des comptages exacts, et chacun indique sa source et sa date. Les descriptions (alimentation, taille, durée de vie, comportement, sécurité) sont des connaissances générales de référence. Respectez toujours les règles du parc et les conseils des rangers. Les cartes utilisent les données © contributeurs OpenStreetMap.",
+        "Compte. Pour utiliser Saffrica, vous vous connectez avec votre compte Google. Saffrica reçoit seulement votre adresse e-mail, votre nom et un identifiant Google. Il les garde (hébergés chez Cloudflare) avec la liste de vos animaux vus et une copie de vos observations, pour que vous les retrouviez sur un autre téléphone. Votre nom et votre adresse ne sont jamais montrés aux autres utilisateurs : sur la carte, les observations restent anonymes. Vous pouvez supprimer votre compte à tout moment (menu ☰ → Mon compte) : votre compte, vos animaux vus et vos observations sont alors effacés.",
         "Vos photos. Quand vous avez du réseau, la photo est réduite puis envoyée à un petit service intermédiaire (hébergé chez Cloudflare), qui la transmet à l’intelligence artificielle Gemini de Google. Saffrica n’enregistre pas vos photos. Google applique ses propres règles de confidentialité : avec l’offre gratuite utilisée par Saffrica, Google peut utiliser le contenu envoyé pour améliorer ses produits. N’envoyez donc pas de photos de personnes ni d’éléments privés.",
         "Observations. Si vous choisissez de noter où vous avez vu un animal, l’animal, la position, la date et le parc sont envoyés à un service en ligne (hébergé chez Cloudflare) et sont visibles par tous les utilisateurs, sur la carte du parc. Aucune photo, aucun nom, aucun identifiant n’est envoyé. La localisation de votre téléphone n’est demandée que lorsque vous choisissez de noter une observation.",
         "Sans réseau. L’identification par photo demande du réseau. Sans réseau, aucune photo n’est envoyée : vous pouvez la garder dans la liste « À vérifier » et la faire vérifier plus tard, quand vous aurez du réseau. Les fiches, les parcs et la recherche fonctionnent sans réseau.",
@@ -1242,6 +1257,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       body: [
         "About. Saffrica is a free personal project. The information about animals comes from public sources, cited in each page with its date. It may be incomplete or change: it is given for information only.",
         "Figures and maps. Figures are estimates, not exact counts, and each one shows its source and date. Descriptions (diet, size, lifespan, behaviour, safety) are general reference knowledge. Always follow park rules and rangers’ advice. Maps use data © OpenStreetMap contributors.",
+        "Account. To use Saffrica, you sign in with your Google account. Saffrica only receives your email address, your name and a Google identifier. It keeps them (hosted by Cloudflare) with the list of animals you have seen and a copy of your sightings, so you can find them on another phone. Your name and address are never shown to other users: on the map, sightings stay anonymous. You can delete your account at any time (menu ☰ → My account): your account, your seen animals and your sightings are then erased.",
         "Your photos. When you have a connection, the photo is shrunk and sent to a small intermediary service (hosted by Cloudflare), which passes it to Google’s Gemini artificial intelligence. Saffrica does not store your photos. Google applies its own privacy rules: with the free offer used by Saffrica, Google may use the content sent to improve its products. So do not send photos of people or private things.",
         "Observations. If you choose to note where you saw an animal, the animal, the position, the date and the park are sent to an online service (hosted by Cloudflare) and are visible to all users on the park map. No photo, no name and no identifier is sent. Your phone’s location is only requested when you choose to note an observation.",
         "Without a connection. Identifying a photo needs a connection. Without one, no photo is sent: you can keep it in the “To check” list and have it checked later, when you have a connection. The animal pages, the parks and the search work without a connection.",
@@ -1276,21 +1292,22 @@ body.is-fiche .footer { padding-bottom: 100px; }
     Array.prototype.forEach.call(m.querySelectorAll("button"), function (b) { b.onclick = function (ev) { ev.stopPropagation(); langMenuClose(); setLang(b.getAttribute("data-l")); }; });
     var first = m.querySelector('[aria-checked="true"]'); if (first) first.focus();
   }
-  function cguAccepted() { try { return localStorage.getItem("saffrica-cgu") === "3"; } catch (e) { return false; } }
+  function cguVer() { return ACC_ON ? 4 : 3; }   /* 4 = conditions avec le compte */
+  function cguAccepted() { try { return Number(localStorage.getItem("saffrica-cgu") || 0) >= cguVer(); } catch (e) { return false; } }
   function showCgu(reading) {
     var old = document.getElementById("cgu"); if (old) old.remove();
     var el = document.createElement("div"); el.id = "cgu"; el.className = "recbox"; el.style.zIndex = 60;
-    var c = CGU[lang];
+    var c = CGU[lang], body = c.body.filter(function (t) { return ACC_ON || !/^(Compte|Account)\. /.test(t); });
     el.innerHTML = '<div class="recin" style="text-align:left"><h2>' + esc(T().cguTitle) + "</h2><p><strong>" + esc(c.sum) + "</strong></p>" + '<div class="tipbox"><h3>' + esc(T().tipTitle) + '</h3><ul><li>' + esc(T().tip1) + "</li><li>" + esc(T().tip2) + "</li><li>" + esc(T().tip3) + '</li></ul></div><div class="cgutext">' +
-      c.body.map(function (t) { var k = t.indexOf(". "); return "<p><strong>" + esc(t.slice(0, k + 1)) + "</strong> " + esc(t.slice(k + 2)) + "</p>"; }).join("") +
+      body.map(function (t) { var k = t.indexOf(". "); return "<p><strong>" + esc(t.slice(0, k + 1)) + "</strong> " + esc(t.slice(k + 2)) + "</p>"; }).join("") +
       '</div><div class="recbtns"><button type="button" class="rbtn" id="cguLang">' + langLabel() + '</button>' +
       '<button type="button" class="rbtn primary" id="cguOk">' + esc(reading ? T().camClose : T().cguAccept) + "</button></div></div>";
     document.body.appendChild(el);
     document.getElementById("cguLang").onclick = function () { setLang(lang === "en" ? "fr" : "en"); showCgu(reading); };
     document.getElementById("cguOk").onclick = function () {
-      if (!reading) { try { localStorage.setItem("saffrica-cgu", "3"); } catch (e) {} }
+      if (!reading) { try { localStorage.setItem("saffrica-cgu", String(cguVer())); } catch (e) {} }
       el.remove();
-      if (!reading) askPersist();
+      if (!reading) { askPersist(); showLogin(); }
     };
   }
 
@@ -1891,6 +1908,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
   function obsSubmit(aid, shot, lat, lng, ts, pk) {
     var rec = { id: obsNewId(), animal: aid, lat: Math.round(lat * 1e5) / 1e5, lng: Math.round(lng * 1e5) / 1e5, ts: Math.round(ts), park: pk };
     var q = obsQ(); q.push({ data: rec }); obsQSave(q);
+    acctAddObs(rec);
     askPersist();
     obsFlush().then(function () {
       var queued = obsInQueue(rec.id), hash = "#/obs/" + (pk || "none");
@@ -1901,6 +1919,159 @@ body.is-fiche .footer { padding-bottom: 100px; }
     });
   }
   window.addEventListener("online", function () { if (cguAccepted()) obsFlush(); });
+  /* ---------- compte (connexion avec Google) ----------
+     Le compte garde l'e-mail, les animaux vus et une copie de « mes observations » pour les retrouver sur un autre téléphone.
+     La carte publique reste anonyme : l'observation envoyée au relais des observations ne contient ni nom ni compte.
+     GOOGLE_CLIENT_ID vide = fonction désactivée (pas d'écran de connexion). */
+  var ACCOUNT_URL = "https://saffrica-compte.michel-elouan.workers.dev";
+  var GOOGLE_CLIENT_ID = window.SAFFRICA_GOOGLE_CLIENT_ID || "";
+  var ACC_ON = !!GOOGLE_CLIENT_ID;
+  var ACC_KEY = "saffrica-compte", MYOBS_KEY = "saffrica-mesobs", SEEN_DIRTY_KEY = "saffrica-seen-dirty";
+  function acct() { try { var a = JSON.parse(localStorage.getItem(ACC_KEY) || "null"); return a && a.token ? a : null; } catch (e) { return null; } }
+  function acctSave(a) { try { if (a) localStorage.setItem(ACC_KEY, JSON.stringify(a)); else localStorage.removeItem(ACC_KEY); } catch (e) {} }
+  function myObs() { try { var a = JSON.parse(localStorage.getItem(MYOBS_KEY) || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+  function myObsSave(a) { try { localStorage.setItem(MYOBS_KEY, JSON.stringify(a)); } catch (e) {} }
+  function seenDirty(v) { try { if (v === undefined) return localStorage.getItem(SEEN_DIRTY_KEY) === "1"; if (v) localStorage.setItem(SEEN_DIRTY_KEY, "1"); else localStorage.removeItem(SEEN_DIRTY_KEY); } catch (e) {} return false; }
+  function acctApi(method, path, body) {
+    var a = acct(), h = { "Content-Type": "application/json" };
+    if (a) h.Authorization = "Bearer " + a.token;
+    return fetch(ACCOUNT_URL + path, { method: method, headers: h, body: body ? JSON.stringify(body) : undefined }).then(function (r) {
+      if (r.status === 401 && path !== "/login") { acctForget(); showLogin(); throw new Error("session"); }
+      if (!r.ok) throw new Error("http " + r.status);
+      return r.json();
+    });
+  }
+  /* efface tout ce qui appartient au compte sur ce téléphone (déconnexion, suppression, session expirée) */
+  function acctForget() {
+    acctSave(null); myObsSave([]); seenDirty(false);
+    try { localStorage.removeItem("saffrica-seen"); } catch (e) {}
+    seenMem = null;
+  }
+  /* fusionne ce que le serveur connaît avec ce qui est sur le téléphone (on n'efface jamais rien côté téléphone) */
+  function acctApply(pr) {
+    var m = loadSeen(), before = Object.keys(m).length, changed = false;
+    (pr.seen || []).forEach(function (k) { if (!m[k]) { m[k] = 1; changed = true; } });
+    if (changed) try { localStorage.setItem("saffrica-seen", JSON.stringify(Object.keys(m))); } catch (e) {}
+    if (Object.keys(m).length !== (pr.seen || []).length) seenDirty(true);
+    var mine = myObs(), ids = {};
+    mine.forEach(function (o) { ids[o.id] = 1; });
+    (pr.obs || []).forEach(function (o) { if (!ids[o.id]) mine.push({ id: o.id, animal: o.animal, lat: Number(o.lat), lng: Number(o.lng), ts: Number(o.ts), park: o.park || null, synced: true }); });
+    var srv = {}; (pr.obs || []).forEach(function (o) { srv[o.id] = 1; });
+    mine.forEach(function (o) { if (srv[o.id]) o.synced = true; });
+    myObsSave(mine.sort(function (x, y) { return y.ts - x.ts; }));
+    var a = acct(); if (a) { a.email = pr.email || a.email; a.name = pr.name || a.name; acctSave(a); }
+    return changed || before !== Object.keys(m).length;
+  }
+  var acctSyncing = false, acctTimer = null;
+  function acctSoon() { if (!ACC_ON) return; clearTimeout(acctTimer); acctTimer = setTimeout(acctSync, 1200); }
+  function acctSync() {
+    if (!ACC_ON || acctSyncing || !acct() || !navigator.onLine || !window.fetch) return Promise.resolve();
+    acctSyncing = true;
+    var p = Promise.resolve();
+    myObs().filter(function (o) { return !o.synced; }).forEach(function (o) {
+      p = p.then(function () {
+        return acctApi("POST", "/obs", { id: o.id, animal: o.animal, lat: o.lat, lng: o.lng, ts: o.ts, park: o.park }).then(function () {
+          myObsSave(myObs().map(function (x) { if (x.id === o.id) x.synced = true; return x; }));
+        });
+      });
+    });
+    return p.then(function () { return acctApi("GET", "/me"); }).then(function (pr) {
+      var changed = acctApply(pr);
+      if (seenDirty()) return acctApi("PUT", "/seen", { seen: Object.keys(loadSeen()) }).then(function () { seenDirty(false); return changed; });
+      return changed;
+    }).then(function (changed) {
+      acctSyncing = false;
+      if (changed && /^#\/(mine|compte)?$/.test(location.hash || "#/")) render();
+    }, function () { acctSyncing = false; });
+  }
+  function acctAddObs(rec) {
+    if (!ACC_ON || !acct()) return;
+    var mine = myObs(); mine.unshift({ id: rec.id, animal: rec.animal, lat: rec.lat, lng: rec.lng, ts: rec.ts, park: rec.park || null, synced: false });
+    myObsSave(mine); acctSoon();
+  }
+  var gisP = null;
+  function loadGis() {
+    if (window.google && window.google.accounts && window.google.accounts.id) return Promise.resolve();
+    if (gisP) return gisP;
+    gisP = new Promise(function (res, rej) {
+      var sc = document.createElement("script"); sc.src = "https://accounts.google.com/gsi/client"; sc.async = true;
+      sc.onload = function () { if (window.google && window.google.accounts && window.google.accounts.id) res(); else { gisP = null; rej(new Error("gis")); } };
+      sc.onerror = function () { gisP = null; rej(new Error("gis")); };
+      document.head.appendChild(sc);
+    });
+    return gisP;
+  }
+  /* écran de connexion : obligatoire (choix de l'utilisateur), après les conditions */
+  function showLogin() {
+    if (!ACC_ON || acct() || document.getElementById("login")) return;
+    var el = document.createElement("div"); el.id = "login"; el.className = "recbox"; el.style.zIndex = 55;
+    el.innerHTML = '<div class="recin loginbox"><div class="loginlogo" aria-hidden="true"></div><h2>' + esc(T().accTitle) + "</h2><p>" + esc(T().accLead) + '</p>' +
+      '<div id="gbtn" class="gbtn"></div><p class="meta" id="loginMsg" role="status"></p>' +
+      '<div class="recbtns"><button type="button" class="rbtn ghost" id="loginRetry" hidden>' + esc(T().retry) + '</button></div>' +
+      '<p class="meta loginnote">' + esc(T().accPrivacy) + "</p></div>";
+    document.body.appendChild(el);
+    var msg = document.getElementById("loginMsg"), retry = document.getElementById("loginRetry");
+    function fail(t) { msg.textContent = t; retry.hidden = false; }
+    function start() {
+      retry.hidden = true; msg.textContent = "";
+      if (!navigator.onLine) return fail(T().accOffline);
+      msg.textContent = T().accLoading;
+      loadGis().then(function () {
+        msg.textContent = "";
+        window.google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: onCredential, auto_select: false, cancel_on_tap_outside: true });
+        window.google.accounts.id.renderButton(document.getElementById("gbtn"), { theme: "outline", size: "large", shape: "pill", text: "continue_with", logo_alignment: "left", width: 280, locale: lang });
+      }, function () { fail(T().accGisErr); });
+    }
+    function onCredential(resp) {
+      msg.textContent = T().accLoading;
+      fetch(ACCOUNT_URL + "/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ credential: resp && resp.credential }) })
+        .then(function (r) { if (!r.ok) throw new Error("http"); return r.json(); })
+        .then(function (pr) {
+          acctSave({ token: pr.token, email: pr.email, name: pr.name });
+          acctApply(pr);
+          el.remove();
+          render(); acctSoon(); askPersist(); obsFlush();
+        }, function () { fail(T().accLoginErr); });
+    }
+    retry.onclick = start;
+    start();
+  }
+  function acctLogout() {
+    var p = navigator.onLine ? acctApi("POST", "/logout").catch(function () {}) : Promise.resolve();
+    return p.then(function () { acctForget(); location.hash = "#/"; render(); showLogin(); });
+  }
+  function acctDelete() {
+    recShow({ title: T().accDelTitle, text: T().accDelText, buttons: [
+      { label: T().accDelOk, cls: "danger", fn: function () {
+        if (!navigator.onLine) { recShow({ title: T().accDelTitle, text: T().accOffline, buttons: [{ label: T().camClose, fn: recHide }] }); return; }
+        recShow({ title: T().accDeleting, buttons: [] });
+        acctApi("DELETE", "/account").then(function () {
+          acctForget(); recShow({ title: T().accDeleted, text: T().accDeletedText, buttons: [{ label: T().camClose, primary: true, fn: function () { recHide(); location.hash = "#/"; render(); showLogin(); } }] });
+        }, function () { recShow({ title: T().accDelTitle, text: T().accDelErr, buttons: [{ label: T().camClose, fn: recHide }] }); });
+      } },
+      { label: T().cancelLbl, cls: "ghost", fn: recHide }] });
+  }
+  function viewAccount() {
+    var a = acct();
+    if (!ACC_ON || !a) return viewCountries();
+    var mine = myObs(), wait = mine.filter(function (o) { return !o.synced; }).length;
+    var rows = mine.map(function (o) {
+      var an = D.animals[o.animal], pk = o.park && findPark(o.park);
+      return '<li><a class="row myobs" href="#/a/' + esc(o.animal) + '"><span><strong>' + esc(an ? tr(an.name) : o.animal) + "</strong><small class=\"meta\">" +
+        esc(obsDate(o.ts)) + " · " + esc(pk ? tr(pk.name) : T().obsNone) + '</small></span><span class="chev">›</span></a></li>';
+    }).join("");
+    var html = '<p class="eyebrow">' + esc(T().accMenu) + "</p><h1>" + esc(a.name || a.email) + '</h1><p class="lead">' + esc(a.email) + "</p>" +
+      '<section class="card"><h2>' + esc(T().accMyObs) + " (" + mine.length + ")</h2>" +
+      (mine.length ? '<ul class="list">' + rows + "</ul>" : '<p class="meta">' + esc(T().accNoObs) + "</p>") +
+      (wait ? '<p class="meta">' + esc(T().accWaiting.replace("{n}", wait)) + "</p>" : "") + "</section>" +
+      '<div class="accbtns"><button type="button" class="rbtn" id="accLogout">' + esc(T().accLogout) + '</button><button type="button" class="rbtn danger" id="accDelete">' + esc(T().accDelete) + "</button></div>";
+    return { html: html, after: function () {
+      document.getElementById("accLogout").onclick = acctLogout;
+      document.getElementById("accDelete").onclick = acctDelete;
+    } };
+  }
+  window.addEventListener("online", function () { acctSync(); });
+
   /* « Identifier » : d'abord le pays, puis le parc ; toucher un parc ouvre directement la photo (la carte « Choisir sur la carte » s'ouvrira sur ce parc) */
   function idPhoto(area) {
     REC.forceArea = area;
@@ -2062,6 +2233,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       } else if (p[1] === "none") ch.push({ label: T().obsNone, href: "#/obs/none" });
       else if (false) ch.push({ label: p[1] === "none" ? T().obsNone : (findPark(p[1]) ? tr(findPark(p[1]).name) : p[1]), href: "#/obs/" + p[1] });
     } else if (p[0] === "mine") ch.push({ label: mineLabel(), href: "#/mine" });
+    else if (p[0] === "compte") ch.push({ label: T().accMenu, href: "#/compte" });
     else if (p[0] === "news") ch.push({ label: T().whatsNew, href: "#/news" });
     else if (p[0] === "verify") ch.push({ label: T().pendTitle, href: "#/verify" });
     return ch;
@@ -2076,6 +2248,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     var cur = ch[ch.length - 1].href;
     /* bloc fixe : toujours les mêmes trois boutons, dans le même ordre, sans décalage */
     var fixed = [{ label: T().menuHome, href: "#/" }, { label: T().obsTitle, href: "#/obs" }, { label: mineLabel(), href: "#/mine" }];
+    if (ACC_ON && acct()) fixed.push({ label: T().accMenu, href: "#/compte" });
     fixed.forEach(function (x) {
       h += x.href === cur ? '<div class="mrow cur" aria-current="page">' + esc(x.label) + "</div>" : '<a class="mrow" href="' + x.href + '">' + esc(x.label) + "</a>";
     });
@@ -2125,6 +2298,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     else if (parts[0] === "mine") view = viewMine();
     else if (parts[0] === "news") view = viewNews();
     else if (parts[0] === "verify") view = viewVerify();
+    else if (parts[0] === "compte") view = viewAccount();
     else view = viewCountries();
 
     document.body.classList.toggle("is-fiche", !!view.fiche);
@@ -2170,7 +2344,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
 
   render();
   cleanOld();
-  if (!cguAccepted()) showCgu(false); else { askPersist(); obsFlush(); }
+  if (!cguAccepted()) showCgu(false); else { askPersist(); obsFlush(); if (ACC_ON && !acct()) showLogin(); else acctSync(); }
 })();
 
 </script>

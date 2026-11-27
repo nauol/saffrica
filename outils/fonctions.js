@@ -30,7 +30,25 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
   });
   await ctx.route("**/nominatim.openstreetmap.org/**", (r) => r.fulfill({ json: { address: { country: "Afrique du Sud" } } }));
   await ctx.route("**/tile.openstreetmap.org/**", (r) => r.abort());
-  await ctx.addInitScript(() => { try { if (!sessionStorage.getItem("init")) { sessionStorage.setItem("init", "1"); localStorage.setItem("saffrica-cgu", "3"); localStorage.setItem("awf-lang", "fr"); } } catch (e) {} });
+  /* compte : relais des comptes et connexion Google simulés ; srv = ce que « le serveur » connaît */
+  const srv = { seen: [], obs: [], deleted: 0, logins: 0 };
+  await ctx.route("**/*saffrica-compte*/**", (r) => {
+    const q = r.request(), u = new URL(q.url()), body = JSON.parse(q.postData() || "{}");
+    const prof = () => ({ email: "voyageur@example.com", name: "Voyageur Test", seen: srv.seen.slice(), obs: srv.obs.slice() });
+    if (u.pathname === "/login") { srv.logins++; return r.fulfill({ json: Object.assign({ token: "b".repeat(64) }, prof()) }); }
+    if (u.pathname === "/me") return r.fulfill({ json: prof() });
+    if (u.pathname === "/seen") { srv.seen = body.seen || []; return r.fulfill({ json: { ok: true } }); }
+    if (u.pathname === "/obs") { if (!srv.obs.some((o) => o.id === body.id)) srv.obs.push(body); return r.fulfill({ json: { ok: true } }); }
+    if (u.pathname === "/account" && q.method() === "DELETE") { srv.deleted++; srv.seen = []; srv.obs = []; return r.fulfill({ json: { ok: true } }); }
+    return r.fulfill({ json: { ok: true } });
+  });
+  await ctx.route("https://accounts.google.com/gsi/client", (r) => r.fulfill({ contentType: "application/javascript", body:
+    "window.google={accounts:{id:{initialize:function(o){window.__gcb=o.callback;},renderButton:function(el){var b=document.createElement('button');b.id='fakeGoogle';b.type='button';b.textContent='Continuer avec Google';b.onclick=function(){window.__gcb({credential:'faux.jeton.google'});};el.appendChild(b);}}}};" }));
+  await ctx.addInitScript(() => { try {
+    window.SAFFRICA_GOOGLE_CLIENT_ID = "test-client.apps.googleusercontent.com";
+    if (!sessionStorage.getItem("init")) { sessionStorage.setItem("init", "1"); localStorage.setItem("saffrica-cgu", "4"); localStorage.setItem("awf-lang", "fr");
+      localStorage.setItem("saffrica-compte", JSON.stringify({ token: "b".repeat(64), email: "voyageur@example.com", name: "Voyageur Test" })); }
+  } catch (e) {} });
   const page = await ctx.newPage();
   const erreurs = [];
   page.on("pageerror", (e) => erreurs.push(e.message));
@@ -45,6 +63,7 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
   const photo = async () => { await page.setInputFiles("#galInput", img); await page.waitForFunction(() => { const h = document.querySelector("#rec .recin h2"); return h && !/Analyse|Préparation|Analysing|Preparing/i.test(h.textContent); }, null, { timeout: 15000 }); await W(200); };
   const ok = [];
   async function verif(nom, fn) {
+    if (process.env.SAFF_TRACE) console.log("→ " + nom);
     try { await fn(); ok.push(nom); }
     catch (e) { pb(`fonctionnalité « ${nom} » : ${String(e.message || e).split("\n")[0]}`); }
     await page.evaluate(() => { const r = document.getElementById("rec"); if (r) r.hidden = true; const p = document.getElementById("pick"); if (p) p.remove(); document.querySelectorAll(".zoomview").forEach((z) => z.remove()); }).catch(() => {});
@@ -127,6 +146,37 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
       exige(await nb("#app > .eyebrow") === 1 && /Où êtes-vous/.test(await txt("#app h1")), `${h} : présentation différente (surtitre + « Où êtes-vous ? »)`);
       exige((await txt("#app .lead")).length < 110, `${h} : texte d'introduction trop long`);
     }
+  });
+  await verif("compte : connexion Google obligatoire, récupération, synchro, Mon compte, suppression", async () => {
+    const existe = async (sel) => (await page.$(sel)) !== null;
+    srv.seen = ["giraffe"]; srv.obs = [{ id: "srv-obs-0001", animal: "lion", lat: -24.99, lng: 31.59, ts: Date.now() - 5 * 864e5, park: "kruger" }];
+    /* nouveau téléphone : pas de compte, pas d'animaux vus */
+    await page.evaluate(() => { localStorage.removeItem("saffrica-compte"); localStorage.removeItem("saffrica-seen"); localStorage.removeItem("saffrica-mesobs"); });
+    await page.goto(base + "#/"); await page.reload(); await W(600);
+    exige(await existe("#login"), "l'écran de connexion n'apparaît pas sans compte");
+    await page.waitForSelector("#fakeGoogle", { timeout: 8000 });
+    await page.click("#fakeGoogle"); await W(800);
+    exige(!(await existe("#login")), "l'écran de connexion reste affiché après la connexion");
+    exige(await page.evaluate(() => JSON.parse(localStorage.getItem("saffrica-seen") || "[]").includes("giraffe")), "les animaux vus du compte ne sont pas récupérés");
+    await go("#/compte"); await W(300);
+    exige(/Voyageur Test/.test(await txt("#app h1")) && await nb("a.myobs") === 1 && /Lion/.test(await txt("a.myobs")), "« Mon compte » ne montre pas le nom ou l'observation récupérée");
+    await page.click("#menuBtn"); await W();
+    exige(await nb('#menu a.mrow[href="#/compte"], #menu .mrow.cur') >= 1 && /Mon compte/.test(await txt("#menu")), "« Mon compte » absent du menu");
+    await page.click("#menuOv").catch(() => {}); await W();
+    /* cocher un animal → envoyé au compte */
+    await go("#/p/kruger/a/leopard"); await page.click("#seenBtn"); await W(2200);
+    exige(srv.seen.includes("leopard") && srv.seen.includes("giraffe"), "l'animal coché n'est pas enregistré sur le compte : " + srv.seen);
+    await page.click("#seenBtn"); await W(2200);
+    /* suppression du compte */
+    await go("#/compte"); await page.click("#accDelete"); await W();
+    await clicBouton("Supprimer définitivement"); await W(600);
+    exige(srv.deleted === 1, "la suppression n'a pas été demandée au serveur");
+    exige(await page.evaluate(() => !localStorage.getItem("saffrica-compte") && !localStorage.getItem("saffrica-seen")), "les données du compte restent sur le téléphone");
+    await clicBouton("Fermer"); await W(600);
+    exige(await existe("#login"), "après suppression, l'écran de connexion devrait revenir");
+    /* on se reconnecte pour la suite des tests */
+    await page.waitForSelector("#fakeGoogle", { timeout: 8000 }); await page.click("#fakeGoogle"); await W(800);
+    exige(!(await existe("#login")), "reconnexion impossible");
   });
   await verif("écrans sans textes d'explication (ils sont dans les conditions)", async () => {
     for (const h of ["#/", "#/id/c/za", "#/obs/c/za", "#/obs/kruger", "#/p/kruger/a/lion"]) {
@@ -259,7 +309,7 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
     await page.evaluate(() => localStorage.removeItem("saffrica-cgu")); await page.reload(); await W(500);
     exige(await nb("#cguOk") === 1, "les conditions ne s'affichent pas au premier lancement");
     await page.click("#cguOk"); await W();
-    exige(await page.evaluate(() => localStorage.getItem("saffrica-cgu")) === "3", "l'acceptation n'est pas mémorisée");
+    exige(await page.evaluate(() => localStorage.getItem("saffrica-cgu")) === "4", "l'acceptation n'est pas mémorisée");
   });
 
   /* ---------- observations ---------- */
