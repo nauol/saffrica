@@ -5,7 +5,7 @@
  */
 window.APP_DATA = {
   meta: {
-    version: "3.5.1",
+    version: "3.5.2",
     lastChecked: "2026-11-15",
     nextUpdate: "2026-12-01"
   },
@@ -7490,6 +7490,12 @@ window.APP_DATA = {
 
   /* News and update log, newest first. Shown on the "What’s new" page. */
   updates: [
+    {
+      date: "2026-11-27",
+      title: { en: "Easier back navigation", fr: "Retour en arrière plus simple" },
+      text: { en: "The back arrow now returns to the page you came from: from a park's sightings map you go back to the park page, and the map has a link to the park's details and animals. After a photo, if you open the animal's page instead of noting the sighting, the back arrow brings the photo result back so you can still note it.", fr: "La flèche retour ramène maintenant à la page d’où vous venez : depuis la carte des observations d’un parc, on revient à la page du parc, et la carte a un lien vers les infos et les animaux du parc. Après une photo, si vous ouvrez la fiche au lieu de noter l’observation, la flèche retour fait réapparaître la photo pour pouvoir encore la noter." },
+      src: []
+    },
     {
       date: "2026-11-26",
       title: { en: "Namibia re-checked, small fixes", fr: "Namibie revérifiée, petites corrections" },

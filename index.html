@@ -290,6 +290,7 @@ a.tile.seen::after { content: "✓"; position: absolute; top: 8px; left: 8px; wi
 .camBtn.alt { background: var(--fill); color: var(--ink); padding: 10px 16px; font-weight: 600; }
 .camBtn svg { width: 24px; height: 24px; flex: none; }
 .camBtn input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+.parklink { margin: 0 0 12px; border-radius: 14px; background: var(--card); box-shadow: var(--shadow); }
 .obsbtn { display: flex; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 13px 10px; margin: 0 0 16px; border-radius: 14px; background: var(--card); box-shadow: var(--shadow); font-weight: 650; color: var(--ink); text-decoration: none; }
 .obsbtn::before { content: ""; width: 20px; height: 20px; background: var(--purple); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z'/%3E%3Ccircle cx='12' cy='10' r='2.5'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z'/%3E%3Ccircle cx='12' cy='10' r='2.5'/%3E%3C/svg%3E") center / contain no-repeat; }
 .obslink { display: block; margin: 10px 0; font-weight: 700; }
@@ -414,7 +415,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       parkAbout: "About the park",
       bestTime: "Best time to visit",
       whatsNew: "What’s new",
-      back: "Back",
+      back: "Back", backPhoto: "Back to the photo",
       checked: "Data last checked",
       next: "Next update planned",
       offlineReady: "Ready to use offline",
@@ -458,7 +459,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       unsureTitle: "I’m not sure",
       unsureText: "Pick the animal, or keep the photo to check it later.",
       pendLater: "Check later",
-      obsTitle: "Observations", obsLead: "Where animals were seen by users. Pick a country, then a park to see its map.", obsNone: "Outside parks", obsPark: "Map of observations", obsNeedNet: "The map needs a connection. Please try again when you are online.", obsEmpty: "No observation yet.", obsAll: "All animals", obsOpenG: "Open in Google Maps", obsAdd: "Note the sighting", obsQTitle: "Note where you saw it?", obsQText: "Was the photo taken just now?", obsYesNow: "Yes, I am here", obsOlder: "No, an older photo", obsNoThanks: "No thanks", obsLocating: "Getting your position…", obsLocErr: "Your position could not be obtained (permission refused or weak signal).", obsManual: "Enter or pick on the map", obsFormTitle: "Where and when?", obsCoordLbl: "Coordinates (latitude, longitude)", obsDateLbl: "Date", obsPickMap: "Pick on the map", obsCoordBad: "Invalid coordinates. Example: -24.10, 31.50", obsDateBad: "Invalid date.", obsContinue: "Continue", obsConfirmTitle: "Save this sighting?", obsConfirmText: "Everyone will see the animal, the position and the date on the park map.", obsInPark: "Park: ", obsNoPark: "Outside the known parks: only the coordinates will be saved.", obsSave: "Save", obsSent: "Sighting saved", obsSentText: "Thank you, it is now visible to all users.", obsQueued: "Sighting kept", obsQueuedText: "No connection: it will be sent automatically when the connection comes back (the app must be open).", obsSeeMap: "See the map", obsPickTitle: "Touch the map", obsPickText: "Touch the place where you saw the animal.", obsPickOk: "Use this point", obsPending: "sighting(s) waiting to be sent",  obsOn: "Seen on", obsMapNote: "Observations are sent by users and shared with everyone. Map data © OpenStreetMap contributors.", obsLoading: "Loading the map…", obsErr: "The observations could not be loaded. Please try again.", menuTitle: "Menu", menuHome: "Home", menuClose: "Close the menu", zoomLbl: "Enlarge the illustration", ficheLink: "See the page", typesTitle: "Types and how to tell them apart", seeGroup: "See also the page", inKrugerYes: "Seen in the Kruger", inKrugerNo: "Not in the Kruger", typeWhere: "Where", typeSize: "Size", typeTell: "How to spot it", tipTitle: "For a good recognition", tip1: "One animal at a time, not a group.", tip2: "A sharp, good-quality photo.", tip3: "The animal must be clearly visible (not too far, not hidden).", tipGo: "Continue", cguTip: "Photo tip. Photograph one animal at a time (not a group), with a sharp photo where the animal is clearly visible.",
+      obsTitle: "Observations", obsLead: "Where animals were seen by users. Pick a country, then a park to see its map.", obsNone: "Outside parks", obsPark: "Sightings: see the map or add one", obsParkInfo: "Park details and animals", obsNeedNet: "The map needs a connection. Please try again when you are online.", obsEmpty: "No observation yet.", obsAll: "All animals", obsOpenG: "Open in Google Maps", obsAdd: "Note the sighting", obsQTitle: "Note where you saw it?", obsQText: "Was the photo taken just now?", obsYesNow: "Yes, I am here", obsOlder: "No, an older photo", obsNoThanks: "No thanks", obsLocating: "Getting your position…", obsLocErr: "Your position could not be obtained (permission refused or weak signal).", obsManual: "Enter or pick on the map", obsFormTitle: "Where and when?", obsCoordLbl: "Coordinates (latitude, longitude)", obsDateLbl: "Date", obsPickMap: "Pick on the map", obsCoordBad: "Invalid coordinates. Example: -24.10, 31.50", obsDateBad: "Invalid date.", obsContinue: "Continue", obsConfirmTitle: "Save this sighting?", obsConfirmText: "Everyone will see the animal, the position and the date on the park map.", obsInPark: "Park: ", obsNoPark: "Outside the known parks: only the coordinates will be saved.", obsSave: "Save", obsSent: "Sighting saved", obsSentText: "Thank you, it is now visible to all users.", obsQueued: "Sighting kept", obsQueuedText: "No connection: it will be sent automatically when the connection comes back (the app must be open).", obsSeeMap: "See the map", obsPickTitle: "Touch the map", obsPickText: "Touch the place where you saw the animal.", obsPickOk: "Use this point", obsPending: "sighting(s) waiting to be sent",  obsOn: "Seen on", obsMapNote: "Observations are sent by users and shared with everyone. Map data © OpenStreetMap contributors.", obsLoading: "Loading the map…", obsErr: "The observations could not be loaded. Please try again.", menuTitle: "Menu", menuHome: "Home", menuClose: "Close the menu", zoomLbl: "Enlarge the illustration", ficheLink: "See the page", typesTitle: "Types and how to tell them apart", seeGroup: "See also the page", inKrugerYes: "Seen in the Kruger", inKrugerNo: "Not in the Kruger", typeWhere: "Where", typeSize: "Size", typeTell: "How to spot it", tipTitle: "For a good recognition", tip1: "One animal at a time, not a group.", tip2: "A sharp, good-quality photo.", tip3: "The animal must be clearly visible (not too far, not hidden).", tipGo: "Continue", cguTip: "Photo tip. Photograph one animal at a time (not a group), with a sharp photo where the animal is clearly visible.",
       aiWork: "Analysing with the smart detector…", aiBy: "Identified by artificial intelligence.", aiAlso: "Or:",
       aiOtherTitle: "Not in Saffrica yet", aiOtherText: "This animal is not part of Saffrica yet. According to artificial intelligence, it is: {n}.", aiWeb: "Search on the internet",
       aiNoneTitle: "No animal detected", aiNoneText: "Artificial intelligence does not see an animal in this photo.",
@@ -551,7 +552,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       parkAbout: "À propos du parc",
       bestTime: "Meilleure période",
       whatsNew: "Nouveautés",
-      back: "Retour",
+      back: "Retour", backPhoto: "Retour à la photo",
       checked: "Dernière vérification des données",
       next: "Prochaine mise à jour prévue",
       offlineReady: "Utilisable hors ligne",
@@ -573,7 +574,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       menuPath: "Vous êtes ici",
       obsAddLead: "Pour ajouter une observation, prenez ou importez une photo : l’appli reconnaît l’animal, puis demande où vous l’avez vu.",
       mineTitle: "Mes animaux", mineLead: "Touchez le rond pour marquer un animal comme vu. Touchez l’image pour ouvrir sa fiche.", mineRank: "Votre titre",
-      mineNext: "Encore {n} pour devenir « {t} »", mineDone: "Vous avez vu tous les animaux de l’application !", mineSeenOf: "{n} vus sur {t}",
+      mineNext: "Encore {n} pour devenir « {t} »", mineDone: "Vous avez vu tous les animaux de l’application !", mineSeenOf: "{n} vus sur {t}", mineSeenOf1: "{n} vu sur {t}",
       fAll: "Tous", fSeen: "Vus", fNot: "Pas encore vus", chkLbl: "Marquer comme vu",
       seenG: "vert = déjà vu",
       seenR: "rouge = pas encore vu",
@@ -595,7 +596,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       unsureTitle: "Je ne suis pas sûr",
       unsureText: "Choisissez l’animal, ou gardez la photo pour la vérifier plus tard.",
       pendLater: "À vérifier plus tard",
-      obsTitle: "Observations", obsLead: "Où les animaux ont été vus par les utilisateurs. Choisissez un pays, puis un parc pour voir sa carte.", obsNone: "Hors parc", obsPark: "Carte des observations", obsNeedNet: "La carte demande du réseau. Réessayez quand vous êtes en ligne.", obsEmpty: "Aucune observation pour l’instant.", obsAll: "Tous les animaux", obsOpenG: "Ouvrir dans Google Maps", obsAdd: "Noter l’observation", obsQTitle: "Noter où vous l’avez vu ?", obsQText: "La photo a-t-elle été prise à l’instant ?", obsYesNow: "Oui, je suis sur place", obsOlder: "Non, photo plus ancienne", obsNoThanks: "Non merci", obsLocating: "Recherche de votre position…", obsLocErr: "La position n’a pas pu être obtenue (autorisation refusée ou signal faible).", obsManual: "Saisir ou choisir sur la carte", obsFormTitle: "Où et quand ?", obsCoordLbl: "Coordonnées (latitude, longitude)", obsDateLbl: "Date", obsPickMap: "Choisir sur la carte", obsCoordBad: "Coordonnées non valides. Exemple : -24.10, 31.50", obsDateBad: "Date non valide.", obsContinue: "Continuer", obsConfirmTitle: "Enregistrer cette observation ?", obsConfirmText: "Tout le monde verra l’animal, la position et la date sur la carte du parc.", obsInPark: "Parc : ", obsNoPark: "Hors des parcs connus : seules les coordonnées seront enregistrées.", obsSave: "Enregistrer", obsSent: "Observation enregistrée", obsSentText: "Merci, elle est maintenant visible par tous les utilisateurs.", obsQueued: "Observation gardée", obsQueuedText: "Pas de réseau : elle sera envoyée automatiquement quand le réseau reviendra (l’appli doit être ouverte).", obsSeeMap: "Voir la carte", obsPickTitle: "Touchez la carte", obsPickText: "Touchez l’endroit où vous avez vu l’animal.", obsPickOk: "Utiliser ce point", obsPending: "observation(s) en attente d’envoi",  obsOn: "Vu le", obsMapNote: "Les observations sont envoyées par les utilisateurs et partagées avec tous. Données de carte © contributeurs OpenStreetMap.", obsLoading: "Chargement de la carte…", obsErr: "Les observations n’ont pas pu être chargées. Réessayez.", menuTitle: "Menu", menuHome: "Accueil", menuClose: "Fermer le menu", zoomLbl: "Agrandir l’illustration", ficheLink: "Voir la fiche", typesTitle: "Les types et comment les distinguer", seeGroup: "Voir aussi la page", inKrugerYes: "Présent au Kruger", inKrugerNo: "Pas au Kruger", typeWhere: "Où", typeSize: "Taille", typeTell: "Comment le reconnaître", tipTitle: "Pour une bonne reconnaissance", tip1: "Un seul animal à la fois, pas un groupe.", tip2: "Une photo nette, de bonne qualité.", tip3: "L’animal doit être bien visible (pas trop loin, pas caché).", tipGo: "Continuer", cguTip: "Conseil photo. Photographiez un seul animal à la fois (pas un groupe), avec une photo nette où l’on voit bien l’animal.",
+      obsTitle: "Observations", obsLead: "Où les animaux ont été vus par les utilisateurs. Choisissez un pays, puis un parc pour voir sa carte.", obsNone: "Hors parc", obsPark: "Observations : voir la carte ou en ajouter", obsParkInfo: "Infos et animaux du parc", obsNeedNet: "La carte demande du réseau. Réessayez quand vous êtes en ligne.", obsEmpty: "Aucune observation pour l’instant.", obsAll: "Tous les animaux", obsOpenG: "Ouvrir dans Google Maps", obsAdd: "Noter l’observation", obsQTitle: "Noter où vous l’avez vu ?", obsQText: "La photo a-t-elle été prise à l’instant ?", obsYesNow: "Oui, je suis sur place", obsOlder: "Non, photo plus ancienne", obsNoThanks: "Non merci", obsLocating: "Recherche de votre position…", obsLocErr: "La position n’a pas pu être obtenue (autorisation refusée ou signal faible).", obsManual: "Saisir ou choisir sur la carte", obsFormTitle: "Où et quand ?", obsCoordLbl: "Coordonnées (latitude, longitude)", obsDateLbl: "Date", obsPickMap: "Choisir sur la carte", obsCoordBad: "Coordonnées non valides. Exemple : -24.10, 31.50", obsDateBad: "Date non valide.", obsContinue: "Continuer", obsConfirmTitle: "Enregistrer cette observation ?", obsConfirmText: "Tout le monde verra l’animal, la position et la date sur la carte du parc.", obsInPark: "Parc : ", obsNoPark: "Hors des parcs connus : seules les coordonnées seront enregistrées.", obsSave: "Enregistrer", obsSent: "Observation enregistrée", obsSentText: "Merci, elle est maintenant visible par tous les utilisateurs.", obsQueued: "Observation gardée", obsQueuedText: "Pas de réseau : elle sera envoyée automatiquement quand le réseau reviendra (l’appli doit être ouverte).", obsSeeMap: "Voir la carte", obsPickTitle: "Touchez la carte", obsPickText: "Touchez l’endroit où vous avez vu l’animal.", obsPickOk: "Utiliser ce point", obsPending: "observation(s) en attente d’envoi",  obsOn: "Vu le", obsMapNote: "Les observations sont envoyées par les utilisateurs et partagées avec tous. Données de carte © contributeurs OpenStreetMap.", obsLoading: "Chargement de la carte…", obsErr: "Les observations n’ont pas pu être chargées. Réessayez.", menuTitle: "Menu", menuHome: "Accueil", menuClose: "Fermer le menu", zoomLbl: "Agrandir l’illustration", ficheLink: "Voir la fiche", typesTitle: "Les types et comment les distinguer", seeGroup: "Voir aussi la page", inKrugerYes: "Présent au Kruger", inKrugerNo: "Pas au Kruger", typeWhere: "Où", typeSize: "Taille", typeTell: "Comment le reconnaître", tipTitle: "Pour une bonne reconnaissance", tip1: "Un seul animal à la fois, pas un groupe.", tip2: "Une photo nette, de bonne qualité.", tip3: "L’animal doit être bien visible (pas trop loin, pas caché).", tipGo: "Continuer", cguTip: "Conseil photo. Photographiez un seul animal à la fois (pas un groupe), avec une photo nette où l’on voit bien l’animal.",
       aiWork: "Analyse par le détecteur intelligent…", aiBy: "Identifié par l’intelligence artificielle.", aiAlso: "Ou :",
       aiOtherTitle: "Pas encore dans Saffrica", aiOtherText: "Cet animal ne fait pas encore partie de Saffrica. D’après l’intelligence artificielle, il s’agit de : {n}.", aiWeb: "Voir sur internet",
       aiNoneTitle: "Aucun animal détecté", aiNoneText: "L’intelligence artificielle ne voit pas d’animal sur cette photo.",
@@ -1076,7 +1077,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       recShow({ img: shot, title: T().aiWork, buttons: [] });
       return aiAsk(file).then(function (res) {
         REC.lastAi = res;
-        var opts = { ctx: ctx, onFiche: function (id) { location.hash = "#/a/" + id; }, save: saveBtn(file, shot), obs: function (id) { obsStart(id, shot); } };
+        var opts = { ctx: ctx, onFiche: function (id) { REC.ficheHash = "#/a/" + id; REC.ficheBack = REC.showResult; location.hash = REC.ficheHash; }, save: saveBtn(file, shot), obs: function (id) { obsStart(id, shot); } };
         REC.showResult = function () { aiShow(res, shot, opts); };   /* pour la flèche retour des écrans suivants */
         aiShow(res, shot, opts);
       }, function () { failScreen(file, shot, false); });
@@ -1314,9 +1315,9 @@ body.is-fiche .footer { padding-bottom: 100px; }
           var h = "<p class=\"meta\">" + esc(T().mineRank) + '</p><p class="rk">' + esc(r.cur[lang] || r.cur.en) + "</p>";
           if (r.next) {
             var pct = Math.max(0, Math.min(100, (c.n - r.from) / Math.max(1, r.next.at - r.from) * 100));
-            h += '<div class="rankbar"><span style="width:' + pct + '%"></span></div><p class="meta"><strong>' + esc(T().mineSeenOf.replace("{n}", c.n).replace("{t}", c.t)) + "</strong> · " +
+            h += '<div class="rankbar"><span style="width:' + pct + '%"></span></div><p class="meta"><strong>' + esc((c.n <= 1 && T().mineSeenOf1 ? T().mineSeenOf1 : T().mineSeenOf).replace("{n}", c.n).replace("{t}", c.t)) + "</strong> · " +
               esc(T().mineNext.replace("{n}", r.next.at - c.n).replace("{t}", r.next.r[lang] || r.next.r.en)) + "</p>";
-          } else h += '<div class="rankbar"><span style="width:100%"></span></div><p class="meta"><strong>' + esc(T().mineSeenOf.replace("{n}", c.n).replace("{t}", c.t)) + "</strong> · " + esc(T().mineDone) + "</p>";
+          } else h += '<div class="rankbar"><span style="width:100%"></span></div><p class="meta"><strong>' + esc((c.n <= 1 && T().mineSeenOf1 ? T().mineSeenOf1 : T().mineSeenOf).replace("{n}", c.n).replace("{t}", c.t)) + "</strong> · " + esc(T().mineDone) + "</p>";
           el.innerHTML = h;
         }
         function apply() {
@@ -1888,7 +1889,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     var park = pid === "none" ? null : findPark(pid);
     if (pid !== "none" && !park) return viewObs(null);
     var title = park ? tr(park.name) : T().obsNone;
-    var html = "<h1>" + esc(title) + "</h1>" + photoBtnHtml() + '<p class="meta camhint">' + esc(T().camHint) + "</p>" + '<div class="obsbar"><select id="obsSel" aria-label="' + esc(T().obsAll) + '"><option value="">' + esc(T().obsAll) + '</option></select></div>' +
+    var html = "<h1>" + esc(title) + "</h1>" + (park ? '<a class="row parklink" href="#/p/' + park.id + '"><span>' + esc(T().obsParkInfo) + '</span><span class="chev">›</span></a>' : "") + photoBtnHtml() + '<p class="meta camhint">' + esc(T().camHint) + "</p>" + '<div class="obsbar"><select id="obsSel" aria-label="' + esc(T().obsAll) + '"><option value="">' + esc(T().obsAll) + '</option></select></div>' +
       '<p class="meta" id="obsMsg">' + esc(T().obsLoading) + '</p><div class="obsmap" id="obsMap"></div><p class="meta">' + esc(T().obsMapNote) + "</p>";
     return {
       html: html,
@@ -2023,8 +2024,19 @@ body.is-fiche .footer { padding-bottom: 100px; }
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") menuClose(); });
   window.addEventListener("hashchange", menuClose);
 
+  /* chemin parcouru dans l'appli : la flèche retour ramène à la page d'où l'on vient (sinon à la page « parente ») */
+  var TRAIL = (function () { try { var t = JSON.parse(sessionStorage.getItem("saffrica-trail") || "[]"); return Array.isArray(t) ? t : []; } catch (e) { return []; } })();
+  function trailNote(h) {
+    var n = TRAIL.length;
+    if (n > 1 && TRAIL[n - 2] === h) TRAIL.pop(); else if (TRAIL[n - 1] !== h) TRAIL.push(h);
+    if (TRAIL.length > 30) TRAIL.splice(0, TRAIL.length - 30);
+    try { sessionStorage.setItem("saffrica-trail", JSON.stringify(TRAIL)); } catch (e) {}
+  }
   function render() {
     var parts = parse();
+    var cur = parts.length ? location.hash : "#/";
+    trailNote(cur);
+    if (REC.ficheHash && REC.ficheHash !== cur) REC.ficheBack = REC.ficheHash = null;
     var view;
     if (parts[0] === "c" && parts[1]) view = viewCountry(parts[1]);
     else if (parts[0] === "a" && parts[1]) view = viewAnimal(null, parts[1]);
@@ -2043,8 +2055,12 @@ body.is-fiche .footer { padding-bottom: 100px; }
 
     var atHome = parts.length === 0;
     backBtn.hidden = atHome;
-    backBtn.onclick = function () { location.hash = parentHash(parts); };
-    backBtn.setAttribute("aria-label", T().back);
+    backBtn.onclick = function () {
+      if (REC.ficheBack && REC.ficheHash === cur) { REC.ficheBack(); return; }   /* fiche ouverte depuis une photo : on revient au résultat de la photo */
+      var n = TRAIL.length;
+      location.hash = n > 1 ? TRAIL[n - 2] : parentHash(parts);
+    };
+    backBtn.setAttribute("aria-label", REC.ficheBack && REC.ficheHash === cur ? T().backPhoto : T().back);
     menuBtn.setAttribute("aria-label", T().menuTitle);
 
     document.documentElement.lang = lang;

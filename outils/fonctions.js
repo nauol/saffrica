@@ -150,13 +150,29 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
     exige(await nb(".types .ty") > 0, "les types de babouins ne s'affichent pas");
   });
   await verif("bouton retour : fiche → parc → pays → accueil", async () => {
-    await go("#/p/kruger/a/lion"); await page.click("#backBtn"); await W();
+    await go("#/"); await go("#/c/za"); await go("#/p/kruger"); await go("#/p/kruger/a/lion"); await page.click("#backBtn"); await W();
     exige(await page.evaluate(() => location.hash) === "#/p/kruger", "fiche → parc");
     await page.click("#backBtn"); await W();
     exige(await page.evaluate(() => location.hash) === "#/c/za", "parc → pays");
     await page.click("#backBtn"); await W();
     exige(await page.evaluate(() => location.hash) === "#/", "pays → accueil");
     exige(await page.$eval("#backBtn", (b) => b.hidden), "le bouton retour reste visible à l'accueil");
+  });
+
+  await verif("bouton retour : revient à la page d'où l'on vient (parc → carte des observations → parc)", async () => {
+    await go("#/"); await go("#/c/za"); await go("#/p/kruger");
+    await page.click('a.obsbtn[href="#/obs/kruger"]'); await W(400);
+    exige(await page.evaluate(() => location.hash) === "#/obs/kruger", "le bouton du parc n'ouvre pas sa carte des observations");
+    exige(await nb('a.parklink[href="#/p/kruger"]') === 1, "pas de lien « Infos et animaux du parc » sur la carte du parc");
+    await page.click("#backBtn"); await W();
+    exige(await page.evaluate(() => location.hash) === "#/p/kruger", "retour depuis la carte ne ramène pas au parc");
+    await page.click('a.obsbtn[href="#/obs/kruger"]'); await W(400);
+    await page.click('a.parklink'); await W();
+    exige(await page.evaluate(() => location.hash) === "#/p/kruger", "le lien « Infos et animaux du parc » ne mène pas au parc");
+    await page.click("#backBtn"); await W();
+    exige(await page.evaluate(() => location.hash) === "#/c/za", "après le lien, retour devrait mener au pays");
+    await go("#/obs"); await go("#/obs/c/za"); await go("#/obs/kruger"); await page.click("#backBtn"); await W();
+    exige(await page.evaluate(() => location.hash) === "#/obs/c/za", "depuis Observations, retour devrait rester dans Observations");
   });
 
   /* ---------- Mes animaux ---------- */
@@ -260,6 +276,20 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
     exige(/Enregistrer/.test(await txt("#rec h2")), "pas d'écran « Enregistrer » après la position");
     await page.click("#rec .recback"); await W();
     exige(/Noter où/.test(await txt("#rec h2")), "« Enregistrer » (sur place) ← ne revient pas à « Noter où ? »");
+  });
+  await verif("photo : « Juste voir la fiche » puis flèche retour → revient à la photo", async () => {
+    relais = { result: { animal: true, sure: true, sci: "Panthera leo", name_fr: "Lion", name_en: "Lion" } };
+    await photoDepuis("#/");
+    await clicBouton("Juste voir la fiche");
+    exige(/^#\/a\/lion/.test(await page.evaluate(() => location.hash)), "« Juste voir la fiche » n'ouvre pas la fiche");
+    exige(await page.$eval("#rec", (r) => r.hidden), "la fenêtre photo reste ouverte sur la fiche");
+    await page.click("#backBtn"); await W(400);
+    exige(!(await page.$eval("#rec", (r) => r.hidden)) && (await boutons()).includes("Noter l’observation") && await nb("#rec .recin img") === 1, "la flèche retour ne rouvre pas le résultat avec la photo");
+    await clicBouton("Noter l’observation");
+    exige(/Noter où/.test(await txt("#rec h2")), "depuis la photo retrouvée, « Noter l'observation » ne marche pas");
+    await clicBouton("Annuler"); await go("#/");
+    await go("#/a/lion"); await page.click("#backBtn"); await W();
+    exige(await page.$eval("#rec", (r) => r.hidden), "une fiche ouverte plus tard ne devrait plus rouvrir l'ancienne photo");
   });
   const centreCarte = async (depuis) => {
     relais = { result: { animal: true, sure: true, sci: "Panthera leo", name_fr: "Lion", name_en: "Lion" } };
