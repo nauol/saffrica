@@ -143,7 +143,7 @@ Une tâche planifiée « Vérification mensuelle saffrica » tourne le 1er de ch
 7. Système de récompenses : les titres sont faits, la suite est prévue tout à la fin.
 8. ~~Refonte du design~~ : faite en 3.0.0 (§5).
 10. **À se rappeler (demandé par l'utilisateur le 27 nov. 2026)** : (a) **modifier les listes des animaux** (détails à demander à l'utilisateur) ; (b) **clé (code) agence de voyage pour les observations** (voir §14 : la carte des observations réservée aux voyageurs ayant un code d'agence).
-11. **Compte Google (3.7.0) à activer** : l'utilisateur doit créer l'ID client OAuth Google (application Web, origine https://nauol.github.io) et le Worker `saffrica-compte` (§8), puis donner l'ID client → le mettre dans `GOOGLE_CLIENT_ID` de `index.html`, tester, publier. **Ne pas publier la 3.7.0 avant** (la nouveauté annonce le compte).
+11. **Compte Google (3.7.0) à activer** : l'utilisateur doit créer l'ID client OAuth Google (application Web, origine https://nauol.github.io) et le Worker `saffrica-compte` (§8), puis donner l'ID client → le mettre dans `GOOGLE_CLIENT_ID` de `index.html`, tester, publier. La 3.7.0 a été publiée avec le compte **désactivé** (ID vide) et sans annonce : à l'activation, nouvelle version + nouveauté « Votre compte Saffrica » (texte : se connecter avec Google pour garder ses animaux vus et ses observations sur un autre téléphone ; « Mon compte » dans le menu ☰ ; carte toujours anonyme).
 9. Commercialisation plus tard : les illustrations appartiennent à l'utilisateur ; conditions d'utilisation des données UICN à vérifier ; fond de carte OpenStreetMap à remplacer si usage commercial.
 
 ## 14. Modèle commercial envisagé (idée de l'utilisateur, 27 nov. 2026 — pas encore construit)
