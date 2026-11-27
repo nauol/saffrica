@@ -1,6 +1,6 @@
 /* Saffrica : permet l'installation et l'utilisation hors ligne.
    Change le numéro de CACHE à chaque mise à jour des fichiers. */
-const CACHE = "saffrica-v68";
+const CACHE = "saffrica-v69";
 const FICHIERS = ["./", "index.html", "donnees.js", "images.js", "icone.png", "icone-192.png", "manifest.webmanifest", "inter.woff2"];
 const IMAGES = []; /* les images sont maintenant dans images.js */
 

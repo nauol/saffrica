@@ -101,10 +101,29 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
     exige(await nb('.qa[href="#/mine"]') === 1, "tuile Mes animaux absente");
     exige(/0 \/ 63/.test(await txt('.qa[href="#/mine"]')), "compteur Mes animaux faux");
   });
-  await verif("accueil : « Identifier » ouvre le choix de photo", async () => {
+  await verif("Identifier : d'abord le pays, puis le parc, puis la photo (centrée sur ce parc)", async () => {
     await go("#/");
-    const [fc] = await Promise.all([page.waitForEvent("filechooser", { timeout: 4000 }), page.click("#photoBtn")]);
-    exige(fc, "aucun sélecteur de fichier");
+    exige(/Pays disponibles/.test(await txt("#cHead h2")), "titre « Pays disponibles… » absent");
+    await page.click("#idTile"); await W();
+    exige(await page.evaluate(() => location.hash) === "#/id", "la tuile Identifier n'ouvre pas le choix du pays");
+    exige(await nb('.ccard[href="#/id/c/na"]') === 1 && await nb('.idpick[data-none]') === 1, "cartes des pays ou « Hors parc » absentes");
+    await page.click('.ccard[href="#/id/c/na"]'); await W();
+    exige(await nb(".idpick[data-park]") === D.parks.filter((p) => p.country === "na").length, "liste des parcs de Namibie incomplète");
+    relais = { result: { animal: true, sure: true, sci: "Panthera leo", name_fr: "Lion", name_en: "Lion" } };
+    const [fc] = await Promise.all([page.waitForEvent("filechooser", { timeout: 4000 }), page.click('.idpick[data-park="etosha"]')]);
+    exige(fc, "toucher un parc n'ouvre pas le choix de photo");
+    await fc.setFiles(img);
+    await page.waitForFunction(() => { const h = document.querySelector("#rec .recin h2"); return h && /Lion/.test(h.textContent); }, null, { timeout: 15000 });
+    exige(await page.evaluate(() => window.SAFFRICA_REC.area && window.SAFFRICA_REC.area.park) === "etosha", "le parc touché n'est pas retenu pour la carte");
+    exige((await boutons()).includes("Juste voir la fiche"), "depuis Identifier, « Juste voir la fiche » devrait être proposé");
+    await clicBouton("Annuler").catch(() => page.evaluate(() => { document.getElementById("rec").hidden = true; }));
+  });
+  await verif("écrans sans textes d'explication (ils sont dans les conditions)", async () => {
+    for (const h of ["#/", "#/id/c/za", "#/obs/c/za", "#/obs/kruger", "#/p/kruger/a/lion"]) {
+      await go(h); await W(300);
+      const t = await page.evaluate(() => document.getElementById("app").innerText);
+      exige(!/intelligence artificielle \(Google\)|contributeurs OpenStreetMap|pas des comptages exacts/.test(t), `texte d'explication encore affiché sur ${h}`);
+    }
   });
 
   /* ---------- pays, parc, fiche ---------- */
@@ -144,6 +163,17 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
     exige(await nb(".info.park .fig") === 1 && await nb(".info.world .fig") === 1, "chiffres du parc ou du monde absents");
     exige(await page.$$eval(".sheet .sources li", (l) => l.length) > 0, "sources absentes");
     exige(await nb('.range a.chip[href="#/c/za"]') === 1, "lien vers le pays absent de « Où vit-il »");
+    exige(await page.$eval(".srcfold details", (d) => !d.open).catch(() => false), "les sources de la fiche devraient être repliées");
+    await page.click(".srcfold summary"); await W();
+    exige(await page.$eval(".srcfold details", (d) => d.open), "la flèche ne déplie pas les sources");
+  });
+  await verif("fiche → « Voir toutes les observations » : carte filtrée sur cet animal", async () => {
+    await go("#/p/kruger/a/lion"); await W(800);
+    const href = await page.$eval("#lsBody a.obsbtn", (a) => a.getAttribute("href"));
+    exige(/\/a\/lion$/.test(href), "le lien ne garde pas l'animal : " + href);
+    await page.click("#lsBody a.obsbtn");
+    await page.waitForFunction(() => { const s = document.getElementById("obsSel"); return s && s.options.length > 1; }, null, { timeout: 15000 });
+    exige(await page.$eval("#obsSel", (s) => s.value) === "lion", "la carte ne s'ouvre pas filtrée sur le lion");
   });
   await verif("fiche d'un groupe : types et liens", async () => {
     await go("#/a/baboons");
@@ -199,8 +229,13 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
   });
   await verif("langue : passer en anglais et revenir", async () => {
     await go("#/"); await page.click("#langBtn"); await W();
+    exige(await nb("#langMenu button") === 2, "le bouton de langue n'ouvre pas le menu déroulant");
+    await page.keyboard.press("Escape"); await W();
+    exige(await nb("#langMenu") === 0, "Échap ne ferme pas le menu des langues");
+    await page.click("#langBtn"); await W(); await page.click('#langMenu [data-l="en"]'); await W();
     exige(await page.evaluate(() => document.documentElement.lang) === "en" && /Collect the wildlife/.test(await txt("h1")), "le passage en anglais ne marche pas");
-    await page.click("#langBtn"); await W();
+    exige(await nb("#langMenu") === 0, "le menu des langues reste ouvert après le choix");
+    await page.click("#langBtn"); await W(); await page.click('#langMenu [data-l="fr"]'); await W();
     exige(await page.evaluate(() => document.documentElement.lang) === "fr", "le retour en français ne marche pas");
   });
   await verif("pied de page : Nouveautés et conditions", async () => {
@@ -257,7 +292,7 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
   });
   await verif("photo : flèches retour à chaque étape (sans perdre la photo ni l'animal)", async () => {
     relais = { result: { animal: true, sure: true, sci: "Panthera leo", name_fr: "Lion", name_en: "Lion" } };
-    await photoDepuis("#/");
+    await photoDepuis("#/id");
     exige(await nb("#rec .recback") === 0, "le résultat de l'IA ne devrait pas avoir de flèche retour");
     await clicBouton("Noter l’observation");
     await page.click("#rec .recback"); await W();
@@ -271,7 +306,7 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
     await page.click("#rec .recback"); await W();
     exige(await nb("#obsCoord") === 1 && (await page.inputValue("#obsCoord")) === "-24.99, 31.59", "« Enregistrer » ← ne revient pas à « Où et quand » avec les coordonnées");
     await clicBouton("Annuler");
-    await photoDepuis("#/");
+    await photoDepuis("#/id");
     await clicBouton("Noter l’observation"); await clicBouton("Oui, je suis sur place"); await W(800);
     exige(/Enregistrer/.test(await txt("#rec h2")), "pas d'écran « Enregistrer » après la position");
     await page.click("#rec .recback"); await W();
@@ -279,7 +314,7 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
   });
   await verif("photo : « Juste voir la fiche » puis flèche retour → revient à la photo", async () => {
     relais = { result: { animal: true, sure: true, sci: "Panthera leo", name_fr: "Lion", name_en: "Lion" } };
-    await photoDepuis("#/");
+    await photoDepuis("#/id");
     await clicBouton("Juste voir la fiche");
     exige(/^#\/a\/lion/.test(await page.evaluate(() => location.hash)), "« Juste voir la fiche » n'ouvre pas la fiche");
     exige(await page.$eval("#rec", (r) => r.hidden), "la fenêtre photo reste ouverte sur la fiche");
@@ -337,7 +372,7 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
     exige(c.lat > -5 && c.lat < 5 && c.lng > 33 && c.lng < 42 && c.zoom >= 4, "carte non centrée sur le Kenya : " + JSON.stringify(c));
   });
   await verif("photo : « Choisir sur la carte » sur toute l'Afrique depuis « Hors parc » ou l'accueil", async () => {
-    for (const h of ["#/obs/none", "#/"]) { const c = await centreCarte(h); exige(c.zoom <= 4, `${h} : carte trop zoomée ` + JSON.stringify(c)); }
+    for (const h of ["#/obs/none", "#/id"]) { const c = await centreCarte(h); exige(c.zoom <= 4, `${h} : carte trop zoomée ` + JSON.stringify(c)); }
   });
   await verif("carte d'un parc : la fenêtre photo passe bien devant la carte", async () => {
     await go("#/obs/kruger");
@@ -370,31 +405,31 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
   });
   await verif("photo : l'IA hésite → toucher un animal le choisit pour l'observation", async () => {
     relais = { result: { animal: true, sure: false, sci: "Panthera leo", name_fr: "Lion", name_en: "Lion" } };
-    await photoDepuis("#/");
+    await photoDepuis("#/id");
     await clicBouton("Lion");
     exige(/Noter où/.test(await txt("#rec h2")), "toucher l'animal n'ouvre pas « Noter où vous l'avez vu ? »");
   });
   await verif("photo : animal pas dans Saffrica → « Voir sur internet »", async () => {
     relais = { result: { animal: true, sure: true, sci: "Lycaon fictus", name_fr: "Animal inconnu", name_en: "Unknown" } };
-    await photoDepuis("#/");
+    await photoDepuis("#/id");
     exige((await boutons()).includes("Voir sur internet"), "bouton « Voir sur internet » absent");
   });
   await verif("photo : aucun animal → garder pour plus tard → page À vérifier", async () => {
     relais = { result: { animal: false } };
-    await photoDepuis("#/");
+    await photoDepuis("#/id");
     await clicBouton("Garder pour vérifier plus tard"); await W(800);
     await clicBouton("Voir la liste"); await W(800);
     exige(await page.evaluate(() => location.hash) === "#/verify" && await nb(".pitem") >= 1, "la photo gardée n'apparaît pas dans « À vérifier »");
   });
   await verif("photo : le relais ne répond pas → réessayer / garder", async () => {
     relais = { error: "panne" }; relaisStatus = 500;
-    await photoDepuis("#/");
+    await photoDepuis("#/id");
     const b = await boutons();
     exige(b.includes("Réessayer") && b.includes("Garder pour vérifier plus tard"), "boutons d'échec absents : " + b.join(" | "));
     relaisStatus = 200;
   });
   await verif("photo : hors ligne → garder pour plus tard", async () => {
-    await go("#/"); await ctx.setOffline(true);
+    await go("#/id"); await ctx.setOffline(true);
     await photo();
     exige(/Pas de réseau|No network/i.test(await txt("#rec h2")) && (await boutons()).includes("Garder pour vérifier plus tard"), "écran hors ligne absent");
     await ctx.setOffline(false);

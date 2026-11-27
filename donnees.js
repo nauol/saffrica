@@ -5,7 +5,7 @@
  */
 window.APP_DATA = {
   meta: {
-    version: "3.5.3",
+    version: "3.6.0",
     lastChecked: "2026-11-15",
     nextUpdate: "2026-12-01"
   },
@@ -7490,6 +7490,12 @@ window.APP_DATA = {
 
   /* News and update log, newest first. Shown on the "What’s new" page. */
   updates: [
+    {
+      date: "2026-11-27",
+      title: { en: "Identify by park, language menu, lighter screens", fr: "Identifier par parc, menu des langues, écrans allégés" },
+      text: { en: "“Identify” now first asks for the country, then the park, before the photo. The language button opens a small menu. Explanation texts were moved to the terms of use, and sources are folded behind an arrow. From an animal’s page, “See all sightings” opens the map already filtered on that animal.", fr: "« Identifier » demande d’abord le pays, puis le parc, avant la photo. Le bouton de langue ouvre un petit menu. Les textes d’explication sont maintenant dans les conditions d’utilisation, et les sources sont repliées derrière une flèche. Depuis la fiche d’un animal, « Voir toutes les observations » ouvre la carte déjà filtrée sur cet animal." },
+      src: []
+    },
     {
       date: "2026-11-27",
       title: { en: "“Big Five” kept in French", fr: "« Big Five » gardé en français" },

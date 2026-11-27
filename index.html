@@ -55,7 +55,12 @@ button { font: inherit; }
   height: 44px; min-width: 44px; border-radius: 999px; display: inline-grid; place-items: center;
 }
 .icon-btn svg { width: 22px; height: 22px; }
-.lang-btn { display: inline-flex; align-items: center; gap: 7px; padding: 0 14px; font-size: .88rem; font-weight: 650; }
+.lang-btn { display: inline-flex; align-items: center; gap: 7px; padding: 0 12px 0 14px; font-size: .88rem; font-weight: 650; }
+.lang-btn .caret { width: 14px; height: 14px; opacity: .7; }
+.langmenu { position: absolute; right: 16px; top: calc(100% - 4px); z-index: 30; min-width: 180px; background: var(--card); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,.18); padding: 6px; display: grid; gap: 2px; }
+.langmenu button { display: flex; align-items: center; gap: 10px; width: 100%; border: 0; background: none; color: var(--ink); font: inherit; font-weight: 600; padding: 11px 12px; border-radius: 11px; cursor: pointer; text-align: left; }
+.langmenu button:hover, .langmenu button:focus-visible { background: var(--bg); outline: none; }
+.langmenu .tick { margin-left: auto; color: var(--brand-ink); font-weight: 800; }
 .flag { border-radius: 3px; box-shadow: 0 0 0 1px rgba(0,0,0,.08); flex: none; }
 .brand { flex: 1; text-align: center; color: var(--ink); text-decoration: none; font-weight: 750; font-size: 1.08rem; letter-spacing: -0.02em; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
 .brand::before { content: ""; width: 28px; height: 28px; border-radius: 8px; background: #2e4a2a url(icone-192.png) center / cover no-repeat; }
@@ -152,7 +157,11 @@ a.row:active { background: var(--fill); }
 .tipbox { background: var(--brand-soft); border-radius: 12px; padding: 10px 14px; margin: 8px 0; font-size: .92rem; text-align: left; }
 .tipbox h3 { margin: 0 0 4px; font-size: 1rem; }
 .tipbox ul { margin: 0; padding-left: 20px; }
-details summary { cursor: pointer; font-weight: 650; padding: 6px 0; }
+details summary { cursor: pointer; font-weight: 650; padding: 6px 0; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+details summary::-webkit-details-marker { display: none; }
+details:not(.soonbox) > summary::after { content: ""; width: 9px; height: 9px; border-right: 2.2px solid var(--muted); border-bottom: 2.2px solid var(--muted); transform: rotate(45deg) translate(-2px, -2px); transition: transform .2s; flex: none; margin-right: 4px; }
+details[open]:not(.soonbox) > summary::after { transform: rotate(225deg) translate(-2px, -2px); }
+.srcfold { padding-top: 10px; padding-bottom: 10px; }
 .sources { margin: 8px 0 0; padding-left: 18px; font-size: .85rem; color: var(--muted); }
 .sources li { margin-bottom: 4px; }
 .sources a { color: var(--brand-ink); overflow-wrap: anywhere; }
@@ -299,6 +308,7 @@ a.tile.seen::after { content: "✓"; position: absolute; top: 8px; left: 8px; wi
 .obsbar select { flex: 1; min-height: 44px; font: inherit; border-radius: 12px; padding: 0 12px; border: 0; background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
 .obspop strong { display: block; font-size: 1rem; }
 .obspop a.gm { display: inline-block; margin-top: 8px; padding: 8px 12px; border-radius: 10px; background: var(--brand); color: #fff; text-decoration: none; font-weight: 700; }
+.idpick { width: 100%; border: 0; background: none; font: inherit; color: inherit; text-align: left; cursor: pointer; }
 .pendlink { display: inline-block; margin: 0 0 10px; padding: 8px 14px; border-radius: 999px; background: #c0392b; color: #fff; font-weight: 700; text-decoration: none; }
 .pitem { display: flex; gap: 12px; align-items: flex-start; padding: 12px; margin: 0 0 12px; border-radius: var(--radius); background: var(--card); box-shadow: var(--shadow); }
 .pitem img { width: 96px; height: 96px; object-fit: cover; border-radius: 12px; flex: none; background: #000; }
@@ -386,7 +396,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     en: {
       title: "Saffrica",
       pickCountry: "Choose a country",
-      homeEyebrow: "Safari guide", homeTitle: "Collect the wildlife", countriesH: "Countries", availN: "{n} available", parksN: "{n} parks", explore: "Explore", otherCountries: "Other countries · coming soon", idTitle: "Identify", idSub: "by photo", obsWhereLead: "Where are you? First pick your country, or “Outside parks”: the map will then open at the right place to note your sighting. You will also see where other users saw animals.", obsParkPick: "Pick your park:", obsElsewhere: "Elsewhere in this country? Take the photo directly:", obsFirst: "Note your sighting first: it will be added to the sightings map.", justFiche: "Just see the page", cancelLbl: "Cancel", orSep: "or", obsPickPrompt: "Pick on the map", obsSub: "map", seenNow: "Seen",
+      homeEyebrow: "Safari guide", homeTitle: "Collect the wildlife", countriesH: "Countries available in the app", availN: "{n} countries", parksN: "{n} parks", explore: "Explore", otherCountries: "Other countries · coming soon", idTitle: "Identify", idSub: "by photo", idWhere: "Where are you?", idLead: "Choose the country, then the park where you take the photo. Then take or import it.", idParkPick: "Tap your park, then take the photo:", obsWhereLead: "Where are you? First pick your country, or “Outside parks”: the map will then open at the right place to note your sighting. You will also see where other users saw animals.", obsParkPick: "Pick your park:", obsElsewhere: "Elsewhere in this country? Take the photo directly:", obsFirst: "Note your sighting first: it will be added to the sightings map.", justFiche: "Just see the page", cancelLbl: "Cancel", orSep: "or", obsPickPrompt: "Pick on the map", obsSub: "map", seenNow: "Seen",
       pickCountryLead: "Step 1 of 4. Start by picking the country you are in.",
       search: "Search…",
       soon: "Coming soon",
@@ -415,7 +425,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       parkAbout: "About the park",
       bestTime: "Best time to visit",
       whatsNew: "What’s new",
-      back: "Back", backPhoto: "Back to the photo",
+      back: "Back", backPhoto: "Back to the photo", langLbl: "Language",
       checked: "Data last checked",
       next: "Next update planned",
       offlineReady: "Ready to use offline",
@@ -523,7 +533,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     fr: {
       title: "Saffrica",
       pickCountry: "Choisissez un pays",
-      homeEyebrow: "Guide de safari", homeTitle: "Collectionnez la faune", countriesH: "Pays", availN: "{n} disponibles", parksN: "{n} parcs", explore: "Explorer", otherCountries: "Autres pays · bientôt", idTitle: "Identifier", idSub: "par photo", obsWhereLead: "Où êtes-vous ? Choisissez d’abord votre pays, ou « Hors parc » : la carte s’ouvrira ensuite au bon endroit pour noter votre observation. Vous y verrez aussi où les autres utilisateurs ont vu des animaux.", obsParkPick: "Choisissez votre parc :", obsElsewhere: "Ailleurs dans ce pays ? Prenez directement la photo :", obsFirst: "Notez d’abord votre observation : elle sera ajoutée à la carte des observations.", justFiche: "Juste voir la fiche", cancelLbl: "Annuler", orSep: "ou", obsPickPrompt: "Choisir sur la carte", obsSub: "carte", seenNow: "Vu",
+      homeEyebrow: "Guide de safari", homeTitle: "Collectionnez la faune", countriesH: "Pays disponibles dans l’application", availN: "{n} pays", parksN: "{n} parcs", explore: "Explorer", otherCountries: "Autres pays · bientôt", idTitle: "Identifier", idSub: "par photo", idWhere: "Où êtes-vous ?", idLead: "Choisissez le pays, puis le parc où vous prenez la photo. Ensuite, prenez-la ou importez-la.", idParkPick: "Touchez votre parc, puis prenez la photo :", obsWhereLead: "Où êtes-vous ? Choisissez d’abord votre pays, ou « Hors parc » : la carte s’ouvrira ensuite au bon endroit pour noter votre observation. Vous y verrez aussi où les autres utilisateurs ont vu des animaux.", obsParkPick: "Choisissez votre parc :", obsElsewhere: "Ailleurs dans ce pays ? Prenez directement la photo :", obsFirst: "Notez d’abord votre observation : elle sera ajoutée à la carte des observations.", justFiche: "Juste voir la fiche", cancelLbl: "Annuler", orSep: "ou", obsPickPrompt: "Choisir sur la carte", obsSub: "carte", seenNow: "Vu",
       pickCountryLead: "Étape 1 sur 4. Commencez par choisir le pays où vous êtes.",
       search: "Rechercher…",
       soon: "Bientôt",
@@ -552,7 +562,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       parkAbout: "À propos du parc",
       bestTime: "Meilleure période",
       whatsNew: "Nouveautés",
-      back: "Retour", backPhoto: "Retour à la photo",
+      back: "Retour", backPhoto: "Retour à la photo", langLbl: "Langue",
       checked: "Dernière vérification des données",
       next: "Prochaine mise à jour prévue",
       offlineReady: "Utilisable hors ligne",
@@ -1069,7 +1079,8 @@ body.is-fiche .footer { padding-bottom: 100px; }
     if (!file) return;
     var shot = null, close = { label: T().camClose, fn: recHide };
     var ctx = /^#\/obs/.test(location.hash || "") ? "obs" : "home";   /* d'où vient la photo : page Observations ou accueil */
-    REC.area = obsArea();   /* parc ou pays choisi avant la photo : la carte « Choisir sur la carte » y sera centrée */
+    REC.area = REC.forceArea !== undefined ? REC.forceArea : obsArea();   /* parc ou pays choisi avant la photo : la carte « Choisir sur la carte » y sera centrée */
+    delete REC.forceArea;
     recShow({ title: T().camWork, bar: null, buttons: [] });
     recPrepare(file).then(function (url) {
       shot = url;
@@ -1216,6 +1227,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       sum: "Saffrica est un guide des animaux d’Afrique. Avec du réseau, la photo que vous prenez est envoyée à une intelligence artificielle de Google pour identifier l’animal. Sans réseau, rien n’est envoyé : vous pouvez garder la photo sur votre téléphone pour la vérifier plus tard.",
       body: [
         "À propos. Saffrica est un projet personnel et gratuit. Les informations sur les animaux viennent de sources publiques, citées dans chaque fiche avec leur date. Elles peuvent être incomplètes ou changer : elles sont données à titre indicatif.",
+        "Chiffres et cartes. Les chiffres sont des estimations, pas des comptages exacts, et chacun indique sa source et sa date. Les descriptions (alimentation, taille, durée de vie, comportement, sécurité) sont des connaissances générales de référence. Respectez toujours les règles du parc et les conseils des rangers. Les cartes utilisent les données © contributeurs OpenStreetMap.",
         "Vos photos. Quand vous avez du réseau, la photo est réduite puis envoyée à un petit service intermédiaire (hébergé chez Cloudflare), qui la transmet à l’intelligence artificielle Gemini de Google. Saffrica n’enregistre pas vos photos. Google applique ses propres règles de confidentialité : avec l’offre gratuite utilisée par Saffrica, Google peut utiliser le contenu envoyé pour améliorer ses produits. N’envoyez donc pas de photos de personnes ni d’éléments privés.",
         "Observations. Si vous choisissez de noter où vous avez vu un animal, l’animal, la position, la date et le parc sont envoyés à un service en ligne (hébergé chez Cloudflare) et sont visibles par tous les utilisateurs, sur la carte du parc. Aucune photo, aucun nom, aucun identifiant n’est envoyé. La localisation de votre téléphone n’est demandée que lorsque vous choisissez de noter une observation.",
         "Sans réseau. L’identification par photo demande du réseau. Sans réseau, aucune photo n’est envoyée : vous pouvez la garder dans la liste « À vérifier » et la faire vérifier plus tard, quand vous aurez du réseau. Les fiches, les parcs et la recherche fonctionnent sans réseau.",
@@ -1229,6 +1241,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       sum: "Saffrica is a guide to African wildlife. With a connection, the photo you take is sent to an artificial intelligence by Google to identify the animal. Without a connection, nothing is sent: you can keep the photo on your phone and check it later.",
       body: [
         "About. Saffrica is a free personal project. The information about animals comes from public sources, cited in each page with its date. It may be incomplete or change: it is given for information only.",
+        "Figures and maps. Figures are estimates, not exact counts, and each one shows its source and date. Descriptions (diet, size, lifespan, behaviour, safety) are general reference knowledge. Always follow park rules and rangers’ advice. Maps use data © OpenStreetMap contributors.",
         "Your photos. When you have a connection, the photo is shrunk and sent to a small intermediary service (hosted by Cloudflare), which passes it to Google’s Gemini artificial intelligence. Saffrica does not store your photos. Google applies its own privacy rules: with the free offer used by Saffrica, Google may use the content sent to improve its products. So do not send photos of people or private things.",
         "Observations. If you choose to note where you saw an animal, the animal, the position, the date and the park are sent to an online service (hosted by Cloudflare) and are visible to all users on the park map. No photo, no name and no identifier is sent. Your phone’s location is only requested when you choose to note an observation.",
         "Without a connection. Identifying a photo needs a connection. Without one, no photo is sent: you can keep it in the “To check” list and have it checked later, when you have a connection. The animal pages, the parks and the search work without a connection.",
@@ -1240,7 +1253,29 @@ body.is-fiche .footer { padding-bottom: 100px; }
     }
   };
   var FLAGS = { en: '<svg class="flag" viewBox="0 0 60 40" width="22" height="15" aria-hidden="true"><rect width="60" height="40" fill="#012169"/><path d="M0 0L60 40M60 0L0 40" stroke="#fff" stroke-width="8"/><path d="M0 0L60 40M60 0L0 40" stroke="#C8102E" stroke-width="3"/><path d="M30 0V40M0 20H60" stroke="#fff" stroke-width="13"/><path d="M30 0V40M0 20H60" stroke="#C8102E" stroke-width="7"/></svg>', fr: '<svg class="flag" viewBox="0 0 3 2" width="22" height="15" aria-hidden="true"><rect width="1" height="2" fill="#0055A4"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#EF4135"/></svg>' };
-  function langLabel() { return lang === "en" ? FLAGS.fr + " FR" : FLAGS.en + " EN"; }
+  function langLabel() { return (lang === "en" ? FLAGS.en + " EN" : FLAGS.fr + " FR") + '<svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>'; }
+  var LANGS = [{ id: "fr", label: "Français" }, { id: "en", label: "English" }];
+  function setLang(l) {
+    if (l === lang) return;
+    lang = l;
+    try { localStorage.setItem("awf-lang", lang); } catch (e) {}
+    render();
+  }
+  function langMenuClose() {
+    var m = document.getElementById("langMenu"); if (m) m.remove();
+    langBtn.setAttribute("aria-expanded", "false");
+  }
+  function langMenuOpen() {
+    langMenuClose();
+    var m = document.createElement("div"); m.id = "langMenu"; m.className = "langmenu"; m.setAttribute("role", "menu");
+    m.innerHTML = LANGS.map(function (o) {
+      return '<button type="button" role="menuitemradio" aria-checked="' + (o.id === lang) + '" data-l="' + o.id + '">' + FLAGS[o.id] + "<span>" + o.label + "</span>" + (o.id === lang ? '<span class="tick">✓</span>' : "") + "</button>";
+    }).join("");
+    langBtn.parentNode.appendChild(m);
+    langBtn.setAttribute("aria-expanded", "true");
+    Array.prototype.forEach.call(m.querySelectorAll("button"), function (b) { b.onclick = function (ev) { ev.stopPropagation(); langMenuClose(); setLang(b.getAttribute("data-l")); }; });
+    var first = m.querySelector('[aria-checked="true"]'); if (first) first.focus();
+  }
   function cguAccepted() { try { return localStorage.getItem("saffrica-cgu") === "3"; } catch (e) { return false; } }
   function showCgu(reading) {
     var old = document.getElementById("cgu"); if (old) old.remove();
@@ -1251,7 +1286,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       '</div><div class="recbtns"><button type="button" class="rbtn" id="cguLang">' + langLabel() + '</button>' +
       '<button type="button" class="rbtn primary" id="cguOk">' + esc(reading ? T().camClose : T().cguAccept) + "</button></div></div>";
     document.body.appendChild(el);
-    document.getElementById("cguLang").onclick = function () { langBtn.click(); showCgu(reading); };
+    document.getElementById("cguLang").onclick = function () { setLang(lang === "en" ? "fr" : "en"); showCgu(reading); };
     document.getElementById("cguOk").onclick = function () {
       if (!reading) { try { localStorage.setItem("saffrica-cgu", "3"); } catch (e) {} }
       el.remove();
@@ -1391,14 +1426,12 @@ body.is-fiche .footer { padding-bottom: 100px; }
     var mc = mineCount();
     var html = '<p class="eyebrow">' + esc(T().homeEyebrow) + "</p><h1 class=\"htitle\">" + esc(T().homeTitle) + "</h1>" +
       '<input class="search" id="q" type="search" placeholder="' + esc(T().searchAll) + '" autocomplete="off">' +
-      '<div class="qa-row"><button type="button" class="qa main" id="photoBtn">' + ICON.cam + "<span>" + esc(T().idTitle) + "<small>" + esc(T().idSub) + "</small></span></button>" +
+      '<div class="qa-row"><a class="qa main" id="idTile" href="#/id">' + ICON.cam + "<span>" + esc(T().idTitle) + "<small>" + esc(T().idSub) + "</small></span></a>" +
       '<a class="qa obs" href="#/obs">' + ICON.pin + "<span>" + esc(T().obsTitle) + "<small>" + esc(T().obsSub) + "</small></span></a>" +
       '<a class="qa mine" href="#/mine">' + ICON.star + "<span>" + esc(T().mineTitle) + "<small>" + mc.n + " / " + mc.t + "</small></span></a></div>" +
-      '<input type="file" accept="image/*" id="galInput" hidden>' +
-      '<p class="meta camhint">' + esc(T().camHint) + "</p>" +
       '<a class="pendlink" id="pendLink" href="#/verify" hidden></a>' +
       '<div id="res" hidden></div>' +
-      '<div class="sectionhead" id="cHead"><h2>' + esc(T().countriesH) + "</h2><span>" + esc(T().availN.replace("{n}", avail.length)) + "</span></div>" +
+      '<div class="sectionhead" id="cHead"><h2>' + esc(T().countriesH) + "</h2></div>" +
       '<ul class="clist" id="items">' + avail.map(function (c) {
         return '<li data-k="' + esc(norm(c.en + " " + c.fr)) + '">' + countryCard(c, "#/c/" + c.id) + "</li>";
       }).join("") + "</ul>" +
@@ -1589,7 +1622,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     var h = '<p class="lastline"><strong>' + esc(obsDate(o.ts)) + "</strong> · " + esc(lsAgo(o.ts)) + "</p>";
     h += '<p id="lsWhere">' + (pk ? esc(t.lsIn) + " <strong>" + esc(tr(pk.name)) + "</strong>" + (c ? " (" + esc(countryName(c)) + ")" : "")
       : esc(t.lsOutside) + " · " + esc(t.lsCoords) + " : " + o.lat.toFixed(4) + ", " + o.lng.toFixed(4)) + "</p>";
-    h += '<p class="meta"><a class="gm" target="_blank" rel="noopener" href="https://www.google.com/maps?q=' + o.lat + "," + o.lng + '">' + esc(t.lsMap) + '</a></p><a class="obsbtn" href="#/obs/' + (o.park || "none") + '">' + esc(t.lsAll) + "</a>";
+    h += '<p class="meta"><a class="gm" target="_blank" rel="noopener" href="https://www.google.com/maps?q=' + o.lat + "," + o.lng + '">' + esc(t.lsMap) + '</a></p><a class="obsbtn" href="#/obs/' + (o.park || "none") + "/a/" + aid + '">' + esc(t.lsAll) + "</a>";
     el.innerHTML = h;
     if (!pk) lsCountry(o.lat, o.lng).then(function (n) {
       var w = document.getElementById("lsWhere"); if (!n || !w || !document.getElementById("lsBody")) return;
@@ -1657,8 +1690,8 @@ body.is-fiche .footer { padding-bottom: 100px; }
 
     var rg = (D.ranges && D.ranges[aid] && D.ranges[aid].src) || [];
     var allSrc = uniq(((pa && pa.src) || []).concat((pa && pa.extraSrc) || [], (pa && pa.growthSrc) || [], (pa && pa.spotSrc) || [], a.global.src || [], a.statusSrc || [], rg, (a.types || []).reduce(function (x, t) { return x.concat(t.src || []); }, [])));
-    html += '<section class="card"><h2>' + esc(T().sources) + "</h2>" + sourceList(allSrc) + "</section>";
-    html += '<div class="warn">' + esc(T().disclaimer) + "</div></div>";
+    html += '<section class="card srcfold"><details><summary>' + esc(T().sources) + " (" + allSrc.length + ")</summary>" + sourceList(allSrc) + "</details></section>";
+    html += "</div>";
     html += '<div class="seenpad"></div><button type="button" id="seenBtn" class="seenbtn' + (isSeen(aid) ? " on" : "") + '" aria-pressed="' + (isSeen(aid) ? "true" : "false") + '"><span class="dot"></span><span>' + esc(T().seenLbl) + "</span></button>";
     return { fiche: true, html: html, after: function () { bindSeen(aid); bindZoom(a); lastSeenLoad(aid); } };
   }
@@ -1805,12 +1838,12 @@ body.is-fiche .footer { padding-bottom: 100px; }
   }
   /* zone choisie sur les pages Observations : #/obs/<parc> → ce parc ; #/obs/c/<pays> → ce pays ; sinon toute l'Afrique */
   function obsArea() {
-    var m = /^#\/obs\/c\/([^/]+)/.exec(location.hash || ""), c, o, pr, w, h;
+    var m = /^#\/(?:obs|id)\/c\/([^/]+)/.exec(location.hash || ""), c, o, pr, w, h;
     if (m && (c = findCountry(m[1])) && (o = c.outline)) {
       pr = o.proj; w = +o.viewBox.split(" ")[2]; h = +o.viewBox.split(" ")[3];
       return { bounds: [[-(h / pr[3] + pr[2]), pr[1] / pr[0]], [-pr[2], (w / pr[3] + pr[1]) / pr[0]]] };
     }
-    m = /^#\/obs\/([^/]+)$/.exec(location.hash || "");
+    m = /^#\/obs\/([^/]+)(?:\/a\/[^/]+)?$/.exec(location.hash || "");
     var p = m && m[1] !== "none" && m[1] !== "c" ? findPark(m[1]) : null;
     if (p && p.map) return { view: p.map, park: p.id };
     return null;
@@ -1868,6 +1901,39 @@ body.is-fiche .footer { padding-bottom: 100px; }
     });
   }
   window.addEventListener("online", function () { if (cguAccepted()) obsFlush(); });
+  /* « Identifier » : d'abord le pays, puis le parc ; toucher un parc ouvre directement la photo (la carte « Choisir sur la carte » s'ouvrira sur ce parc) */
+  function idPhoto(area) {
+    REC.forceArea = area;
+    var gi = document.getElementById("galInput"); if (gi) gi.click();
+  }
+  function viewId() {
+    var cs = D.countries.filter(function (c) { return D.parks.some(function (p) { return p.country === c.id; }); });
+    var cards = cs.map(function (c) { return "<li>" + countryCard(c, "#/id/c/" + c.id) + "</li>"; }).join("");
+    return {
+      html: '<p class="eyebrow">' + esc(T().idTitle + " " + T().idSub) + "</p><h1>" + esc(T().idWhere) + '</h1><p class="lead">' + esc(T().idLead) + "</p>" +
+        '<ul class="clist">' + cards + '</ul><ul class="list" style="margin-top:12px"><li><button type="button" class="row idpick" data-none="1"><span>' + esc(T().obsNone) + '</span><span class="chev">›</span></button></li></ul>' +
+        '<input type="file" accept="image/*" id="galInput" hidden>',
+      after: function () { bindPhotoBtn(); bindIdPicks(); }
+    };
+  }
+  function viewIdCountry(cid) {
+    var c = findCountry(cid);
+    if (!c) return viewId();
+    var li = D.parks.filter(function (p) { return p.country === cid; }).map(function (p) {
+      return '<li><button type="button" class="row idpick" data-park="' + esc(p.id) + '"><span>' + esc(tr(p.name)) + '</span><span class="chev">›</span></button></li>';
+    }).join("");
+    return { after: function () { bindPhotoBtn(); bindIdPicks(); },
+      html: '<p class="eyebrow">' + esc(T().idTitle + " " + T().idSub) + "</p><h1>" + esc(countryName(c)) + '</h1><p class="lead">' + esc(T().idParkPick) + '</p><ul class="list">' + li + "</ul>" +
+        '<p class="lead" style="margin-top:22px">' + esc(T().obsElsewhere) + "</p>" + photoBtnHtml() };
+  }
+  function bindIdPicks() {
+    Array.prototype.forEach.call(document.querySelectorAll(".idpick"), function (b) {
+      b.onclick = function () {
+        var p = b.getAttribute("data-park") && findPark(b.getAttribute("data-park"));
+        idPhoto(p && p.map ? { view: p.map, park: p.id } : null);
+      };
+    });
+  }
   function viewObsCountry(cid) {
     var c = findCountry(cid);
     if (!c) return viewObs(null);
@@ -1875,9 +1941,9 @@ body.is-fiche .footer { padding-bottom: 100px; }
       return '<li><a class="row" href="#/obs/' + p.id + '"><span>' + esc(tr(p.name)) + '</span><span class="chev">›</span></a></li>';
     }).join("");
     return { after: bindPhotoBtn, html: '<p class="eyebrow">' + esc(T().obsTitle) + "</p><h1>" + esc(countryName(c)) + '</h1><p class="lead">' + esc(T().obsParkPick) + '</p><ul class="list">' + li + "</ul>" +
-      '<p class="lead" style="margin-top:22px">' + esc(T().obsElsewhere) + "</p>" + photoBtnHtml() + '<p class="meta camhint">' + esc(T().camHint) + "</p>" };
+      '<p class="lead" style="margin-top:22px">' + esc(T().obsElsewhere) + "</p>" + photoBtnHtml() };
   }
-  function viewObs(pid) {
+  function viewObs(pid, focusAid) {
     if (!pid) {
       var cs = D.countries.filter(function (c) { return D.parks.some(function (p) { return p.country === c.id; }); });
       var nq = obsQ().length;
@@ -1889,15 +1955,15 @@ body.is-fiche .footer { padding-bottom: 100px; }
     var park = pid === "none" ? null : findPark(pid);
     if (pid !== "none" && !park) return viewObs(null);
     var title = park ? tr(park.name) : T().obsNone;
-    var html = "<h1>" + esc(title) + "</h1>" + (park ? '<a class="row parklink" href="#/p/' + park.id + '"><span>' + esc(T().obsParkInfo) + '</span><span class="chev">›</span></a>' : "") + photoBtnHtml() + '<p class="meta camhint">' + esc(T().camHint) + "</p>" + '<div class="obsbar"><select id="obsSel" aria-label="' + esc(T().obsAll) + '"><option value="">' + esc(T().obsAll) + '</option></select></div>' +
-      '<p class="meta" id="obsMsg">' + esc(T().obsLoading) + '</p><div class="obsmap" id="obsMap"></div><p class="meta">' + esc(T().obsMapNote) + "</p>";
+    var html = "<h1>" + esc(title) + "</h1>" + (park ? '<a class="row parklink" href="#/p/' + park.id + '"><span>' + esc(T().obsParkInfo) + '</span><span class="chev">›</span></a>' : "") + photoBtnHtml() + '<div class="obsbar"><select id="obsSel" aria-label="' + esc(T().obsAll) + '"><option value="">' + esc(T().obsAll) + '</option></select></div>' +
+      '<p class="meta" id="obsMsg">' + esc(T().obsLoading) + '</p><div class="obsmap" id="obsMap"></div>';
     return {
       html: html,
       after: function () {
         bindPhotoBtn();
         var msg = document.getElementById("obsMsg"), sel = document.getElementById("obsSel"), el = document.getElementById("obsMap");
         var mapRef = null, layer = null, all = [], alive = true;
-        window.addEventListener("hashchange", function once() { alive = false; window.removeEventListener("hashchange", once); if (mapRef) { try { mapRef.remove(); } catch (e) {} } });
+        window.addEventListener("hashchange", function once() { alive = false; window.removeEventListener("hashchange", once); if (mapRef) { try { mapRef.remove(); } catch (e) {} mapRef = null; } });
         function draw() {
           if (!mapRef || !window.L) return;
           if (layer) layer.clearLayers(); else layer = window.L.layerGroup().addTo(mapRef);
@@ -1921,12 +1987,16 @@ body.is-fiche .footer { padding-bottom: 100px; }
           Object.keys(names).sort(function (x, y) { return tr((D.animals[x] || { name: { en: x, fr: x } }).name).localeCompare(tr((D.animals[y] || { name: { en: y, fr: y } }).name), lang); }).forEach(function (k) {
             var o = document.createElement("option"); o.value = k; o.textContent = D.animals[k] ? tr(D.animals[k].name) : k; sel.appendChild(o);
           });
+          if (focusAid && D.animals[focusAid]) {   /* venu de la fiche d'un animal : la carte s'ouvre filtrée sur lui */
+            if (!names[focusAid]) { var fo = document.createElement("option"); fo.value = focusAid; fo.textContent = tr(D.animals[focusAid].name); sel.appendChild(fo); }
+            sel.value = focusAid;
+          }
           var L = window.L, c = park && park.map ? park.map : { lat: 2, lng: 20, zoom: 3 };
           mapRef = L.map(el).setView([c.lat, c.lng], c.zoom);
           L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "© OpenStreetMap contributors" }).addTo(mapRef);
           drawParks(mapRef, park && park.id);
           REC.obsMap = mapRef;
-          setTimeout(function () { if (mapRef) mapRef.invalidateSize(); }, 200);
+          setTimeout(function () { if (mapRef && alive) mapRef.invalidateSize(); }, 200);
           draw();
         }).catch(function (e) {
           if (!alive) return;
@@ -1940,7 +2010,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     var html = "<h1>" + esc(T().whatsNew) + '</h1><p class="lead">' + esc(T().updatesLead) + "</p>" +
       D.updates.map(function (u) {
         return '<article class="card upd"><time datetime="' + esc(u.date) + '">' + esc(fmtDate(u.date)) + "</time>" +
-          "<h2>" + esc(tr(u.title)) + "</h2><p>" + esc(tr(u.text)) + "</p>" + sourceList(u.src) + "</article>";
+          "<h2>" + esc(tr(u.title)) + "</h2><p>" + esc(tr(u.text)) + "</p>" + ((u.src || []).length ? "<details><summary>" + esc(T().sources) + " (" + u.src.length + ")</summary>" + sourceList(u.src) + "</details>" : "") + "</article>";
       }).join("");
     return { html: html };
   }
@@ -2035,6 +2105,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
   function render() {
     var parts = parse();
     var cur = parts.length ? location.hash : "#/";
+    delete REC.forceArea;   /* un parc touché sur « Identifier » ne vaut que pour la photo qui suit */
     trailNote(cur);
     if (REC.ficheHash && REC.ficheHash !== cur) REC.ficheBack = REC.ficheHash = null;
     var view;
@@ -2043,7 +2114,9 @@ body.is-fiche .footer { padding-bottom: 100px; }
     else if (parts[0] === "p" && parts[1] && parts[2] === "a" && parts[3]) view = viewAnimal(parts[1], parts[3]);
     else if (parts[0] === "p" && parts[1]) view = viewPark(parts[1]);
     else if (parts[0] === "obs" && parts[1] === "c") view = viewObsCountry(parts[2]);
-    else if (parts[0] === "obs") view = viewObs(parts[1]);
+    else if (parts[0] === "obs") view = viewObs(parts[1], parts[2] === "a" ? parts[3] : null);
+    else if (parts[0] === "id" && parts[1] === "c") view = viewIdCountry(parts[2]);
+    else if (parts[0] === "id") view = viewId();
     else if (parts[0] === "mine") view = viewMine();
     else if (parts[0] === "news") view = viewNews();
     else if (parts[0] === "verify") view = viewVerify();
@@ -2067,7 +2140,9 @@ body.is-fiche .footer { padding-bottom: 100px; }
     document.title = T().title;
     brand.textContent = T().title;
     langBtn.innerHTML = langLabel();
-    langBtn.setAttribute("aria-label", lang === "en" ? "Passer en français" : "Switch to English");
+    langBtn.setAttribute("aria-label", T().langLbl);
+    langBtn.setAttribute("aria-haspopup", "menu");
+    langMenuClose();
 
     footer.innerHTML =
       '<p><a href="#/news">' + esc(T().whatsNew) + "</a></p>" +
@@ -2079,11 +2154,12 @@ body.is-fiche .footer { padding-bottom: 100px; }
     window.scrollTo(0, 0);
   }
 
-  langBtn.addEventListener("click", function () {
-    lang = lang === "en" ? "fr" : "en";
-    try { localStorage.setItem("awf-lang", lang); } catch (e) {}
-    render();
+  langBtn.addEventListener("click", function (ev) {
+    ev.stopPropagation();
+    if (document.getElementById("langMenu")) langMenuClose(); else langMenuOpen();
   });
+  document.addEventListener("click", function (ev) { var m = document.getElementById("langMenu"); if (m && !m.contains(ev.target)) langMenuClose(); });
+  document.addEventListener("keydown", function (ev) { if (ev.key === "Escape" && document.getElementById("langMenu")) { langMenuClose(); langBtn.focus(); } });
   window.addEventListener("hashchange", render);
   window.addEventListener("scroll", function () { document.body.classList.toggle("scrolled", window.pageYOffset > 240); }, { passive: true });
 

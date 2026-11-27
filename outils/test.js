@@ -302,7 +302,7 @@ async function navigateur() {
       for (const x of interdits) if (bs.includes(x)) pb(`parcours photo, ${nom} : bouton « ${x} » ne devrait pas être là`);
     };
     // depuis l'accueil : on propose d'abord de noter, la fiche en second
-    await page.goto(base + "#/"); await page.reload(); await page.waitForSelector("#galInput", { state: "attached" });
+    await page.goto(base + "#/id"); await page.reload(); await page.waitForSelector("#galInput", { state: "attached" });
     await page.setInputFiles("#galInput", img); await page.waitForSelector(".recin h2:has-text('Lion')", { timeout: 15000 });
     await etape("accueil, résultat", ["Noter l’observation", "Juste voir la fiche"], ["Voir la fiche"]);
     // depuis Observations : jamais la fiche avant la fin
