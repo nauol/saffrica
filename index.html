@@ -396,7 +396,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     en: {
       title: "Saffrica",
       pickCountry: "Choose a country",
-      homeEyebrow: "Safari guide", homeTitle: "Collect the wildlife", countriesH: "Countries available in the app", availN: "{n} countries", parksN: "{n} parks", explore: "Explore", otherCountries: "Other countries · coming soon", idTitle: "Identify", idSub: "by photo", idWhere: "Where are you?", idLead: "Choose the country, then the park where you take the photo. Then take or import it.", idParkPick: "Tap your park, then take the photo:", obsWhereLead: "Where are you? First pick your country, or “Outside parks”: the map will then open at the right place to note your sighting. You will also see where other users saw animals.", obsParkPick: "Pick your park:", obsElsewhere: "Elsewhere in this country? Take the photo directly:", obsFirst: "Note your sighting first: it will be added to the sightings map.", justFiche: "Just see the page", cancelLbl: "Cancel", orSep: "or", obsPickPrompt: "Pick on the map", obsSub: "map", seenNow: "Seen",
+      homeEyebrow: "Safari guide", homeTitle: "Collect the wildlife", countriesH: "Countries available in the app", availN: "{n} countries", parksN: "{n} parks", explore: "Explore", otherCountries: "Other countries · coming soon", idTitle: "Identify", idSub: "by photo", idWhere: "Where are you?", idLead: "Choose the country, then the park where you take the photo. Then take or import it.", idParkPick: "Tap your park, then take the photo:", obsWhereLead: "Choose the country, then the park, to see the sightings map and note yours.", obsParkPick: "Pick your park:", obsElsewhere: "Elsewhere in this country? Take the photo directly:", obsFirst: "Note your sighting first: it will be added to the sightings map.", justFiche: "Just see the page", cancelLbl: "Cancel", orSep: "or", obsPickPrompt: "Pick on the map", obsSub: "map", seenNow: "Seen",
       pickCountryLead: "Step 1 of 4. Start by picking the country you are in.",
       search: "Search…",
       soon: "Coming soon",
@@ -533,7 +533,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     fr: {
       title: "Saffrica",
       pickCountry: "Choisissez un pays",
-      homeEyebrow: "Guide de safari", homeTitle: "Collectionnez la faune", countriesH: "Pays disponibles dans l’application", availN: "{n} pays", parksN: "{n} parcs", explore: "Explorer", otherCountries: "Autres pays · bientôt", idTitle: "Identifier", idSub: "par photo", idWhere: "Où êtes-vous ?", idLead: "Choisissez le pays, puis le parc où vous prenez la photo. Ensuite, prenez-la ou importez-la.", idParkPick: "Touchez votre parc, puis prenez la photo :", obsWhereLead: "Où êtes-vous ? Choisissez d’abord votre pays, ou « Hors parc » : la carte s’ouvrira ensuite au bon endroit pour noter votre observation. Vous y verrez aussi où les autres utilisateurs ont vu des animaux.", obsParkPick: "Choisissez votre parc :", obsElsewhere: "Ailleurs dans ce pays ? Prenez directement la photo :", obsFirst: "Notez d’abord votre observation : elle sera ajoutée à la carte des observations.", justFiche: "Juste voir la fiche", cancelLbl: "Annuler", orSep: "ou", obsPickPrompt: "Choisir sur la carte", obsSub: "carte", seenNow: "Vu",
+      homeEyebrow: "Guide de safari", homeTitle: "Collectionnez la faune", countriesH: "Pays disponibles dans l’application", availN: "{n} pays", parksN: "{n} parcs", explore: "Explorer", otherCountries: "Autres pays · bientôt", idTitle: "Identifier", idSub: "par photo", idWhere: "Où êtes-vous ?", idLead: "Choisissez le pays, puis le parc où vous prenez la photo. Ensuite, prenez-la ou importez-la.", idParkPick: "Touchez votre parc, puis prenez la photo :", obsWhereLead: "Choisissez le pays, puis le parc, pour voir la carte des observations et noter les vôtres.", obsParkPick: "Choisissez votre parc :", obsElsewhere: "Ailleurs dans ce pays ? Prenez directement la photo :", obsFirst: "Notez d’abord votre observation : elle sera ajoutée à la carte des observations.", justFiche: "Juste voir la fiche", cancelLbl: "Annuler", orSep: "ou", obsPickPrompt: "Choisir sur la carte", obsSub: "carte", seenNow: "Vu",
       pickCountryLead: "Étape 1 sur 4. Commencez par choisir le pays où vous êtes.",
       search: "Rechercher…",
       soon: "Bientôt",
@@ -1906,8 +1906,13 @@ body.is-fiche .footer { padding-bottom: 100px; }
     REC.forceArea = area;
     var gi = document.getElementById("galInput"); if (gi) gi.click();
   }
+  /* pays qui ont des parcs, dans le même ordre que l'accueil (alphabétique dans la langue choisie) */
+  function parkCountries() {
+    return D.countries.filter(function (c) { return D.parks.some(function (p) { return p.country === c.id; }); })
+      .sort(function (a, b) { return countryName(a).localeCompare(countryName(b), lang); });
+  }
   function viewId() {
-    var cs = D.countries.filter(function (c) { return D.parks.some(function (p) { return p.country === c.id; }); });
+    var cs = parkCountries();
     var cards = cs.map(function (c) { return "<li>" + countryCard(c, "#/id/c/" + c.id) + "</li>"; }).join("");
     return {
       html: '<p class="eyebrow">' + esc(T().idTitle + " " + T().idSub) + "</p><h1>" + esc(T().idWhere) + '</h1><p class="lead">' + esc(T().idLead) + "</p>" +
@@ -1945,10 +1950,10 @@ body.is-fiche .footer { padding-bottom: 100px; }
   }
   function viewObs(pid, focusAid) {
     if (!pid) {
-      var cs = D.countries.filter(function (c) { return D.parks.some(function (p) { return p.country === c.id; }); });
+      var cs = parkCountries();
       var nq = obsQ().length;
       var cards = cs.map(function (c) { return "<li>" + countryCard(c, "#/obs/c/" + c.id) + "</li>"; }).join("");
-      return { html: "<h1>" + esc(T().obsTitle) + '</h1><p class="lead">' + esc(T().obsWhereLead) + "</p>" +
+      return { html: '<p class="eyebrow">' + esc(T().obsTitle) + "</p><h1>" + esc(T().idWhere) + '</h1><p class="lead">' + esc(T().obsWhereLead) + "</p>" +
         (nq ? '<p class="meta"><strong>' + nq + "</strong> " + esc(T().obsPending) + "</p>" : "") +
         '<ul class="clist">' + cards + '</ul><ul class="list" style="margin-top:12px"><li><a class="row" href="#/obs/none"><span>' + esc(T().obsNone) + '</span><span class="chev">›</span></a></li></ul>' };
     }

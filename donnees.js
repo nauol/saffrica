@@ -5,7 +5,7 @@
  */
 window.APP_DATA = {
   meta: {
-    version: "3.6.0",
+    version: "3.6.1",
     lastChecked: "2026-11-15",
     nextUpdate: "2026-12-01"
   },
@@ -7490,6 +7490,12 @@ window.APP_DATA = {
 
   /* News and update log, newest first. Shown on the "What’s new" page. */
   updates: [
+    {
+      date: "2026-11-27",
+      title: { en: "Same country order everywhere", fr: "Même ordre des pays partout" },
+      text: { en: "Countries now appear in the same order on the home page, in Observations and in Identify, and the Observations page has the same simpler layout as Identify.", fr: "Les pays apparaissent maintenant dans le même ordre sur l’accueil, dans Observations et dans Identifier, et la page Observations a la même présentation, plus simple, qu’Identifier." },
+      src: []
+    },
     {
       date: "2026-11-27",
       title: { en: "Identify by park, language menu, lighter screens", fr: "Identifier par parc, menu des langues, écrans allégés" },

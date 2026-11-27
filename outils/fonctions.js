@@ -118,6 +118,16 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
     exige((await boutons()).includes("Juste voir la fiche"), "depuis Identifier, « Juste voir la fiche » devrait être proposé");
     await clicBouton("Annuler").catch(() => page.evaluate(() => { document.getElementById("rec").hidden = true; }));
   });
+  await verif("accueil, Observations et Identifier : mêmes pays, même ordre, même présentation", async () => {
+    const ordre = async (h) => { await go(h); return page.$$eval(".ccard", (cs) => cs.map((c) => c.getAttribute("href").split("/").pop())); };
+    const a = await ordre("#/"), o = await ordre("#/obs"), i = await ordre("#/id");
+    exige(a.join() === o.join() && a.join() === i.join(), `ordre des pays différent : accueil ${a} · observations ${o} · identifier ${i}`);
+    for (const h of ["#/obs", "#/id"]) {
+      await go(h);
+      exige(await nb("#app > .eyebrow") === 1 && /Où êtes-vous/.test(await txt("#app h1")), `${h} : présentation différente (surtitre + « Où êtes-vous ? »)`);
+      exige((await txt("#app .lead")).length < 110, `${h} : texte d'introduction trop long`);
+    }
+  });
   await verif("écrans sans textes d'explication (ils sont dans les conditions)", async () => {
     for (const h of ["#/", "#/id/c/za", "#/obs/c/za", "#/obs/kruger", "#/p/kruger/a/lion"]) {
       await go(h); await W(300);
