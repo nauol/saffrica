@@ -148,6 +148,12 @@ for (const [pid, pa] of Object.entries(D.parkAnimals || {})) for (const [aid, x]
   if (!(x.src || []).length) pb(`${pid}/${aid} : aucune source pour la présence de l'animal`);
   if (x.conf !== "none" && /^Not found in the sources used/.test(x.pop && x.pop.en)) pb(`${pid}/${aid} : « Non trouvé » mais conf « ${x.conf} »`);
 }
+// « Big Five » reste en anglais dans les textes français (voulu par l'utilisateur)
+{
+  const tout = fs.readFileSync(path.join(RACINE, "donnees.js"), "utf8") + fs.readFileSync(path.join(RACINE, "index.html"), "utf8");
+  const m = tout.match(/.{0,30}\b(cinq|5) grands\b.{0,30}/gi);
+  if (m) pb("« Big Five » traduit en français (garder « Big Five ») : " + m.join(" | "));
+}
 // Chaque niveau de confiance utilisé a son libellé dans les deux langues (sinon le badge s'affiche vide)
 {
   const html = fs.readFileSync(path.join(RACINE, "index.html"), "utf8");

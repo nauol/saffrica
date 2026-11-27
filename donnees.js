@@ -5,7 +5,7 @@
  */
 window.APP_DATA = {
   meta: {
-    version: "3.5.2",
+    version: "3.5.3",
     lastChecked: "2026-11-15",
     nextUpdate: "2026-12-01"
   },
@@ -1973,7 +1973,7 @@ window.APP_DATA = {
       ],
       about: {
         en: "One of the largest game reserves in Africa. It is home to the Big Five (lion, leopard, elephant, rhino, buffalo) plus cheetah, wild dog, hippo, giraffe, zebra and many antelope.",
-        fr: "L’une des plus grandes réserves de faune d’Afrique. On y trouve les Cinq Grands (lion, léopard, éléphant, rhinocéros, buffle) ainsi que le guépard, le lycaon, l’hippopotame, la girafe, le zèbre et de nombreuses antilopes."
+        fr: "L’une des plus grandes réserves de faune d’Afrique. On y trouve les « Big Five » (lion, léopard, éléphant, rhinocéros, buffle) ainsi que le guépard, le lycaon, l’hippopotame, la girafe, le zèbre et de nombreuses antilopes."
       },
       bestTime: {
         en: "Animals are easiest to see in the dry season (roughly May to September), when they gather at rivers and waterholes, and in the early morning and late afternoon. General guidance; check SANParks for current conditions.",
@@ -7490,6 +7490,12 @@ window.APP_DATA = {
 
   /* News and update log, newest first. Shown on the "What’s new" page. */
   updates: [
+    {
+      date: "2026-11-27",
+      title: { en: "“Big Five” kept in French", fr: "« Big Five » gardé en français" },
+      text: { en: "The French text of the Kruger page now says “Big Five”, like everywhere else in the app.", fr: "Le texte français de la page du Kruger dit maintenant « Big Five », comme partout ailleurs dans l’appli." },
+      src: []
+    },
     {
       date: "2026-11-27",
       title: { en: "Easier back navigation", fr: "Retour en arrière plus simple" },
