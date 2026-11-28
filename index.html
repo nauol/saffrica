@@ -255,8 +255,8 @@ dl.facts.stack dt { font-weight: 600; }
 .fc .lnk { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 8px; }
 .fc .lnk a { font-size: .82rem; font-weight: 650; color: var(--brand-ink); text-decoration: none; background: none; box-shadow: none; padding: 0; margin: 0; display: inline; }
 .fc .lnk a.obsbtn::before { display: none; }
-.tsec h2 { font-size: 1.08rem; margin: 0 0 8px; }
-.tsec p { margin: 0; }
+.tsec h2 { font-size: 1rem; margin: 0 0 6px; }
+.tsec p { margin: 0; font-size: .9rem; line-height: 1.5; }
 .tsec .chips { margin: 6px 0 0; }
 .tsec details.allc { margin-top: 10px; border-top: 1px solid var(--line); padding-top: 4px; }
 .tsec details.allc summary { color: var(--brand-ink); font-size: .9rem; }
@@ -268,7 +268,7 @@ dl.facts.stack dt { font-weight: 600; }
 .card.recog { margin-top: 0; padding-top: 16px; border-top: 0; }
 @media (min-width: 560px) { .sexes { grid-template-columns: 1fr 1fr; } .sexes .sx.both { grid-column: 1 / -1; } }
 .sx { min-width: 0; }
-.sx p { margin: 0; font-size: .95rem; }
+.sx p { margin: 0; font-size: .9rem; line-height: 1.5; }
 .sx strong { display: block; font-size: .85rem; }
 .sx span { font-size: .92rem; }
 
@@ -1753,7 +1753,6 @@ body.is-fiche .footer { padding-bottom: 100px; }
     if (pa) cells.push(factCell(T().spot, sh.spot ? tr(sh.spot.v) : "", sh.spot ? tr(sh.spot.x) : tr(pa.spot), { wide: true }));
     var ss = shortSafety(tr(a.safety));
     cells.push(factCell(T().safety, ss, "", { wide: true, txt: true }));
-    cells.push('<div class="fc w" id="lsBody"><span class="k">' + esc(T().lsTitle) + '</span><span class="x">' + esc(T().lsLoad) + "</span></div>");
     html += '<div class="factgrid">' + cells.join("") + "</div>";
     if (a.see && D.animals[a.see]) html += '<p class="meta"><a href="#/a/' + a.see + '">' + esc(T().seeGroup) + " « " + esc(tr(D.animals[a.see].name)) + " » ›</a></p>";
 
@@ -1767,6 +1766,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
 
     var rg = (D.ranges && D.ranges[aid] && D.ranges[aid].src) || [];
     var allSrc = uniq(((pa && pa.src) || []).concat((pa && pa.extraSrc) || [], (pa && pa.growthSrc) || [], (pa && pa.spotSrc) || [], a.global.src || [], a.statusSrc || [], rg, (a.types || []).reduce(function (x, t) { return x.concat(t.src || []); }, [])));
+    html += '<div class="factgrid lastobs"><div class="fc w" id="lsBody"><span class="k">' + esc(T().lsTitle) + '</span><span class="x">' + esc(T().lsLoad) + "</span></div></div>"; /* juste avant les sources, avec le lieu */
     html += '<section class="card srcfold"><details><summary>' + esc(T().sources) + " (" + allSrc.length + ")</summary>" + sourceList(allSrc) + "</details></section>";
     html += "</div>";
     html += '<div class="seenpad"></div><button type="button" id="seenBtn" class="seenbtn' + (isSeen(aid) ? " on" : "") + '" aria-pressed="' + (isSeen(aid) ? "true" : "false") + '"><span class="dot"></span><span>' + esc(T().seenLbl) + "</span></button>";
