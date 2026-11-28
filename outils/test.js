@@ -154,9 +154,6 @@ for (const [pid, pa] of Object.entries(D.parkAnimals || {})) for (const [aid, x]
   const m = tout.match(/.{0,30}\b(cinq|5) grands\b.{0,30}/gi);
   if (m) pb("« Big Five » traduit en français (garder « Big Five ») : " + m.join(" | "));
 }
-// Fiche 4.0 : chaque animal a ses textes courts (rectangles), chaque animal de parc aussi (effectif, où l'observer)
-for (const id of Object.keys(D.animals)) { const b = (D.animalBriefs || {})[id]; if (!b || !["world", "weight", "life", "diet"].every((k) => b[k] && b[k].v && b[k].v.fr && b[k].x)) pb(`animal ${id} : textes courts des rectangles manquants`); }
-for (const [pid, pa] of Object.entries(D.parkAnimals || {})) for (const [aid, x] of Object.entries(pa)) if (!x.short || !x.short.pop || !x.short.spot) pb(`${pid}/${aid} : textes courts manquants (short.pop / short.spot)`);
 // Chaque niveau de confiance utilisé a son libellé dans les deux langues (sinon le badge s'affiche vide)
 {
   const html = fs.readFileSync(path.join(RACINE, "index.html"), "utf8");

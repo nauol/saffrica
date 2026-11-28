@@ -236,41 +236,15 @@ dl.facts.stack dt { font-weight: 600; }
 .zoomview button { position: absolute; top: calc(12px + env(safe-area-inset-top)); right: 12px; z-index: 2; width: 44px; height: 44px; border-radius: 999px; border: 0; background: rgba(255,255,255,.22); color: #fff; font-size: 24px; }
 
 /* --- comment le reconnaître --- */
-/* fiche 4.0 : rectangles puis sections de texte (même anatomie : titre, puis contenu) */
-.factgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); margin: 0 0 12px; }
-.fc { background: var(--card); padding: 12px 13px; min-width: 0; display: flex; flex-direction: column; }
-.fc.w { grid-column: 1 / -1; }
-.fc .k, .tsec .k { display: block; font-size: .76rem; color: var(--muted); font-weight: 600; margin-bottom: 2px; }
-.fc .v { font-size: 1.04rem; font-weight: 750; letter-spacing: -0.01em; line-height: 1.25; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-.fc .v.nf { color: var(--muted); font-weight: 600; }
-.fc .x { font-size: .76rem; color: var(--muted); line-height: 1.38; margin-top: 4px; }
-.fc .gauge { margin-top: 6px; }
-.fc .cf { align-self: flex-start; font-size: .72rem; font-weight: 650; color: var(--brand-ink); background: var(--brand-soft); border-radius: 999px; padding: 2px 8px; margin-top: 6px; }
-.fc .cf.estimate, .fc .cf.unofficial, .fc .cf.scientific { color: var(--muted); background: var(--fill); }
-.fc details.fx { margin-top: 4px; }
-.fc details.fx summary { font-size: .76rem; color: var(--brand-ink); font-weight: 650; padding: 4px 0; justify-content: flex-start; }
-.fc details.fx summary::after { width: 6px; height: 6px; border-width: 1.6px; }
-.fc details.fx p { font-size: .82rem; color: var(--muted); margin: 4px 0 0; line-height: 1.45; }
-.fc .lnk { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 8px; }
-.fc .lnk a { font-size: .82rem; font-weight: 650; color: var(--brand-ink); text-decoration: none; background: none; box-shadow: none; padding: 0; margin: 0; display: inline; }
-.fc .lnk a.obsbtn::before { display: none; }
-.tsec h2 { font-size: 1.08rem; margin: 0 0 8px; }
-.tsec p { margin: 0; }
-.tsec .chips { margin: 6px 0 0; }
-.tsec details.allc { margin-top: 10px; border-top: 1px solid var(--line); padding-top: 4px; }
-.tsec details.allc summary { color: var(--brand-ink); font-size: .9rem; }
 .recog { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
 .recog h3 { font-size: 1rem; margin: 0 0 6px; }
 .recog p { margin: 0 0 10px; }
-.sexes { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
-.sexes.one { grid-template-columns: 1fr; }
-.card.recog { margin-top: 0; padding-top: 16px; border-top: 0; }
+.sexes { display: grid; gap: 8px; grid-template-columns: 1fr; }
 @media (min-width: 560px) { .sexes { grid-template-columns: 1fr 1fr; } .sexes .sx.both { grid-column: 1 / -1; } }
-.sx { min-width: 0; }
-.sx p { margin: 0; font-size: .95rem; }
+.sx { border-radius: 12px; padding: 10px 12px; background: var(--bg); border-left: 4px solid var(--muted); }
 .sx strong { display: block; font-size: .85rem; }
 .sx span { font-size: .92rem; }
-
+.sx.m { border-left-color: #2f6fb0; } .sx.f { border-left-color: #c2527a; }
 .types .ty { border-top: 1px solid var(--line); padding: 12px 0; }
 .types .ty h3 { margin: 0 0 2px; font-size: 1.02rem; }
 .types .ty dl { margin: 6px 0 0; }
@@ -440,7 +414,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       pickAnimal: "Choose an animal",
       pickAnimalLead: "Step 3 of 4. Tap an animal to see its details.",
       noResults: "Nothing found.",
-      inPark: "In this park", inParks: "Parks in Saffrica", parksWord: "parks", weight: "Weight", regime: "Diet", notFoundShort: "Not found", details: "Details", rSummary: "Present in {n} countries, {m} of them in Saffrica", rAll: "See all countries", lsNoneShort: "None yet",
+      inPark: "In this park",
       worldwide: "Worldwide",
       about: "About this animal",
       diet: "Diet",
@@ -580,7 +554,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       pickAnimal: "Choisissez un animal",
       pickAnimalLead: "Étape 3 sur 4. Touchez un animal pour voir ses détails.",
       noResults: "Aucun résultat.",
-      inPark: "Dans ce parc", inParks: "Parcs de Saffrica", parksWord: "parcs", weight: "Poids", regime: "Régime", notFoundShort: "Non trouvé", details: "Détails", rSummary: "Présent dans {n} pays, dont {m} dans Saffrica", rAll: "Voir tous les pays", lsNoneShort: "Aucune encore",
+      inPark: "Dans ce parc",
       worldwide: "Dans le monde",
       about: "À propos de cet animal",
       diet: "Alimentation",
@@ -822,26 +796,14 @@ body.is-fiche .footer { padding-bottom: 100px; }
     var img = a.img ? '<img src="' + esc(src) + '" alt="' + esc(tr(a.name)) + '" loading="lazy" data-y="' + (FOCUS[a.img] != null ? FOCUS[a.img] : 12) + '" data-hero="' + (cls === "hero-photo" ? 1 : 0) + '" onload="window.saffFit(this)" onerror="this.remove()">' : "";
     return '<span class="photo ' + (cls || "") + '"><span class="ph" aria-hidden="true">' + letter + "</span>" + img + "</span>";
   }
-  /* un rectangle : étiquette, valeur courte, détail en petit gris ; « more » = détails dépliables (texte complet, sources) */
-  function factCell(label, v, x, o) {
-    o = o || {};
-    var more = (o.more || []).filter(function (t) { return t && t.trim(); });
-    return '<div class="fc' + (o.wide ? " w" : "") + (o.cls ? " " + o.cls : "") + '"><span class="k">' + esc(label) + "</span>" +
-      '<span class="v' + (v ? "" : " nf") + '">' + esc(v || T().notFoundShort) + "</span>" +
-      (o.gauge ? gauge(o.gauge) : "") +
-      (x ? '<span class="x">' + esc(x) + "</span>" : "") +
-      (o.conf && T().conf[o.conf] && o.conf !== "none" && /\d/.test(v) ? '<span class="cf ' + o.conf + '">' + esc(T().conf[o.conf]) + "</span>" : "") +
-      (more.length ? '<details class="fx"><summary>' + esc(T().details) + "</summary>" + more.map(function (t) { return "<p>" + esc(t) + "</p>"; }).join("") + "</details>" : "") + "</div>";
-  }
   function recogBlock(a) {
     if (!a.recognize) return "";
-    var head = '<section class="card tsec recog"><h2>' + esc(T().recognize) + "</h2><p>" + esc(tr(a.recognize)) + "</p>";
-    if (a.group) return head + "</section>";
+    if (a.group) return '<div class="recog"><h3>' + esc(T().recognize) + "</h3><p>" + esc(tr(a.recognize)) + "</p></div>";
     var sexes = a.noDiff
-      ? '<div class="sx both"><span class="k">' + esc(T().bothSexes) + "</span><p>" + esc(tr(a.noDiff)) + "</p></div>"
-      : '<div class="sx m"><span class="k">♂ ' + esc(T().male) + "</span><p>" + esc(tr(a.male)) + "</p></div>" +
-        '<div class="sx f"><span class="k">♀ ' + esc(T().female) + "</span><p>" + esc(tr(a.female)) + "</p></div>";
-    return head + '<div class="sexes' + (a.noDiff ? " one" : "") + '">' + sexes + "</div></section>";
+      ? '<div class="sx both"><strong>' + esc(T().bothSexes) + "</strong><span>" + esc(tr(a.noDiff)) + "</span></div>"
+      : '<div class="sx m"><strong>' + esc(T().male) + "</strong><span>" + esc(tr(a.male)) + "</span></div>" +
+        '<div class="sx f"><strong>' + esc(T().female) + "</strong><span>" + esc(tr(a.female)) + "</span></div>";
+    return '<div class="recog"><h3>' + esc(T().recognize) + "</h3><p>" + esc(tr(a.recognize)) + '</p><div class="sexes">' + sexes + "</div></div>";
   }
   function chip(text, cls) { return '<span class="chip ' + (cls || "") + '">' + esc(text) + "</span>"; }
   function infoCard(kind, title, fig, chips, date, note, extra) {
@@ -864,13 +826,8 @@ body.is-fiche .footer { padding-bottom: 100px; }
   function rangeCard(aid) {
     var r = D.ranges && D.ranges[aid];
     if (!r) return "";
-    var html = '<section class="card range tsec"><h2>' + esc(T().whereLives) + "</h2>";
+    var html = '<section class="card range"><h2>' + esc(T().whereLives) + "</h2>";
     if (r.text) html += "<p>" + esc(tr(r.text)) + "</p>";
-    var pres = (r.present || []).concat(r.back || []).map(findCountry).filter(Boolean);
-    var inApp = pres.filter(function (c) { return c.available; }).sort(byCountryOrder);
-    if (pres.length) html += '<span class="k">' + esc(T().rSummary.replace("{n}", pres.length).replace("{m}", inApp.length)) + '</span><p class="chips">' +
-      inApp.map(function (c) { return '<a class="chip cty app" href="#/c/' + c.id + '">' + esc(countryName(c)) + "</a>"; }).join("") + "</p>";
-    if (r.present || r.back || r.gone) html += '<details class="allc"><summary>' + esc(T().rAll) + "</summary>";
     [["present", "rPresent", ""], ["back", "rBack", "back"], ["gone", "rGone", "gone"]].forEach(function (g) {
       var ids = r[g[0]];
       if (!ids || !ids.length) return;
@@ -882,8 +839,8 @@ body.is-fiche .footer { padding-bottom: 100px; }
       }).join("") + "</p>";
     });
     html += '<p class="meta">' + esc(T().dataDate) + ": " + esc(looseDate(tr(r.asOf))) + "</p>";
-    if (r.note) html += '<p class="meta">' + esc(tr(r.note)) + "</p>";
-    if (r.present || r.back || r.gone) html += '<p class="meta">' + esc(T().rGeneric) + "</p></details>";
+    if (r.note) html += '<p class="note">' + esc(tr(r.note)) + "</p>";
+    if (r.present || r.back || r.gone) html += '<p class="meta">' + esc(T().rGeneric) + "</p>";
     return html + "</section>";
   }
   function typesCard(a) {
@@ -1686,21 +1643,20 @@ body.is-fiche .footer { padding-bottom: 100px; }
   function lsPaint(aid, o, offline) {
     var el = document.getElementById("lsBody"); if (!el) return;
     var t = T(), pk = o.park ? findPark(o.park) : null, c = pk ? findCountry(pk.country) : null;
-    var ago = lsAgo(o.ts);
-    var h = '<span class="k">' + esc(t.lsTitle) + '</span><span class="v">' + esc(ago.charAt(0).toUpperCase() + ago.slice(1)) + "</span>";
-    h += '<span class="x" id="lsWhere">' + esc(obsDate(o.ts)) + ", " + (pk ? esc(tr(pk.name)) + (c ? " (" + esc(countryName(c)) + ")" : "")
-      : esc(t.lsOutside) + " · " + o.lat.toFixed(4) + ", " + o.lng.toFixed(4)) + ".</span>";
-    h += '<span class="lnk"><a class="obsbtn" href="#/obs/' + (o.park || "none") + "/a/" + aid + '">' + esc(t.lsAll) + ' ›</a><a class="gm" target="_blank" rel="noopener" href="https://www.google.com/maps?q=' + o.lat + "," + o.lng + '">' + esc(t.lsMap) + "</a></span>";
+    var h = '<p class="lastline"><strong>' + esc(obsDate(o.ts)) + "</strong> · " + esc(lsAgo(o.ts)) + "</p>";
+    h += '<p id="lsWhere">' + (pk ? esc(t.lsIn) + " <strong>" + esc(tr(pk.name)) + "</strong>" + (c ? " (" + esc(countryName(c)) + ")" : "")
+      : esc(t.lsOutside) + " · " + esc(t.lsCoords) + " : " + o.lat.toFixed(4) + ", " + o.lng.toFixed(4)) + "</p>";
+    h += '<p class="meta"><a class="gm" target="_blank" rel="noopener" href="https://www.google.com/maps?q=' + o.lat + "," + o.lng + '">' + esc(t.lsMap) + '</a></p><a class="obsbtn" href="#/obs/' + (o.park || "none") + "/a/" + aid + '">' + esc(t.lsAll) + "</a>";
     el.innerHTML = h;
     if (!pk) lsCountry(o.lat, o.lng).then(function (n) {
       var w = document.getElementById("lsWhere"); if (!n || !w || !document.getElementById("lsBody")) return;
-      w.textContent = obsDate(o.ts) + ", " + t.lsOutside + " · " + n + " (" + o.lat.toFixed(4) + ", " + o.lng.toFixed(4) + ").";
+      w.innerHTML = esc(t.lsOutside) + " · <strong>" + esc(n) + "</strong><br><small class=\"meta\">" + esc(t.lsCoords) + " : " + o.lat.toFixed(4) + ", " + o.lng.toFixed(4) + "</small>";
     });
   }
   function lastSeenLoad(aid) {
     var key = "saffrica-ls-" + aid, cached = null;
     try { cached = JSON.parse(localStorage.getItem(key) || "null"); } catch (e) {}
-    function none(msg) { var el = document.getElementById("lsBody"); if (el) el.innerHTML = '<span class="k">' + esc(T().lsTitle) + '</span><span class="v nf">' + esc(T().lsNoneShort) + '</span><span class="x">' + esc(msg) + '</span><span class="lnk"><a class="obsbtn" href="#/obs">' + esc(T().obsTitle) + " ›</a></span>"; }
+    function none(msg) { var el = document.getElementById("lsBody"); if (el) el.innerHTML = '<p class="meta">' + esc(msg) + '</p><a class="obsbtn" href="#/obs">' + esc(T().obsTitle) + "</a>"; }
     if (cached) lsPaint(aid, cached);
     if (!window.fetch || !navigator.onLine) { if (!cached) none(T().lsOff); return; }
     fetch(OBS_URL + "/?animal=" + encodeURIComponent(aid) + "&limit=1")
@@ -1724,31 +1680,37 @@ body.is-fiche .footer { padding-bottom: 100px; }
     var html = '<div class="herowrap">' + photo(a, "hero-photo") + (a.img ? '<span class="credit">' + esc(T().illustration) + '</span><button type="button" class="zoombtn" id="zoomBtn" aria-label="' + esc(T().zoomLbl) + '">⤢</button>' : "") + "</div>" +
       '<div class="sheet"><p class="eyebrow">' + (p ? esc(tr(p.name)) : esc(T().animalSheet)) + '</p><h1 class="aname' + (tr(a.name).length > 16 ? " long" : "") + '">' + esc(tr(a.name)) + '</h1><p class="sci">' + esc(a.sci) + "</p>";
 
-    /* Fiche (version 4.0, voulue par l'utilisateur) : chaque information une seule fois.
-       1. Rectangles : la valeur courte en gras, le détail utile en petit gris dedans (données « brief » et « short »).
-       2. Puis seulement le texte qui ne tient pas dans un rectangle. */
-    var b = (D.animalBriefs && D.animalBriefs[aid]) || {}, sh = (pa && pa.short) || {};
-    var gt = tr(D.gauge[a.status] ? D.gauge[a.status].text : { en: "", fr: "" }).replace(/^[^:：]*[:：]\s*/, ""); gt = gt.charAt(0).toUpperCase() + gt.slice(1);
-    var cells = [];
-    if (pa) cells.push(factCell(T().inPark, sh.pop ? tr(sh.pop.v) : tr(pa.pop), sh.pop ? tr(sh.pop.x) : looseDate(tr(pa.asOf)) + ".",
-      { cls: "pk", conf: pa.conf, more: sh.pop ? [tr(pa.pop) + " (" + looseDate(tr(pa.asOf)) + ")", tr(pa.note), pa.trend ? T().trend + " : " + tr(pa.trend) : "", pa.extra ? tr(pa.extra) : ""] : [tr(pa.note), pa.trend ? T().trend + " : " + tr(pa.trend) : ""] }));
-    else cells.push(factCell(T().inParks, parksWith(aid).length + " " + T().parksWord, parksWith(aid).map(function (x) { return tr(x.name).replace(/^(Parc national|Réserve nationale|National Park|National Reserve) (de |du |d'|d’)?/i, ""); }).join(", ") + "."));
-    cells.push(factCell(T().worldwide, b.world ? tr(b.world.v) : tr(a.global.pop), b.world ? tr(b.world.x) : looseDate(a.global.asOf) + ".", { cls: "world", more: b.world ? [tr(a.global.pop), a.global.note ? tr(a.global.note) : ""] : [a.global.note ? tr(a.global.note) : ""] }));
-    cells.push(factCell(T().status, tr(D.status[a.status]), gt + (gt ? " " : "") + tr(a.statusAsOf) + ".", { gauge: a.status }));
-    cells.push(factCell(T().weight, b.weight ? tr(b.weight.v) : "", b.weight ? tr(b.weight.x) : tr(a.size)));
-    cells.push(factCell(T().lifespan, b.life ? tr(b.life.v) : "", b.life ? tr(b.life.x) : tr(a.lifespan)));
-    cells.push(factCell(T().regime, b.diet ? tr(b.diet.v) : "", b.diet ? tr(b.diet.x) : tr(a.diet)));
-    if (pa) cells.push(factCell(T().spot, sh.spot ? tr(sh.spot.v) : "", sh.spot ? tr(sh.spot.x) : tr(pa.spot), { wide: true }));
-    cells.push('<div class="fc w" id="lsBody"><span class="k">' + esc(T().lsTitle) + '</span><span class="x">' + esc(T().lsLoad) + "</span></div>");
-    html += '<div class="factgrid">' + cells.join("") + "</div>";
-    if (a.see && D.animals[a.see]) html += '<p class="meta"><a href="#/a/' + a.see + '">' + esc(T().seeGroup) + " « " + esc(tr(D.animals[a.see].name)) + " » ›</a></p>";
+    /* 1. Les chiffres : dans ce parc, puis dans le monde (même mise en page) */
+    if (pa) html += infoCard("park", T().inPark, tr(pa.pop),
+      chip(T().conf[pa.conf], pa.conf) + (pa.trend ? chip(T().trend + ": " + tr(pa.trend)) : ""),
+      looseDate(tr(pa.asOf)), tr(pa.note), pa.extra ? tr(pa.extra) : "");
+    html += infoCard("world", T().worldwide, tr(a.global.pop),
+      chip(tr(D.status[a.status]), a.status) + (a.global.trend ? chip(T().trend + ": " + tr(a.global.trend)) : ""),
+      looseDate(a.global.asOf), tr(a.global.note), "");
 
-    /* 2. Le texte : le reconnaître, comportement, types (pages de groupe), sécurité, où il vit */
-    html += recogBlock(a);
-    html += '<section class="card tsec"><h2>' + esc(T().behavior) + "</h2><p>" + esc(tr(a.behavior)) + "</p></section>";
-    html += typesCard(a);
-    html += '<section class="card tsec"><h2>' + esc(T().safety) + "</h2><p>" + esc(tr(a.safety)) + "</p></section>";
+    /* 2. Où le voir dans ce parc */
+    if (pa) html += '<section class="card"><h2>' + esc(T().spot) + "</h2><p>" + esc(tr(pa.spot)) + "</p>" +
+      '<p class="meta">' + esc(tr(p.bestTime)) + "</p></section>";
+
+    /* 3. Infos générales sur l'animal */
+    html += '<section class="card"><h2>' + esc(T().about) + '</h2><dl class="facts">' +
+      "<dt>" + esc(T().diet) + "</dt><dd>" + esc(tr(a.diet)) + "</dd>" +
+      "<dt>" + esc(T().size) + "</dt><dd>" + esc(tr(a.size)) + "</dd>" +
+      "<dt>" + esc(T().lifespan) + "</dt><dd>" + esc(tr(a.lifespan)) + "</dd>" +
+      "<dt>" + esc(T().behavior) + "</dt><dd>" + esc(tr(a.behavior)) + "</dd>" +
+      "</dl>" + recogBlock(a) + (a.see && D.animals[a.see] ? '<p class="meta"><a href="#/a/' + a.see + '">' + esc(T().seeGroup) + " « " + esc(tr(D.animals[a.see].name)) + " » ›</a></p>" : "") + "</section>" + typesCard(a) + lastSeenCard();
+
+    /* 4. Jauge de menace */
+    html += '<section class="card"><h2>' + esc(T().status) + "</h2>" +
+      '<p class="lvl"><span class="badge ' + a.status + '">' + esc(tr(D.status[a.status])) + "</span></p>" +
+      gauge(a.status, "lg") +
+      '<div class="scale"><span>' + esc(T().gaugeLess) + "</span><span>" + esc(T().gaugeMore) + "</span></div>" +
+      '<p class="note">' + esc(tr(D.gauge[a.status].text)) + "</p>" +
+      '<p class="meta">' + esc(tr(a.statusAsOf)) + "</p></section>";
+
+    /* 5. Pays, parcs de l'application, où voir, sécurité, sources */
     html += rangeCard(aid);
+    html += '<section class="card"><h2>' + esc(T().safety) + "</h2><p>" + esc(tr(a.safety)) + "</p></section>";
 
     var rg = (D.ranges && D.ranges[aid] && D.ranges[aid].src) || [];
     var allSrc = uniq(((pa && pa.src) || []).concat((pa && pa.extraSrc) || [], (pa && pa.growthSrc) || [], (pa && pa.spotSrc) || [], a.global.src || [], a.statusSrc || [], rg, (a.types || []).reduce(function (x, t) { return x.concat(t.src || []); }, [])));
