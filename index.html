@@ -240,10 +240,10 @@ dl.facts.stack dt { font-weight: 600; }
 .factgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); margin: 0 0 12px; }
 .fc { background: var(--card); padding: 12px 13px; min-width: 0; display: flex; flex-direction: column; }
 .fc.w { grid-column: 1 / -1; }
-.fc .k, .tsec .k { display: block; font-size: .76rem; color: var(--muted); font-weight: 600; margin-bottom: 2px; }
-.fc .v { font-size: 1.04rem; font-weight: 750; letter-spacing: -0.01em; line-height: 1.25; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-.fc .v.nf { color: var(--muted); font-weight: 600; }
-.fc .x { font-size: .76rem; color: var(--muted); line-height: 1.38; margin-top: 4px; }
+.fc .k, .tsec .k { display: block; font-size: .72rem; color: var(--muted); font-weight: 600; margin-bottom: 2px; }
+.fc .v { font-size: .98rem; font-weight: 750; letter-spacing: -0.01em; line-height: 1.25; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.fc .v.nf { color: var(--muted); font-weight: 500; font-size: .85rem; }
+.fc .x { font-size: .7rem; color: var(--muted); line-height: 1.35; margin-top: 3px; }
 .fc .gauge { margin-top: 6px; }
 .fc .cf { align-self: flex-start; font-size: .72rem; font-weight: 650; color: var(--brand-ink); background: var(--brand-soft); border-radius: 999px; padding: 2px 8px; margin-top: 6px; }
 .fc .cf.estimate, .fc .cf.unofficial, .fc .cf.scientific { color: var(--muted); background: var(--fill); }
@@ -823,15 +823,18 @@ body.is-fiche .footer { padding-bottom: 100px; }
     return '<span class="photo ' + (cls || "") + '"><span class="ph" aria-hidden="true">' + letter + "</span>" + img + "</span>";
   }
   /* un rectangle : étiquette, valeur courte, détail en petit gris ; « more » = détails dépliables (texte complet, sources) */
+  /* une seule phrase en petit gris : la première phrase du texte, le reste est ignoré dans la case */
+  function firstSentence(t) {
+    t = (t || "").trim();
+    var m = t.match(/^.*?[.!?](?=\s|$)/);
+    return m ? m[0] : t;
+  }
   function factCell(label, v, x, o) {
     o = o || {};
-    var more = (o.more || []).filter(function (t) { return t && t.trim(); });
     return '<div class="fc' + (o.wide ? " w" : "") + (o.cls ? " " + o.cls : "") + '"><span class="k">' + esc(label) + "</span>" +
       '<span class="v' + (v ? "" : " nf") + '">' + esc(v || T().notFoundShort) + "</span>" +
       (o.gauge ? gauge(o.gauge) : "") +
-      (x ? '<span class="x">' + esc(x) + "</span>" : "") +
-      (o.conf && T().conf[o.conf] && o.conf !== "none" && /\d/.test(v) ? '<span class="cf ' + o.conf + '">' + esc(T().conf[o.conf]) + "</span>" : "") +
-      (more.length ? '<details class="fx"><summary>' + esc(T().details) + "</summary>" + more.map(function (t) { return "<p>" + esc(t) + "</p>"; }).join("") + "</details>" : "") + "</div>";
+      (x ? '<span class="x">' + esc(firstSentence(x)) + "</span>" : "") + "</div>";
   }
   function recogBlock(a) {
     if (!a.recognize) return "";
