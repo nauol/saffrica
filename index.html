@@ -243,6 +243,7 @@ dl.facts.stack dt { font-weight: 600; }
 .fc .k, .tsec .k { display: block; font-size: .72rem; color: var(--muted); font-weight: 600; margin-bottom: 2px; }
 .fc .v { font-size: .98rem; font-weight: 750; letter-spacing: -0.01em; line-height: 1.25; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .fc .v.nf { color: var(--muted); font-weight: 500; font-size: .85rem; }
+.fc .v.txt { font-weight: 600; font-size: .92rem; line-height: 1.35; }
 .fc .x { font-size: .7rem; color: var(--muted); line-height: 1.35; margin-top: 3px; }
 .fc .gauge { margin-top: 6px; }
 .fc .cf { align-self: flex-start; font-size: .72rem; font-weight: 650; color: var(--brand-ink); background: var(--brand-soft); border-radius: 999px; padding: 2px 8px; margin-top: 6px; }
@@ -829,10 +830,19 @@ body.is-fiche .footer { padding-bottom: 100px; }
     var m = t.match(/^.*?[.!?](?=\s|$)/);
     return m ? m[0] : t;
   }
+  /* sécurité en une courte phrase : la première phrase, coupée avant « : », « ; », « , mais » ou une parenthèse si elle est longue */
+  function shortSafety(t) {
+    var s = firstSentence(t);
+    if (s.length > 80) {
+      var m = s.match(/^(.{12,}?)(?:: |; |, mais |, but | \()/);
+      if (m) s = m[1].replace(/[\s,;:]+$/, "") + ".";
+    }
+    return s;
+  }
   function factCell(label, v, x, o) {
     o = o || {};
     return '<div class="fc' + (o.wide ? " w" : "") + (o.cls ? " " + o.cls : "") + '"><span class="k">' + esc(label) + "</span>" +
-      '<span class="v' + (v ? "" : " nf") + '">' + esc(v || T().notFoundShort) + "</span>" +
+      '<span class="v' + (v ? "" : " nf") + (o.txt ? " txt" : "") + '">' + esc(v || T().notFoundShort) + "</span>" +
       (o.gauge ? gauge(o.gauge) : "") +
       (x ? '<span class="x">' + esc(firstSentence(x)) + "</span>" : "") + "</div>";
   }
@@ -1735,13 +1745,14 @@ body.is-fiche .footer { padding-bottom: 100px; }
     var cells = [];
     if (pa) cells.push(factCell(T().inPark, sh.pop ? tr(sh.pop.v) : tr(pa.pop), sh.pop ? tr(sh.pop.x) : looseDate(tr(pa.asOf)) + ".",
       { cls: "pk", conf: pa.conf, more: sh.pop ? [tr(pa.pop) + " (" + looseDate(tr(pa.asOf)) + ")", tr(pa.note), pa.trend ? T().trend + " : " + tr(pa.trend) : "", pa.extra ? tr(pa.extra) : ""] : [tr(pa.note), pa.trend ? T().trend + " : " + tr(pa.trend) : ""] }));
-    else cells.push(factCell(T().inParks, parksWith(aid).length + " " + T().parksWord));
     cells.push(factCell(T().worldwide, b.world ? tr(b.world.v) : tr(a.global.pop), b.world ? tr(b.world.x) : looseDate(a.global.asOf) + ".", { cls: "world", more: b.world ? [tr(a.global.pop), a.global.note ? tr(a.global.note) : ""] : [a.global.note ? tr(a.global.note) : ""] }));
     cells.push(factCell(T().status, tr(D.status[a.status]), gt + (gt ? " " : "") + tr(a.statusAsOf) + ".", { gauge: a.status }));
     cells.push(factCell(T().weight, b.weight ? tr(b.weight.v) : "", b.weight ? tr(b.weight.x) : tr(a.size)));
     cells.push(factCell(T().lifespan, b.life ? tr(b.life.v) : "", b.life ? tr(b.life.x) : tr(a.lifespan)));
-    cells.push(factCell(T().regime, b.diet ? tr(b.diet.v) : "", b.diet ? tr(b.diet.x) : tr(a.diet)));
+    cells.push(factCell(T().regime, b.diet ? tr(b.diet.v) : "", b.diet ? tr(b.diet.x) : tr(a.diet), { wide: !pa })); /* sans parc : 5 cases, la dernière prend toute la largeur (pas de trou) */
     if (pa) cells.push(factCell(T().spot, sh.spot ? tr(sh.spot.v) : "", sh.spot ? tr(sh.spot.x) : tr(pa.spot), { wide: true }));
+    var ss = shortSafety(tr(a.safety));
+    cells.push(factCell(T().safety, ss, "", { wide: true, txt: true }));
     cells.push('<div class="fc w" id="lsBody"><span class="k">' + esc(T().lsTitle) + '</span><span class="x">' + esc(T().lsLoad) + "</span></div>");
     html += '<div class="factgrid">' + cells.join("") + "</div>";
     if (a.see && D.animals[a.see]) html += '<p class="meta"><a href="#/a/' + a.see + '">' + esc(T().seeGroup) + " « " + esc(tr(D.animals[a.see].name)) + " » ›</a></p>";
@@ -1750,7 +1761,8 @@ body.is-fiche .footer { padding-bottom: 100px; }
     html += recogBlock(a);
     html += '<section class="card tsec"><h2>' + esc(T().behavior) + "</h2><p>" + esc(tr(a.behavior)) + "</p></section>";
     html += typesCard(a);
-    html += '<section class="card tsec"><h2>' + esc(T().safety) + "</h2><p>" + esc(tr(a.safety)) + "</p></section>";
+    /* la phrase clé de sécurité est déjà dans un rectangle : le texte complet n'est gardé que s'il apporte plus */
+    if (tr(a.safety).trim() !== ss) html += '<section class="card tsec"><h2>' + esc(T().safety) + "</h2><p>" + esc(tr(a.safety)) + "</p></section>";
     html += rangeCard(aid);
 
     var rg = (D.ranges && D.ranges[aid] && D.ranges[aid].src) || [];
