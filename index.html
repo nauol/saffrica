@@ -1735,7 +1735,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
     var cells = [];
     if (pa) cells.push(factCell(T().inPark, sh.pop ? tr(sh.pop.v) : tr(pa.pop), sh.pop ? tr(sh.pop.x) : looseDate(tr(pa.asOf)) + ".",
       { cls: "pk", conf: pa.conf, more: sh.pop ? [tr(pa.pop) + " (" + looseDate(tr(pa.asOf)) + ")", tr(pa.note), pa.trend ? T().trend + " : " + tr(pa.trend) : "", pa.extra ? tr(pa.extra) : ""] : [tr(pa.note), pa.trend ? T().trend + " : " + tr(pa.trend) : ""] }));
-    else cells.push(factCell(T().inParks, parksWith(aid).length + " " + T().parksWord, parksWith(aid).map(function (x) { return tr(x.name).replace(/^(Parc national|Réserve nationale|National Park|National Reserve) (de |du |d'|d’)?/i, ""); }).join(", ") + "."));
+    else cells.push(factCell(T().inParks, parksWith(aid).length + " " + T().parksWord));
     cells.push(factCell(T().worldwide, b.world ? tr(b.world.v) : tr(a.global.pop), b.world ? tr(b.world.x) : looseDate(a.global.asOf) + ".", { cls: "world", more: b.world ? [tr(a.global.pop), a.global.note ? tr(a.global.note) : ""] : [a.global.note ? tr(a.global.note) : ""] }));
     cells.push(factCell(T().status, tr(D.status[a.status]), gt + (gt ? " " : "") + tr(a.statusAsOf) + ".", { gauge: a.status }));
     cells.push(factCell(T().weight, b.weight ? tr(b.weight.v) : "", b.weight ? tr(b.weight.x) : tr(a.size)));
