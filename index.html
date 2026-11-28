@@ -830,7 +830,7 @@ body.is-fiche .footer { padding-bottom: 100px; }
       '<span class="v' + (v ? "" : " nf") + '">' + esc(v || T().notFoundShort) + "</span>" +
       (o.gauge ? gauge(o.gauge) : "") +
       (x ? '<span class="x">' + esc(x) + "</span>" : "") +
-      (o.conf && T().conf[o.conf] && o.conf !== "none" ? '<span class="cf ' + o.conf + '">' + esc(T().conf[o.conf]) + "</span>" : "") +
+      (o.conf && T().conf[o.conf] && o.conf !== "none" && /\d/.test(v) ? '<span class="cf ' + o.conf + '">' + esc(T().conf[o.conf]) + "</span>" : "") +
       (more.length ? '<details class="fx"><summary>' + esc(T().details) + "</summary>" + more.map(function (t) { return "<p>" + esc(t) + "</p>"; }).join("") + "</details>" : "") + "</div>";
   }
   function recogBlock(a) {
@@ -1727,8 +1727,8 @@ body.is-fiche .footer { padding-bottom: 100px; }
     /* Fiche (version 4.0, voulue par l'utilisateur) : chaque information une seule fois.
        1. Rectangles : la valeur courte en gras, le détail utile en petit gris dedans (données « brief » et « short »).
        2. Puis seulement le texte qui ne tient pas dans un rectangle. */
-    var b = a.brief || {}, sh = (pa && pa.short) || {};
-    var gt = tr(D.gauge[a.status] ? D.gauge[a.status].text : { en: "", fr: "" }).replace(/^[^:：]*[:：]\s*/, "");
+    var b = (D.animalBriefs && D.animalBriefs[aid]) || {}, sh = (pa && pa.short) || {};
+    var gt = tr(D.gauge[a.status] ? D.gauge[a.status].text : { en: "", fr: "" }).replace(/^[^:：]*[:：]\s*/, ""); gt = gt.charAt(0).toUpperCase() + gt.slice(1);
     var cells = [];
     if (pa) cells.push(factCell(T().inPark, sh.pop ? tr(sh.pop.v) : tr(pa.pop), sh.pop ? tr(sh.pop.x) : looseDate(tr(pa.asOf)) + ".",
       { cls: "pk", conf: pa.conf, more: sh.pop ? [tr(pa.pop) + " (" + looseDate(tr(pa.asOf)) + ")", tr(pa.note), pa.trend ? T().trend + " : " + tr(pa.trend) : "", pa.extra ? tr(pa.extra) : ""] : [tr(pa.note), pa.trend ? T().trend + " : " + tr(pa.trend) : ""] }));

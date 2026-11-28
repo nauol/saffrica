@@ -221,9 +221,12 @@ module.exports = async function fonctions({ browser, base, D, I, pb, log }) {
     await go("#/p/kruger/a/lion"); await W(800);
     const ls = await txt("#lsBody");
     exige(ls && !/Chargement|Loading/i.test(ls), "la dernière observation ne s'affiche pas");
-    exige(await nb(".info.park .fig") === 1 && await nb(".info.world .fig") === 1, "chiffres du parc ou du monde absents");
+    exige(await nb(".factgrid .fc") >= 8 && /1 620/.test(await txt(".fc.pk .v")) && (await txt(".fc.world .v")).length > 0, "rectangles des chiffres absents ou incomplets");
+    exige(!(await page.$$eval(".sx", (l) => l.some((e) => parseFloat(getComputedStyle(e).borderLeftWidth) > 1))), "les barres de couleur mâle/femelle sont revenues");
+    const vides = await page.$$eval(".fc .v", (l) => l.filter((e) => !e.textContent.trim()).length);
+    exige(vides === 0, vides + " rectangle(s) sans valeur");
     exige(await page.$$eval(".sheet .sources li", (l) => l.length) > 0, "sources absentes");
-    exige(await nb('.range a.chip[href="#/c/za"]') === 1, "lien vers le pays absent de « Où vit-il »");
+    exige(await nb('.range a.chip[href="#/c/za"]') >= 1, "lien vers le pays absent de « Où vit-il »");
     exige(await page.$eval(".srcfold details", (d) => !d.open).catch(() => false), "les sources de la fiche devraient être repliées");
     await page.click(".srcfold summary"); await W();
     exige(await page.$eval(".srcfold details", (d) => d.open), "la flèche ne déplie pas les sources");
